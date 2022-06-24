@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">DiaSync</string>
+    <string name="btn_detonate">DETONATE</string>
 </resources>
