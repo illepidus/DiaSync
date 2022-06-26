@@ -25,13 +25,13 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
         final String url = "https://krotarnya.ru/diasync.php";
         final String action = intent.getAction();
         final Bundle bundle = intent.getExtras();
-        String data;
+        String update;
         String type;
 
         if (action == null) return;
         switch (action) {
             case "com.eveningoutpost.dexdrip.diasync.l2r":
-                data = bundle.getString("data");
+                update = bundle.getString("data");
                 type = "l2rs";
                 break;
             default:
@@ -44,7 +44,7 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<>();
-                params.put("update", data);
+                params.put("update", update);
                 params.put("type", type);
                 return params;
             }
