@@ -18,13 +18,14 @@ import java.util.Map;
 
 public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
     private static final String TAG = "DiaBroadcastReceiver";
-    private RequestQueue request_queue;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         final String url = "https://krotarnya.ru/diasync.php";
+        final String token = "78e297d6d6a5fe57da3184705551a69a4";
         final String action = intent.getAction();
         final Bundle bundle = intent.getExtras();
+
         String update;
         String type;
 
@@ -39,11 +40,12 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
                 return;
         }
 
-        request_queue = Volley.newRequestQueue(context);
+        RequestQueue request_queue = Volley.newRequestQueue(context);
         StringRequest string_request = new StringRequest(Request.Method.POST, url, response -> Log.d(TAG, "Response: " + response), error -> Log.e(TAG, error.toString())) {
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<>();
+                params.put("token", token);
                 params.put("update", update);
                 params.put("type", type);
                 return params;
