@@ -53,6 +53,5 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
         };
 
         request_queue.add(string_request);
-
     }
 }
