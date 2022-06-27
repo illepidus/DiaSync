@@ -40,7 +40,6 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
                 return;
         }
 
-
         RequestQueue request_queue = Volley.newRequestQueue(context);
         StringRequest string_request = new StringRequest(Request.Method.POST, url, response -> Log.d(TAG, "Response: " + response), error -> Log.e(TAG, error.toString())) {
             @Override
