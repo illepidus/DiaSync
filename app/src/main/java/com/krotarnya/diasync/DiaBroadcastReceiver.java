@@ -5,13 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +28,10 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
         String update;
         String type;
 
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapterFactory(new BundleTypeAdapterFactory());
+        Gson gson = builder.create();
+
         if (action == null) return;
 
         Log.d (TAG, "Received broadcast intent [" + action + "] with following extras: ");
@@ -38,12 +41,25 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
 
         switch (action) {
             case "com.eveningoutpost.dexdrip.diasync.libre2_activation":
-                update = "NULL";
+                if (!bundle.containsKey("sensor") || !bundle.containsKey("bleManager")) {
+                    Log.e(TAG,"Received faulty libre2_activation intent");
+                    return;
+                }
+                update = gson.toJson(bundle);
                 type = "libre2_activation";
                 break;
             case "com.eveningoutpost.dexdrip.diasync.libre2_bg":
-                update = "NULL";
+                if (!bundle.containsKey("glucose") || !bundle.containsKey("timestamp") || !bundle.containsKey("bleManager")) {
+                    Log.e(TAG,"Received faulty libre2_bg intent");
+                    return;
+                }
+                update = gson.toJson(bundle);
                 type = "libre2_bg";
+                break;
+            case "com.eveningoutpost.dexdrip.diasync.l2r":
+                //REMOVE THIS LATER
+                update = gson.toJson(bundle);
+                type = "REMOVE_THIS_TYPE_OF_UPDATES";
                 break;
             default:
                 Log.e(TAG, "Unknown action: " + action);
