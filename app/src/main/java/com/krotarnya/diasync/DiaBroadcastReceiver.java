@@ -30,10 +30,20 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
         String type;
 
         if (action == null) return;
+
+        Log.d (TAG, "Received broadcast intent [" + action + "] with following extras: ");
+        for (String key: bundle.keySet()) {
+            Log.d (TAG, "\"" + key + "\" => [" + bundle.get(key).getClass().getSimpleName() + "]");
+        }
+
         switch (action) {
-            case "com.eveningoutpost.dexdrip.diasync.l2r":
-                update = bundle.getString("data");
-                type = "l2rs";
+            case "com.eveningoutpost.dexdrip.diasync.libre2_activation":
+                update = "NULL";
+                type = "libre2_activation";
+                break;
+            case "com.eveningoutpost.dexdrip.diasync.libre2_bg":
+                update = "NULL";
+                type = "libre2_bg";
                 break;
             default:
                 Log.e(TAG, "Unknown action: " + action);

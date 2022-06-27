@@ -23,9 +23,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-            <receiver android:name=".DiaBroadcastReceiver" android:exported="true">
+        <receiver android:name=".DiaBroadcastReceiver" android:exported="true">
             <intent-filter>
-                <action android:name="com.eveningoutpost.dexdrip.diasync.l2r" />
+                <action android:name="com.eveningoutpost.dexdrip.diasync.libre2_activation" />
+                <action android:name="com.eveningoutpost.dexdrip.diasync.libre2_bg" />
+                <action android:name="com.eveningoutpost.dexdrip.diasync.l2r" /> <!-- DELETE ME LATER -->
             </intent-filter>
         </receiver>
     </application>
