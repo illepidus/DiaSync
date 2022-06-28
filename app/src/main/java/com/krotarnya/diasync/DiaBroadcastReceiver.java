@@ -23,9 +23,9 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        final String action = intent.getAction();
-        final Bundle bundle = intent.getExtras();
         broadcast_context = context;
+        final String action = intent.getAction();
+        Bundle bundle = new Bundle(intent.getExtras());
 
         if (action == null) return;
 
@@ -48,13 +48,10 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
                 Log.e(TAG, "Received faulty libre2_bg intent");
                 return;
             }
+            bundle.remove("sas");
             sendUpdate(bundle, "libre2_bg");
         }
         if (action.equals("com.eveningoutpost.dexdrip.diasync.libre2_bg_follower")) {
-            return;
-        }
-        if (action.equals("com.eveningoutpost.dexdrip.diasync.l2r")) {
-            sendUpdate(bundle, "DELETE_ME");
             return;
         }
 
