@@ -53,6 +53,10 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
         if (action.equals("com.eveningoutpost.dexdrip.diasync.libre2_bg_follower")) {
             return;
         }
+        if (action.equals("com.eveningoutpost.dexdrip.diasync.l2r")) {
+            sendUpdate(bundle, "DELETE_ME");
+            return;
+        }
 
         Log.e(TAG,"Received unknown intent");
     }
@@ -66,6 +70,7 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
 
     private void sendUpdate(String update, String type) {
         RequestQueue request_queue = Volley.newRequestQueue(broadcast_context);
+        Log.d(TAG, "Sending update to " + ds_url + "...");
         StringRequest string_request = new StringRequest(Request.Method.POST, ds_url, response -> Log.d(TAG, "Response: " + response), error -> Log.e(TAG, error.toString())) {
             @Override
             protected Map<String,String> getParams(){

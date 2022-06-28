@@ -27,6 +27,7 @@
             <intent-filter>
                 <action android:name="com.eveningoutpost.dexdrip.diasync.libre2_activation" />
                 <action android:name="com.eveningoutpost.dexdrip.diasync.libre2_bg" />
+                <action android:name="com.eveningoutpost.dexdrip.diasync.libre2_bg_follower" />
                 <action android:name="com.eveningoutpost.dexdrip.diasync.l2r" /> <!-- DELETE ME LATER -->
             </intent-filter>
         </receiver>
