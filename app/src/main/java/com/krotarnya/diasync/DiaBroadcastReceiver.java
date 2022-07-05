@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
     private static final String TAG      = "DiaBroadcastReceiver";
-    private static final String ds_token = "78e297d6d6a5fe57da3184705551a69a4";
+    private static final String ds_token = "78e297d6d6a5fe57da3184705551a69a";
     private static final String ds_url    = "https://krotarnya.ru/diasync.php";
     private Context broadcast_context;
 
