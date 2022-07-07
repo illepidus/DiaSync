@@ -25,9 +25,7 @@
         </activity>
         <receiver android:name=".DiaBroadcastReceiver" android:exported="true">
             <intent-filter>
-                <action android:name="com.eveningoutpost.dexdrip.diasync.libre2_activation" />
                 <action android:name="com.eveningoutpost.dexdrip.diasync.libre2_bg" />
-                <action android:name="com.eveningoutpost.dexdrip.diasync.libre2_bg_follower" />
             </intent-filter>
         </receiver>
     </application>

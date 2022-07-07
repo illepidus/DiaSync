@@ -33,26 +33,12 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
         for (String key: bundle.keySet()) {
             Log.d (TAG, "\"" + key + "\" => [" + bundle.get(key).getClass().getSimpleName() + "]");
         }
-
-        if (action.equals("com.eveningoutpost.dexdrip.diasync.libre2_activation")) {
-            if (!bundle.containsKey("sensor") || !bundle.containsKey("bleManager")) {
-                Log.e(TAG,"Received faulty libre2_activation intent");
-                return;
-            }
-            sendUpdate(bundle, "libre2_activation");
-            return;
-        }
-
         if (action.equals("com.eveningoutpost.dexdrip.diasync.libre2_bg")) {
-            if (!bundle.containsKey("glucose") || !bundle.containsKey("timestamp") || !bundle.containsKey("bleManager")) {
+            if (!bundle.containsKey("source") || !bundle.containsKey("libre2")) {
                 Log.e(TAG, "Received faulty libre2_bg intent");
                 return;
             }
-            bundle.remove("sas");
-            sendUpdate(bundle, "libre2_bg");
-        }
-        if (action.equals("com.eveningoutpost.dexdrip.diasync.libre2_bg_follower")) {
-            return;
+            if (bundle.getString("source").equals("master")) sendUpdate(bundle, "libre2_bg");
         }
 
         Log.e(TAG,"Received unknown intent");
