@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.icu.util.ULocale;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -110,7 +111,7 @@ public class DiasyncDB extends SQLiteOpenHelper {
             Log.d(TAG, "Inserted row ID[" + res + "] row");
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.d(TAG, "Wasn't able to add XDripCalibration to database. Calibration exsits?");
+            Log.d(TAG, "Wasn't able to add XDripCalibration to database. Calibration exits?");
             Log.d(TAG, e.toString());
         } finally {
             db.endTransaction();
@@ -133,7 +134,7 @@ public class DiasyncDB extends SQLiteOpenHelper {
             Log.d(TAG, "Inserted row ID[" + res + "] row");
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.d(TAG, "Wasn't able to add XDripValue to database. Value exsits?");
+            Log.d(TAG, "Wasn't able to add XDripValue to database. Value exits?");
             Log.d(TAG, e.toString());
         } finally {
             db.endTransaction();
@@ -157,7 +158,7 @@ public class DiasyncDB extends SQLiteOpenHelper {
             Log.d(TAG, "Inserted row ID[" + res + "] row");
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.d(TAG, "Wasn't able to add Libre2Value to database. Value exsits? ");
+            Log.d(TAG, "Wasn't able to add Libre2Value to database. Value exits?");
             Log.d(TAG, e.toString());
         } finally {
             db.endTransaction();
@@ -166,7 +167,6 @@ public class DiasyncDB extends SQLiteOpenHelper {
 
     public List<Libre2Value> getLastLibre2Values(int limit) {
         List<Libre2Value> values = new ArrayList<>();
-        @SuppressLint("DefaultLocale")
         String LIBRE2_SELECT_QUERY = String.format("SELECT * FROM %s LIMIT %d", TABLE_LIBRE2_VALUES, limit);
         Log.d(TAG, "Running query: " + LIBRE2_SELECT_QUERY);
 
