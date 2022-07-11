@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
@@ -30,15 +31,19 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
         if (action == null) return;
 
         Log.d (TAG, "Received broadcast intent [" + action + "] in context [" + context.toString() + "] with following extras: ");
-        for (String key: bundle.keySet()) {
-            Log.d (TAG, "\"" + key + "\" => [" + bundle.get(key).getClass().getSimpleName() + "]");
-        }
         if (action.equals("com.eveningoutpost.dexdrip.diasync.libre2_bg")) {
             if (!bundle.containsKey("source") || !bundle.containsKey("libre2_value")) {
                 Log.e(TAG, "Received faulty libre2_bg intent");
                 return;
             }
-            if (bundle.getString("source").equals("master")) sendUpdate(bundle, "libre2_bg");
+            if (bundle.getString("source").equals("master") || bundle.getString("source").equals("follower")) sendUpdate(bundle, "libre2_bg");
+            Libre2Value libre2_value = new Libre2Value(bundle);
+            DiasyncDBHelper databaseHelper = DiasyncDBHelper.getInstance(broadcast_context);
+            databaseHelper.addLibre2Value(libre2_value);
+            List<Libre2Value> values = databaseHelper.getLastLibre2Values(10);
+            for (Libre2Value value : values) {
+                Log.d(TAG, "LOADED Libre2Value = " + value.value);
+            }
             return;
         }
 
@@ -54,7 +59,7 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
 
     private void sendUpdate(String update, String type) {
         RequestQueue request_queue = Volley.newRequestQueue(broadcast_context);
-        Log.d(TAG, "Sending update to " + ds_url + "...");
+        Log.d(TAG, "Sending update to [" + ds_url + "]...");
         StringRequest string_request = new StringRequest(Request.Method.POST, ds_url, response -> Log.d(TAG, "Response: " + response), error -> Log.e(TAG, error.toString())) {
             @Override
             protected Map<String,String> getParams(){
@@ -66,6 +71,5 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
             }
         };
         request_queue.add(string_request);
-        Log.d(TAG, "Sending update to [" + ds_url + "]");
     }
 }
