@@ -34,11 +34,12 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
             Log.d (TAG, "\"" + key + "\" => [" + bundle.get(key).getClass().getSimpleName() + "]");
         }
         if (action.equals("com.eveningoutpost.dexdrip.diasync.libre2_bg")) {
-            if (!bundle.containsKey("source") || !bundle.containsKey("libre2")) {
+            if (!bundle.containsKey("source") || !bundle.containsKey("libre2_value")) {
                 Log.e(TAG, "Received faulty libre2_bg intent");
                 return;
             }
             if (bundle.getString("source").equals("master")) sendUpdate(bundle, "libre2_bg");
+            return;
         }
 
         Log.e(TAG,"Received unknown intent");
@@ -65,5 +66,6 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
             }
         };
         request_queue.add(string_request);
+        Log.d(TAG, "Sending update to [" + ds_url + "]");
     }
 }
