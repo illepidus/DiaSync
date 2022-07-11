@@ -37,12 +37,13 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
                 return;
             }
             if (bundle.getString("source").equals("master") || bundle.getString("source").equals("follower")) sendUpdate(bundle, "libre2_bg");
+
             Libre2Value libre2_value = new Libre2Value(bundle);
-            DiasyncDBHelper databaseHelper = DiasyncDBHelper.getInstance(broadcast_context);
-            databaseHelper.addLibre2Value(libre2_value);
-            List<Libre2Value> values = databaseHelper.getLastLibre2Values(10);
+            DiasyncDB diasync_db = DiasyncDB.getInstance(broadcast_context);
+            diasync_db.addLibre2Value(libre2_value);
+            List<Libre2Value> values = diasync_db.getLastLibre2Values(10);
             for (Libre2Value value : values) {
-                Log.d(TAG, "LOADED Libre2Value = " + value.value);
+                Log.d(TAG, "LOADED timestamp = " + value.timestamp);
             }
             return;
         }

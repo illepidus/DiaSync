@@ -7,20 +7,23 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = "MainActivity";
     private Button btn_detonate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        btn_detonate = (Button) findViewById( R.id.btn_detonate );
+        btn_detonate = findViewById( R.id.btn_detonate );
         btn_detonate.setOnClickListener( this );
     }
 
     public void onClick(View view) {
         if(view == btn_detonate) {
-            Log.d("DETONATED: ", "Detonation");
+            Log.d(TAG, "Detonation");
         }
     }
 }

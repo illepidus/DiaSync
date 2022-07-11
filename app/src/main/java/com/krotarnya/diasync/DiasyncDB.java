@@ -11,12 +11,12 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiasyncDBHelper extends SQLiteOpenHelper {
-    private static final String TAG = "DiasyncDBHelper";
-    private static DiasyncDBHelper instance;
+public class DiasyncDB extends SQLiteOpenHelper {
+    private static final String TAG = "DiasyncDB";
+    private static DiasyncDB instance;
 
     private static final String DATABASE_NAME = "diasync";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 10;
 
     private static final String TABLE_LIBRE2_VALUES = "libre2_values";
     private static final String COLUMN_LIBRE2_VALUES_TIMESTAMP = "timestamp";
@@ -36,13 +36,13 @@ public class DiasyncDBHelper extends SQLiteOpenHelper {
     private static final String COLUMN_XDRIP_CALIBRATIONS_SLOPE = "slope";
     private static final String COLUMN_XDRIP_CALIBRATIONS_INTERCEPT = "intercept";
 
-    public DiasyncDBHelper(Context context) {
+    public DiasyncDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public static synchronized DiasyncDBHelper getInstance(Context context) {
+    public static synchronized DiasyncDB getInstance(Context context) {
         if (instance == null) {
-            instance = new DiasyncDBHelper(context.getApplicationContext());
+            instance = new DiasyncDB(context.getApplicationContext());
         }
         return instance;
     }
@@ -55,6 +55,7 @@ public class DiasyncDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.d(TAG, "Creating " + DATABASE_NAME + " tables. Schema = " + DATABASE_VERSION);
         db.execSQL(
             "CREATE TABLE " + TABLE_XDRIP_CALIBRATIONS +
             "(" +
@@ -87,6 +88,7 @@ public class DiasyncDBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int old_version,  int new_version) {
         if (old_version != new_version) {
+            Log.d(TAG, "Dropping " + DATABASE_NAME + " tables. Schema = " + DATABASE_VERSION);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_XDRIP_CALIBRATIONS);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_XDRIP_VALUES);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_LIBRE2_VALUES);
@@ -96,13 +98,17 @@ public class DiasyncDBHelper extends SQLiteOpenHelper {
 
     private void addXDripCalibration(XDripCalibration calibration) {
         SQLiteDatabase db = getWritableDatabase();
+
+        Log.d(TAG, "Inserting XDripCalibration");
         db.beginTransaction();
         try {
             ContentValues values = new ContentValues();
             values.put(COLUMN_XDRIP_CALIBRATIONS_TIMESTAMP, calibration.timestamp);
             values.put(COLUMN_XDRIP_CALIBRATIONS_SLOPE, calibration.slope);
             values.put(COLUMN_XDRIP_CALIBRATIONS_INTERCEPT, calibration.intercept);
-            db.insertOrThrow(TABLE_XDRIP_CALIBRATIONS, null, values);
+            long res = db.insertOrThrow(TABLE_XDRIP_CALIBRATIONS, null, values);
+            Log.d(TAG, "Inserted row ID[" + res + "] row");
+            db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.d(TAG, "Wasn't able to add XDripCalibration to database. Calibration exsits?");
             Log.d(TAG, e.toString());
@@ -115,6 +121,7 @@ public class DiasyncDBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         addXDripCalibration(value.calibration);
 
+        Log.d(TAG, "Inserting XDripValue");
         db.beginTransaction();
         try {
             ContentValues values = new ContentValues();
@@ -122,7 +129,9 @@ public class DiasyncDBHelper extends SQLiteOpenHelper {
             values.put(COLUMN_XDRIP_VALUES_VALUE, value.value);
             values.put(COLUMN_XDRIP_VALUES_ARROW, value.arrow);
             values.put(COLUMN_LIBRE2_VALUES_CALIBRATION, value.calibration.timestamp);
-            db.insertOrThrow(TABLE_XDRIP_VALUES, null, values);
+            long res = db.insertOrThrow(TABLE_XDRIP_VALUES, null, values);
+            Log.d(TAG, "Inserted row ID[" + res + "] row");
+            db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.d(TAG, "Wasn't able to add XDripValue to database. Value exsits?");
             Log.d(TAG, e.toString());
@@ -134,6 +143,8 @@ public class DiasyncDBHelper extends SQLiteOpenHelper {
     public void addLibre2Value(Libre2Value value) {
         SQLiteDatabase db = getWritableDatabase();
         addXDripValue(value.xdrip_value);
+
+        Log.d(TAG, "Inserting Libre2Value");
         db.beginTransaction();
         try {
             ContentValues values = new ContentValues();
@@ -142,9 +153,11 @@ public class DiasyncDBHelper extends SQLiteOpenHelper {
             values.put(COLUMN_LIBRE2_VALUES_SERIAL, value.serial);
             values.put(COLUMN_LIBRE2_VALUES_XDRIP_VALUE, value.xdrip_value.timestamp);
             values.put(COLUMN_LIBRE2_VALUES_CALIBRATION, value.xdrip_calibration.timestamp);
-            db.insertOrThrow(TABLE_LIBRE2_VALUES, null, values);
+            long res = db.insertOrThrow(TABLE_LIBRE2_VALUES, null, values);
+            Log.d(TAG, "Inserted row ID[" + res + "] row");
+            db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e(TAG, "Wasn't able to add Libre2Value to database. Value exsits? ");
+            Log.d(TAG, "Wasn't able to add Libre2Value to database. Value exsits? ");
             Log.d(TAG, e.toString());
         } finally {
             db.endTransaction();
@@ -153,11 +166,14 @@ public class DiasyncDBHelper extends SQLiteOpenHelper {
 
     public List<Libre2Value> getLastLibre2Values(int limit) {
         List<Libre2Value> values = new ArrayList<>();
-        String LIBRE2_SELECT_QUERY = String.format("SELECT * FROM %s LIMIT %s", TABLE_LIBRE2_VALUES, limit);
+        @SuppressLint("DefaultLocale")
+        String LIBRE2_SELECT_QUERY = String.format("SELECT * FROM %s LIMIT %d", TABLE_LIBRE2_VALUES, limit);
         Log.d(TAG, "Running query: " + LIBRE2_SELECT_QUERY);
 
         SQLiteDatabase db = getReadableDatabase();
+        Log.d(TAG, db.isOpen() ? "db_open" : "db_close");
         Cursor cursor = db.rawQuery(LIBRE2_SELECT_QUERY, null);
+        Log.d(TAG, "Query returned " + cursor.getCount() + " rows");
         try {
             if (cursor.moveToFirst()) {
                 do {
@@ -165,17 +181,17 @@ public class DiasyncDBHelper extends SQLiteOpenHelper {
                     value.timestamp = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_LIBRE2_VALUES_TIMESTAMP));
                     value.serial = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LIBRE2_VALUES_SERIAL));
                     value.value = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_LIBRE2_VALUES_SERIAL));
+                    values.add(value);
                 } while(cursor.moveToNext());
             }
         } catch (Exception e) {
             Log.d(TAG, "Error while trying to get libre2values from database");
             Log.d(TAG, e.toString());
         } finally {
-            if (cursor != null && !cursor.isClosed()) {
+            if (!cursor.isClosed()) {
                 cursor.close();
             }
         }
-        Log.d(TAG, "Got " + String.valueOf(values.size()) + " rows");
         return values;
     }
 }
