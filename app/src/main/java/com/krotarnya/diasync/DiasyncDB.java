@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.icu.util.ULocale;
@@ -17,8 +18,9 @@ public class DiasyncDB extends SQLiteOpenHelper {
     private static DiasyncDB instance;
 
     private static final String DATABASE_NAME = "diasync";
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
 
+    /*
     private static final String TABLE_LIBRE2_VALUES = "libre2_values";
     private static final String COLUMN_LIBRE2_VALUES_TIMESTAMP = "timestamp";
     private static final String COLUMN_LIBRE2_VALUES_SERIAL = "serial";
@@ -36,6 +38,7 @@ public class DiasyncDB extends SQLiteOpenHelper {
     private static final String COLUMN_XDRIP_CALIBRATIONS_TIMESTAMP = "timestamp";
     private static final String COLUMN_XDRIP_CALIBRATIONS_SLOPE = "slope";
     private static final String COLUMN_XDRIP_CALIBRATIONS_INTERCEPT = "intercept";
+    */
 
     public DiasyncDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -58,31 +61,25 @@ public class DiasyncDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         Log.d(TAG, "Creating " + DATABASE_NAME + " tables. Schema = " + DATABASE_VERSION);
         db.execSQL(
-            "CREATE TABLE " + TABLE_XDRIP_CALIBRATIONS +
-            "(" +
-                COLUMN_XDRIP_CALIBRATIONS_TIMESTAMP + " INTEGER PRIMARY KEY," +
-                COLUMN_XDRIP_CALIBRATIONS_SLOPE + " REAL," +
-                COLUMN_XDRIP_CALIBRATIONS_INTERCEPT + " REAL" +
-            ");"
+                "CREATE TABLE xdrip_calibrations (" +
+                "timestamp INTEGER PRIMARY KEY, " +
+                "slope REAL, " +
+                "intercept REAL);"
         );
         db.execSQL(
-            "CREATE TABLE " + TABLE_XDRIP_VALUES +
-            "(" +
-                COLUMN_XDRIP_VALUES_TIMESTAMP + " INTEGER PRIMARY KEY," +
-                COLUMN_XDRIP_VALUES_VALUE + " REAL," +
-                COLUMN_XDRIP_VALUES_ARROW + " TEXT," +
-                COLUMN_XDRIP_VALUES_CALIBRATION + " INTEGER" +
-            ");"
+                "CREATE TABLE xdrip_values (" +
+                "timestamp INTEGER PRIMARY KEY, " +
+                "value REAL, " +
+                "arrow TEXT, " +
+                "xdrip_calibration INTEGER);"
         );
         db.execSQL(
-            "CREATE TABLE " + TABLE_LIBRE2_VALUES +
-            "(" +
-                COLUMN_LIBRE2_VALUES_TIMESTAMP + " INTEGER PRIMARY KEY," +
-                COLUMN_LIBRE2_VALUES_SERIAL + " TEXT," +
-                COLUMN_LIBRE2_VALUES_VALUE + " REAL," +
-                COLUMN_LIBRE2_VALUES_XDRIP_VALUE + " INTEGER," +
-                COLUMN_LIBRE2_VALUES_CALIBRATION + " INTEGER" +
-            ");"
+                "CREATE TABLE libre2_values (" +
+                "timestamp INTEGER PRIMARY KEY, " +
+                "serial TEXT, " +
+                "value REAL, " +
+                "xdrip_calibration INTEGER, " +
+                "xdrip_value INTEGER);"
         );
     }
 
@@ -90,9 +87,9 @@ public class DiasyncDB extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int old_version,  int new_version) {
         if (old_version != new_version) {
             Log.d(TAG, "Dropping " + DATABASE_NAME + " tables. Schema = " + DATABASE_VERSION);
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_XDRIP_CALIBRATIONS);
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_XDRIP_VALUES);
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_LIBRE2_VALUES);
+            db.execSQL("DROP TABLE IF EXISTS xdrip_calibrations");
+            db.execSQL("DROP TABLE IF EXISTS xdrip_values");
+            db.execSQL("DROP TABLE IF EXISTS libre2_values");
             onCreate(db);
         }
     }
@@ -104,15 +101,14 @@ public class DiasyncDB extends SQLiteOpenHelper {
         db.beginTransaction();
         try {
             ContentValues values = new ContentValues();
-            values.put(COLUMN_XDRIP_CALIBRATIONS_TIMESTAMP, calibration.timestamp);
-            values.put(COLUMN_XDRIP_CALIBRATIONS_SLOPE, calibration.slope);
-            values.put(COLUMN_XDRIP_CALIBRATIONS_INTERCEPT, calibration.intercept);
-            long res = db.insertOrThrow(TABLE_XDRIP_CALIBRATIONS, null, values);
-            Log.d(TAG, "Inserted row ID[" + res + "] row");
-            db.setTransactionSuccessful();
+            values.put("timestamp", calibration.timestamp);
+            values.put("slope", calibration.slope);
+            values.put("intercept", calibration.intercept);
+            long res = db.insertOrThrow("xdrip_calibrations", null, values);
+            if (res >= 0) db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.d(TAG, "Wasn't able to add XDripCalibration to database. Calibration exits?");
-            Log.d(TAG, e.toString());
+            Log.v(TAG, e.toString());
         } finally {
             db.endTransaction();
         }
@@ -126,16 +122,15 @@ public class DiasyncDB extends SQLiteOpenHelper {
         db.beginTransaction();
         try {
             ContentValues values = new ContentValues();
-            values.put(COLUMN_XDRIP_VALUES_TIMESTAMP, value.timestamp);
-            values.put(COLUMN_XDRIP_VALUES_VALUE, value.value);
-            values.put(COLUMN_XDRIP_VALUES_ARROW, value.arrow);
-            values.put(COLUMN_LIBRE2_VALUES_CALIBRATION, value.calibration.timestamp);
-            long res = db.insertOrThrow(TABLE_XDRIP_VALUES, null, values);
-            Log.d(TAG, "Inserted row ID[" + res + "] row");
-            db.setTransactionSuccessful();
+            values.put("timestamp", value.timestamp);
+            values.put("value", value.value);
+            values.put("arrow", value.arrow);
+            values.put("xdrip_calibration", value.calibration.timestamp);
+            long res = db.insertOrThrow("xdrip_values", null, values);
+            if (res >= 0) db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.d(TAG, "Wasn't able to add XDripValue to database. Value exits?");
-            Log.d(TAG, e.toString());
+            Log.v(TAG, e.toString());
         } finally {
             db.endTransaction();
         }
@@ -149,38 +144,61 @@ public class DiasyncDB extends SQLiteOpenHelper {
         db.beginTransaction();
         try {
             ContentValues values = new ContentValues();
-            values.put(COLUMN_LIBRE2_VALUES_TIMESTAMP, value.timestamp);
-            values.put(COLUMN_LIBRE2_VALUES_VALUE, value.value);
-            values.put(COLUMN_LIBRE2_VALUES_SERIAL, value.serial);
-            values.put(COLUMN_LIBRE2_VALUES_XDRIP_VALUE, value.xdrip_value.timestamp);
-            values.put(COLUMN_LIBRE2_VALUES_CALIBRATION, value.xdrip_calibration.timestamp);
-            long res = db.insertOrThrow(TABLE_LIBRE2_VALUES, null, values);
-            Log.d(TAG, "Inserted row ID[" + res + "] row");
-            db.setTransactionSuccessful();
+            values.put("timestamp", value.timestamp);
+            values.put("value", value.value);
+            values.put("serial", value.serial);
+            values.put("xdrip_value", value.xdrip_value.timestamp);
+            values.put("xdrip_calibration", value.xdrip_calibration.timestamp);
+            long res = db.insertOrThrow("libre2_values", null, values);
+            if (res >= 0) db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.d(TAG, "Wasn't able to add Libre2Value to database. Value exits?");
-            Log.d(TAG, e.toString());
+            Log.v(TAG, e.toString());
         } finally {
             db.endTransaction();
         }
     }
 
-    public List<Libre2Value> getLastLibre2Values(int limit) {
+    public List<Libre2Value> getLibre2Values(long from, long till) {
+        return getLibre2Values(from, till, Long.MAX_VALUE);
+    }
+
+    public List<Libre2Value> getLastLibre2Values(long limit) {
+        return getLibre2Values(0, Long.MAX_VALUE, limit);
+    }
+
+    public List<Libre2Value> getLibre2Values(long from, long till, long limit) {
         List<Libre2Value> values = new ArrayList<>();
-        String LIBRE2_SELECT_QUERY = String.format("SELECT * FROM %s LIMIT %d", TABLE_LIBRE2_VALUES, limit);
+
+        String LIBRE2_SELECT_QUERY =
+                "SELECT lv.timestamp, lv.serial, lv.value, " +
+                "xc.timestamp AS calibration_timestamp, xc.slope AS calibration_slope, xc.intercept AS calibration_intercept, " +
+                "xv.timestamp AS xdrip_timestamp, xv.value AS xdrip_value, xv.arrow AS xdrip_arrow " +
+                "FROM libre2_values lv " +
+                "LEFT JOIN xdrip_values xv ON lv.xdrip_value = xv.timestamp " +
+                "LEFT JOIN xdrip_calibrations xc ON lv.xdrip_calibration = xc.timestamp " +
+                "WHERE (lv.timestamp > " + from + ") AND (lv.timestamp < " + till + ") " +
+                "ORDER BY lv.timestamp DESC LIMIT " + limit;
+
         Log.d(TAG, "Running query: " + LIBRE2_SELECT_QUERY);
 
         SQLiteDatabase db = getReadableDatabase();
-        Log.d(TAG, db.isOpen() ? "db_open" : "db_close");
         Cursor cursor = db.rawQuery(LIBRE2_SELECT_QUERY, null);
-        Log.d(TAG, "Query returned " + cursor.getCount() + " rows");
+        Log.v(TAG, DatabaseUtils.dumpCursorToString(cursor));
+
         try {
             if (cursor.moveToFirst()) {
                 do {
                     Libre2Value value = new Libre2Value();
-                    value.timestamp = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_LIBRE2_VALUES_TIMESTAMP));
-                    value.serial = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LIBRE2_VALUES_SERIAL));
-                    value.value = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_LIBRE2_VALUES_SERIAL));
+                    value.timestamp = cursor.getLong(cursor.getColumnIndexOrThrow("timestamp"));
+                    value.serial = cursor.getString(cursor.getColumnIndexOrThrow("serial"));
+                    value.value = cursor.getDouble(cursor.getColumnIndexOrThrow("value"));
+                    value.xdrip_calibration.timestamp = cursor.getLong(cursor.getColumnIndexOrThrow("calibration_timestamp"));
+                    value.xdrip_calibration.slope = cursor.getDouble(cursor.getColumnIndexOrThrow("calibration_slope"));
+                    value.xdrip_calibration.intercept = cursor.getDouble(cursor.getColumnIndexOrThrow("calibration_intercept"));
+                    value.xdrip_value.timestamp = cursor.getLong(cursor.getColumnIndexOrThrow("xdrip_timestamp"));
+                    value.xdrip_value.value = cursor.getDouble(cursor.getColumnIndexOrThrow("xdrip_value"));
+                    value.xdrip_value.arrow = cursor.getString(cursor.getColumnIndexOrThrow("xdrip_arrow"));
                     values.add(value);
                 } while(cursor.moveToNext());
             }
@@ -192,6 +210,7 @@ public class DiasyncDB extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
+
         return values;
     }
 }

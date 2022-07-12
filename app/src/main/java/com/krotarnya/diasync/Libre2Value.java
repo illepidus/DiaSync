@@ -1,6 +1,13 @@
 package com.krotarnya.diasync;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateFormat;
+import android.util.Log;
+
+import java.util.Calendar;
+import java.util.Locale;
 
 public class Libre2Value {
     public XDripValue xdrip_value;
@@ -19,5 +26,21 @@ public class Libre2Value {
 
     Libre2Value() {
         this(new Bundle());
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public double getMmolValue() {
+        return value * 0.0555;
+    }
+
+    public double getCalibratedValue() {
+        return value * xdrip_calibration.slope + xdrip_calibration.intercept;
+    }
+
+    public double getCalibratedMmolValue() {
+        return getCalibratedValue() * 0.0555;
     }
 }

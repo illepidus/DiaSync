@@ -30,21 +30,17 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
 
         if (action == null) return;
 
-        Log.d (TAG, "Received broadcast intent [" + action + "] in context [" + context.toString() + "] with following extras: ");
+        Log.d (TAG, "Received broadcast intent [" + action + "] in context [" + context.toString() + "]");
         if (action.equals("com.eveningoutpost.dexdrip.diasync.libre2_bg")) {
             if (!bundle.containsKey("source") || !bundle.containsKey("libre2_value")) {
                 Log.e(TAG, "Received faulty libre2_bg intent");
                 return;
             }
-            if (bundle.getString("source").equals("master") || bundle.getString("source").equals("follower")) sendUpdate(bundle, "libre2_bg");
+            if (bundle.getString("source").equals("master")) sendUpdate(bundle, "libre2_bg");
 
             Libre2Value libre2_value = new Libre2Value(bundle);
             DiasyncDB diasync_db = DiasyncDB.getInstance(broadcast_context);
             diasync_db.addLibre2Value(libre2_value);
-            List<Libre2Value> values = diasync_db.getLastLibre2Values(10);
-            for (Libre2Value value : values) {
-                Log.d(TAG, "LOADED timestamp = " + value.timestamp);
-            }
             return;
         }
 
