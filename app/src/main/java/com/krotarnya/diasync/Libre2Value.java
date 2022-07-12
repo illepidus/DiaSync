@@ -1,13 +1,6 @@
 package com.krotarnya.diasync;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.format.DateFormat;
-import android.util.Log;
-
-import java.util.Calendar;
-import java.util.Locale;
 
 public class Libre2Value {
     public XDripValue xdrip_value;
