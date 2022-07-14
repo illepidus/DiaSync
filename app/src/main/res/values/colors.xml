@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="blood_high">#FFFFBB34</color>
-    <color name="blood_low">#FFC3090A</color>
+    <color name="blood_high">#FFFFBB33</color>
+    <color name="blood_low">#FFC30909</color>
     <color name="blood_normal">#FFFFFFFF</color>
     <color name="widget_background">#FF000000</color>
 </resources>

@@ -1,9 +1,12 @@
 package com.krotarnya.diasync;
 
+import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.graphics.Color;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
@@ -11,6 +14,7 @@ public class Libre2Widget extends AppWidgetProvider {
     private static final String TAG = "Libre2Widget";
     private static final DecimalFormat mmol_format = new DecimalFormat("0.0");
 
+    @SuppressLint("ResourceType")
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
         // Construct the RemoteViews object
@@ -19,6 +23,7 @@ public class Libre2Widget extends AppWidgetProvider {
         DiasyncDB diasync_db = DiasyncDB.getInstance(context);
         Libre2Value libre2_value = diasync_db.getLastLibre2Value();
         views.setTextViewText(R.id.blood_glucose, mmol_format.format(libre2_value.getCalibratedMmolValue()));
+        views.setTextColor(R.id.blood_glucose, Color.parseColor(context.getString(R.color.blood_normal)));
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
