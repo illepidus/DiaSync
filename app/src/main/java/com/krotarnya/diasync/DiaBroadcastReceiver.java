@@ -1,5 +1,7 @@
 package com.krotarnya.diasync;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,6 +43,15 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
             Libre2Value libre2_value = new Libre2Value(bundle);
             DiasyncDB diasync_db = DiasyncDB.getInstance(broadcast_context);
             diasync_db.addLibre2Value(libre2_value);
+
+            Intent widget_intent = new Intent(context, DiasyncWidget.class);
+            widget_intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            int ids[] = AppWidgetManager.getInstance(context.getApplicationContext())
+                    .getAppWidgetIds(new ComponentName(context.getApplicationContext(), DiasyncWidget.class));
+            if (ids.length > 0) {
+                widget_intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+                context.sendBroadcast(widget_intent);
+            }
             return;
         }
 

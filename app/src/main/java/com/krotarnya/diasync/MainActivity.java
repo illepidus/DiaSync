@@ -2,6 +2,9 @@ package com.krotarnya.diasync;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,13 +22,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         btn_detonate = findViewById( R.id.btn_detonate );
         btn_detonate.setOnClickListener( this );
-        /*
-        DiasyncDB diasync_db = DiasyncDB.getInstance(this);
-        List<Libre2Value> values = diasync_db.getLastLibre2Values(5);
-        for (Libre2Value value : values) {
-            Log.d(TAG, value.getTimestampString() + " Calibrated value = " + value.getCalibratedValue());
+
+        Intent widget_intent = new Intent(this, DiasyncWidget.class);
+        widget_intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = AppWidgetManager.getInstance(getApplicationContext())
+                .getAppWidgetIds(new ComponentName(getApplicationContext(), DiasyncWidget.class));
+        if (ids.length > 0) {
+            widget_intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+            sendBroadcast(widget_intent);
         }
-        */
     }
 
     public void onClick(View view) {

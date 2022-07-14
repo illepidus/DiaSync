@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">DiaSync</string>
     <string name="btn_detonate">DETONATE</string>
+    <string name="appwidget_text">No Data</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">Libre2RawValue</string>
 </resources>

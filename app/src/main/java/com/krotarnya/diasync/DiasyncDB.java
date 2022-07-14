@@ -20,26 +20,6 @@ public class DiasyncDB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "diasync";
     private static final int DATABASE_VERSION = 11;
 
-    /*
-    private static final String TABLE_LIBRE2_VALUES = "libre2_values";
-    private static final String COLUMN_LIBRE2_VALUES_TIMESTAMP = "timestamp";
-    private static final String COLUMN_LIBRE2_VALUES_SERIAL = "serial";
-    private static final String COLUMN_LIBRE2_VALUES_VALUE = "value";
-    private static final String COLUMN_LIBRE2_VALUES_XDRIP_VALUE = "xdrip_value";
-    private static final String COLUMN_LIBRE2_VALUES_CALIBRATION = "calibration";
-
-    private static final String TABLE_XDRIP_VALUES = "xdrip_values";
-    private static final String COLUMN_XDRIP_VALUES_TIMESTAMP = "timestamp";
-    private static final String COLUMN_XDRIP_VALUES_VALUE = "value";
-    private static final String COLUMN_XDRIP_VALUES_ARROW = "arrow";
-    private static final String COLUMN_XDRIP_VALUES_CALIBRATION = "calibration";
-
-    private static final String TABLE_XDRIP_CALIBRATIONS = "xdrip_calibrations";
-    private static final String COLUMN_XDRIP_CALIBRATIONS_TIMESTAMP = "timestamp";
-    private static final String COLUMN_XDRIP_CALIBRATIONS_SLOPE = "slope";
-    private static final String COLUMN_XDRIP_CALIBRATIONS_INTERCEPT = "intercept";
-    */
-
     public DiasyncDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -165,6 +145,13 @@ public class DiasyncDB extends SQLiteOpenHelper {
 
     public List<Libre2Value> getLastLibre2Values(long limit) {
         return getLibre2Values(0, Long.MAX_VALUE, limit);
+    }
+
+    public Libre2Value getLastLibre2Value() {
+        List<Libre2Value> vals = getLastLibre2Values(1);
+        if (vals.size() == 1)
+            return vals.get(0);
+        return new Libre2Value();
     }
 
     public List<Libre2Value> getLibre2Values(long from, long till, long limit) {

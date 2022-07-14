@@ -1,0 +1,12 @@
+<resources>
+
+    <style name="Widget.DiaSync.AppWidget.Container" parent="android:Widget">
+        <item name="android:id">@android:id/background</item>
+        <item name="android:background">@color/widget_bg</item>
+    </style>
+
+    <style name="Widget.DiaSync.AppWidget.InnerView" parent="android:Widget">
+        <item name="android:background">@color/widget_bg</item>
+        <item name="android:textColor">@color/bg_normal</item>
+    </style>
+</resources>
