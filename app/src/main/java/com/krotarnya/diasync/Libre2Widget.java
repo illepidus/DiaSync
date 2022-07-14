@@ -18,7 +18,7 @@ public class Libre2Widget extends AppWidgetProvider {
 
         DiasyncDB diasync_db = DiasyncDB.getInstance(context);
         Libre2Value libre2_value = diasync_db.getLastLibre2Value();
-        views.setTextViewText(R.id.appwidget_text, mmol_format.format(libre2_value.getCalibratedMmolValue()));
+        views.setTextViewText(R.id.blood_glucose, mmol_format.format(libre2_value.getCalibratedMmolValue()));
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
