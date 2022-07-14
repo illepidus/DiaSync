@@ -15,7 +15,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
@@ -44,10 +43,10 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
             DiasyncDB diasync_db = DiasyncDB.getInstance(broadcast_context);
             diasync_db.addLibre2Value(libre2_value);
 
-            Intent widget_intent = new Intent(context, DiasyncWidget.class);
+            Intent widget_intent = new Intent(context, Libre2Widget.class);
             widget_intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-            int ids[] = AppWidgetManager.getInstance(context.getApplicationContext())
-                    .getAppWidgetIds(new ComponentName(context.getApplicationContext(), DiasyncWidget.class));
+            int [] ids = AppWidgetManager.getInstance(context.getApplicationContext())
+                    .getAppWidgetIds(new ComponentName(context.getApplicationContext(), Libre2Widget.class));
             if (ids.length > 0) {
                 widget_intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
                 context.sendBroadcast(widget_intent);

@@ -7,14 +7,14 @@ import android.widget.RemoteViews;
 
 import java.text.DecimalFormat;
 
-public class DiasyncWidget extends AppWidgetProvider {
-    private static final String TAG = "DiasyncWidget";
+public class Libre2Widget extends AppWidgetProvider {
+    private static final String TAG = "Libre2Widget";
     private static final DecimalFormat mmol_format = new DecimalFormat("0.0");
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
         // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.diasync_widget);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.libre2_widget);
 
         DiasyncDB diasync_db = DiasyncDB.getInstance(context);
         Libre2Value libre2_value = diasync_db.getLastLibre2Value();
