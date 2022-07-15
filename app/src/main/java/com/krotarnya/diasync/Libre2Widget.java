@@ -6,7 +6,6 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.graphics.Color;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
@@ -18,7 +17,7 @@ public class Libre2Widget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
         // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.libre2_widget);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_libre2);
 
         DiasyncDB diasync_db = DiasyncDB.getInstance(context);
         Libre2Value libre2_value = diasync_db.getLastLibre2Value();

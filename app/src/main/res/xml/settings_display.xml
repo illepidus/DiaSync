@@ -1,5 +1,22 @@
 <PreferenceScreen
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     app:key="settings_display">
+
+    <PreferenceCategory app:title="General settings">
+        <ListPreference
+            app:key="glucose_units"
+            app:entries="@array/glucose_units_entries"
+            app:entryValues="@array/glucose_units_values"
+            app:defaultValue="mmol"
+            app:title="Glucose units"
+            app:useSimpleSummaryProvider="true"/>
+        <EditTextPreference
+            app:key="glucose_low"
+            app:title="Low value"
+            app:defaultValue="3.9"
+            android:inputType="numberDecimal"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>>
 
 </PreferenceScreen>

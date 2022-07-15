@@ -24,7 +24,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/libre2_widget_info" />
+                android:resource="@xml/widget_libre2_info" />
         </receiver>
 
         <activity
