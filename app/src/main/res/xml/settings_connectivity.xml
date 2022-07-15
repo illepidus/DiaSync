@@ -1,0 +1,33 @@
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:key="settings_connectivity">
+
+    <PreferenceCategory app:title="Webhook">
+        <SwitchPreferenceCompat
+            app:key="webhook_enabled"
+            app:title="Enabled"
+            app:defaultValue="false"
+            />
+
+        <EditTextPreference
+            app:key="webhook_address"
+            app:dependency="webhook_enabled"
+            app:title="Webhook address"
+            app:defaultValue="https://krotarnya.ru/diasync.php"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="webhook_token"
+            app:dependency="webhook_enabled"
+            app:title="Webhook token"
+            app:defaultValue="78e297d6d6a5fe57da3184705551a69a"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreferenceCompat
+            app:key="webhook_enabled_follower"
+            app:dependency="webhook_enabled"
+            app:title="Enabled in follower mode"
+            app:defaultValue="false"
+            />
+    </PreferenceCategory>
+</PreferenceScreen>

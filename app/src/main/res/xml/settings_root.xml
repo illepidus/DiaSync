@@ -1,0 +1,15 @@
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:key="settings_root">
+
+    <Preference
+        app:fragment="com.krotarnya.diasync.DiasyncSettings$ConnectivityFragment"
+        app:title="Connectivity"
+        app:useSimpleSummaryProvider="true" />
+
+    <Preference
+        app:fragment="com.krotarnya.diasync.DiasyncSettings$DisplayFragment"
+        app:title="Display"
+        app:useSimpleSummaryProvider="true" />
+
+</PreferenceScreen>

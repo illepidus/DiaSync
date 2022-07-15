@@ -4,8 +4,11 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+
+import androidx.preference.PreferenceManager;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -18,9 +21,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
-    private static final String TAG      = "DiaBroadcastReceiver";
-    private static final String ds_token = "78e297d6d6a5fe57da3184705551a69a";
-    private static final String ds_url    = "https://krotarnya.ru/diasync.php";
+    private static final String TAG = "DiaBroadcastReceiver";
+    private String  webhook_address;
+    private String  webhook_token;
     private Context broadcast_context;
 
     @Override
@@ -28,6 +31,11 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
         broadcast_context = context;
         final String action = intent.getAction();
         Bundle bundle = new Bundle(intent.getExtras());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean webhook_enabled = prefs.getBoolean("webhook_enabled", false);
+        boolean webhook_enabled_follower = prefs.getBoolean("webhook_enabled_follower", false);
+        webhook_address = prefs.getString("webhook_address", "undefined");
+        webhook_token = prefs.getString("webhook_token", "undefined");
 
         if (action == null) return;
 
@@ -37,7 +45,11 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
                 Log.e(TAG, "Received faulty libre2_bg intent");
                 return;
             }
-            if (bundle.getString("source").equals("master")) sendUpdate(bundle, "libre2_bg");
+            if (webhook_enabled) {
+                if (bundle.getString("source").equals("master") || (webhook_enabled_follower && bundle.getString("source").equals("follower"))) {
+                    webhookUpdate(bundle, "libre2_bg");
+                }
+            }
 
             Libre2Value libre2_value = new Libre2Value(bundle);
             DiasyncDB diasync_db = DiasyncDB.getInstance(broadcast_context);
@@ -57,21 +69,21 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
         Log.e(TAG,"Received unknown intent");
     }
 
-    private void sendUpdate(Bundle bundle, String type) {
+    private void webhookUpdate(Bundle bundle, String type) {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapterFactory(new BundleTypeAdapterFactory());
         Gson gson = builder.create();
-        sendUpdate(gson.toJson(bundle), type);
+        webhookUpdate(gson.toJson(bundle), type);
     }
 
-    private void sendUpdate(String update, String type) {
+    private void webhookUpdate(String update, String type) {
         RequestQueue request_queue = Volley.newRequestQueue(broadcast_context);
-        Log.d(TAG, "Sending update to [" + ds_url + "]...");
-        StringRequest string_request = new StringRequest(Request.Method.POST, ds_url, response -> Log.d(TAG, "Response: " + response), error -> Log.e(TAG, error.toString())) {
+        Log.d(TAG, "Updating [" + webhook_address + "]...");
+        StringRequest string_request = new StringRequest(Request.Method.POST, webhook_address, response -> Log.d(TAG, "Response: " + response), error -> Log.e(TAG, error.toString())) {
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<>();
-                params.put("token",  ds_token);
+                params.put("token",  webhook_token);
                 params.put("update", update);
                 params.put("type",   type);
                 return params;
