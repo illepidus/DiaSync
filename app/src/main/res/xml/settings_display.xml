@@ -15,7 +15,11 @@
             app:key="glucose_low"
             app:title="Low value"
             app:defaultValue="3.9"
-            android:inputType="numberDecimal"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:key="glucose_high"
+            app:title="High value"
+            app:defaultValue="10.0"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>>
 

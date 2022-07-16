@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.preference.EditTextPreference;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
@@ -11,8 +13,14 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
+import android.widget.EditText;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 import java.util.Objects;
 
 public class DiasyncSettings extends AppCompatActivity implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -59,7 +67,6 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
             widget_intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
             sendBroadcast(widget_intent);
         }
-
         /*THIS IS TEST BLOCK*/
     }
 
@@ -95,7 +102,6 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
     public static class RootFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String key) {
-            Log.d(TAG, "key = " + key);
             setPreferencesFromResource(R.xml.settings_root, key);
         }
     }
@@ -103,15 +109,63 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
     public static class DisplayFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String key) {
-            Log.d(TAG, "key = " + key);
             setPreferencesFromResource(R.xml.settings_display, key);
+
+            EditTextPreference glucose_low = (EditTextPreference) findPreference("glucose_low");
+            if (glucose_low != null)
+                glucose_low.setOnBindEditTextListener(
+                        editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL)
+                );
+
+            EditTextPreference glucose_high = (EditTextPreference) findPreference("glucose_high");
+            if (glucose_high != null)
+                glucose_high.setOnBindEditTextListener(
+                        editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL)
+                );
+
+            ListPreference glucose_units = (ListPreference) findPreference("glucose_units");
+            if (glucose_units != null) {
+                glucose_units.setOnPreferenceChangeListener((preference, value) -> {
+                    final String old_value = glucose_units.getValue();
+                    final String new_value = (String) value;
+                    Log.d(TAG, "New glucose units = " + new_value);
+                    if (old_value == new_value) return false;
+
+                    DecimalFormat format = new DecimalFormat();
+                    switch (new_value) {
+                        case "mmol":
+                            try {
+                                format.applyPattern("0.0");
+                                glucose_high.setText(format.format(format.parse(glucose_high.getText()).doubleValue() * 0.0555));
+                                glucose_low .setText(format.format(format.parse(glucose_low .getText()).doubleValue() * 0.0555));
+                            } catch (Exception e) {
+                                Log.d(TAG, "Something went wrong converting mg/dl -> mmol/l");
+                                return false;
+                            }
+                            break;
+                        case "mgdl":
+                            try {
+                                format.applyPattern("0");
+                                glucose_high.setText(format.format(format.parse(glucose_high.getText()).doubleValue() * 18));
+                                glucose_low .setText(format.format(format.parse(glucose_low .getText()).doubleValue() * 18));
+                            } catch (Exception e) {
+                                Log.d(TAG, "Something went wrong converting mmol/l -> mg/dl");
+                                return false;
+                            }
+                            break;
+                        default:
+                            Log.wtf(TAG, "Unknown glucose unit type set.");
+                            return false;
+                    }
+                    return true;
+                });
+            }
         }
     }
 
     public static class ConnectivityFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String key) {
-            Log.d(TAG, "key = " + key);
             setPreferencesFromResource(R.xml.settings_connectivity, key);
         }
     }
