@@ -39,5 +39,4 @@ public abstract class Glucose {
         DecimalFormat format = new DecimalFormat("0");
         return format.format(v);
     }
-
 }

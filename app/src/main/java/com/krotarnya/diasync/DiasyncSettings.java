@@ -107,19 +107,19 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
         public void onCreatePreferences(Bundle savedInstanceState, String key) {
             setPreferencesFromResource(R.xml.settings_display, key);
 
-            EditTextPreference glucose_low = (EditTextPreference) findPreference("glucose_low");
+            EditTextPreference glucose_low = findPreference("glucose_low");
             if (glucose_low != null)
                 glucose_low.setOnBindEditTextListener(
                         editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL)
                 );
 
-            EditTextPreference glucose_high = (EditTextPreference) findPreference("glucose_high");
+            EditTextPreference glucose_high = findPreference("glucose_high");
             if (glucose_high != null)
                 glucose_high.setOnBindEditTextListener(
                         editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL)
                 );
 
-            ListPreference glucose_units = (ListPreference) findPreference("glucose_units");
+            ListPreference glucose_units = findPreference("glucose_units");
             if (glucose_units != null) {
                 glucose_units.setOnPreferenceChangeListener((preference, value) -> {
                     final String old_value = glucose_units.getValue();

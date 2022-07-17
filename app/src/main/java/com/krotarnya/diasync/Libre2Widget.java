@@ -6,27 +6,56 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import java.text.DecimalFormat;
+import androidx.preference.PreferenceManager;
+
 import java.util.Objects;
 
 public class Libre2Widget extends AppWidgetProvider {
     private static final String TAG = "Libre2Widget";
     private static final String WIDGET_CLICKED_TAG = "WIDGET_CLICKED";
-    private static final DecimalFormat mmol_format = new DecimalFormat("0.0");
 
     @SuppressLint("ResourceType")
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_libre2);
 
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String glucose_units = prefs.getString("glucose_units", "mmol");
+        double glucose_low  = Glucose.glucose(prefs.getString("glucose_low" , "3.9" ));
+        double glucose_high = Glucose.glucose(prefs.getString("glucose_high", "10.0"));
+
         DiasyncDB diasync_db = DiasyncDB.getInstance(context);
         Libre2Value libre2_value = diasync_db.getLastLibre2Value();
-        views.setTextViewText(R.id.blood_glucose, mmol_format.format(libre2_value.getCalibratedMmolValue()));
-        views.setTextColor(R.id.blood_glucose, Color.parseColor(context.getString(R.color.blood_normal)));
+
+        String blood_color = context.getString(R.color.blood_error);
+        double value;
+        switch (glucose_units) {
+            case "mmol":
+                value = libre2_value.getCalibratedMmolValue();
+                views.setTextViewText(R.id.blood_glucose, Glucose.stringMmol(value));
+                blood_color = context.getString(R.color.blood_low);
+                if (value > glucose_low)  blood_color = context.getString(R.color.blood_normal);
+                if (value > glucose_high) blood_color = context.getString(R.color.blood_high);
+                break;
+            case "mgdl":
+                value = libre2_value.getCalibratedValue();
+                views.setTextViewText(R.id.blood_glucose, Glucose.stringMgdl(value));
+                blood_color = context.getString(R.color.blood_low);
+                if (value > glucose_low)  blood_color = context.getString(R.color.blood_normal);
+                if (value > glucose_high) blood_color = context.getString(R.color.blood_high);
+                break;
+            default:
+                Log.wtf(TAG, "Unknown glucose units");
+                views.setTextViewText(R.id.blood_glucose, "----");
+        }
+        views.setTextColor(R.id.blood_glucose, Color.parseColor(blood_color));
+
         views.setOnClickPendingIntent(R.id.root_layout, getPendingSelfIntent(context, WIDGET_CLICKED_TAG));
 
         // Instruct the widget manager to update the widget
