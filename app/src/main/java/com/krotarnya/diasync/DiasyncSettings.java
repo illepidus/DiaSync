@@ -11,6 +11,7 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -21,10 +22,12 @@ import java.util.Objects;
 public class DiasyncSettings extends AppCompatActivity implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
     private static final String TAG = "DiasyncSettings";
     private static final String TITLE_TAG = "DiasyncSettingsTitle";
+    private static DiasyncSettings instance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = this;
         setContentView(R.layout.activity_settings);
 
         if (savedInstanceState == null) {
@@ -95,6 +98,10 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
         return true;
     }
 
+    public static Context getContext(){
+        return instance;
+    }
+
     public static class RootFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String key) {
@@ -143,6 +150,15 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
                         default:
                             Log.wtf(TAG, "Unknown glucose unit type set.");
                             return false;
+                    }
+                    Context context = DiasyncSettings.getContext();
+                    Intent widget_intent = new Intent(context, Libre2Widget.class);
+                    widget_intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                    int [] ids = AppWidgetManager.getInstance(context.getApplicationContext())
+                            .getAppWidgetIds(new ComponentName(context.getApplicationContext(), Libre2Widget.class));
+                    if (ids.length > 0) {
+                        widget_intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+                        context.sendBroadcast(widget_intent);
                     }
                     return true;
                 });

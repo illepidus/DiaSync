@@ -13,6 +13,8 @@ import android.widget.RemoteViews;
 
 import androidx.preference.PreferenceManager;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 public class Libre2Widget extends AppWidgetProvider {
@@ -54,6 +56,9 @@ public class Libre2Widget extends AppWidgetProvider {
                 Log.wtf(TAG, "Unknown glucose units");
                 views.setTextViewText(R.id.blood_glucose, "----");
         }
+        Date date = new Date(libre2_value.timestamp);
+        SimpleDateFormat date_format = new SimpleDateFormat("HH:mm");
+        views.setTextViewText(R.id.data_timer, String.valueOf(date_format.format(libre2_value.timestamp)));
         views.setTextColor(R.id.blood_glucose, Color.parseColor(blood_color));
 
         views.setOnClickPendingIntent(R.id.root_layout, getPendingSelfIntent(context, WIDGET_CLICKED_TAG));
