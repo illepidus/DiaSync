@@ -83,13 +83,14 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
     public boolean onPreferenceStartFragment(@NonNull PreferenceFragmentCompat caller, @NonNull Preference pref) {
         Log.d(TAG, "onPreferenceStartFragment callback");
         final Bundle args = pref.getExtras();
+
         final Fragment fragment = getSupportFragmentManager().getFragmentFactory().instantiate(getClassLoader(), Objects.requireNonNull(pref.getFragment()));
         fragment.setArguments(args);
-        fragment.setTargetFragment(caller, 0);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.settings, fragment)
                 .addToBackStack(null)
                 .commit();
+
         setTitle(pref.getTitle());
         return true;
     }
