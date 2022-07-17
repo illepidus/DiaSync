@@ -2,7 +2,7 @@ package com.krotarnya.diasync;
 
 import android.os.Bundle;
 
-public class XDripCalibration {
+public class XDripCalibration  extends Glucose {
     public long timestamp;
     public double slope;
     public double intercept;

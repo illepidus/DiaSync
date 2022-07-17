@@ -82,11 +82,11 @@ public class BundleTypeAdapterFactory implements TypeAdapterFactory {
                     if (value instanceof String) {
                         bundle.putString(key, (String) value);
                     } else if (value instanceof Integer) {
-                        bundle.putInt(key, ((Integer)value).intValue());
+                        bundle.putInt(key, (Integer) value);
                     } else if (value instanceof Long) {
-                        bundle.putLong(key, ((Long)value).longValue());
+                        bundle.putLong(key, (Long) value);
                     } else if (value instanceof Double) {
-                        bundle.putDouble(key, ((Double)value).doubleValue());
+                        bundle.putDouble(key, (Double) value);
                     } else if (value instanceof Parcelable) {
                         bundle.putParcelable(key, (Parcelable)value);
                     } else if (value instanceof List) {
@@ -101,14 +101,14 @@ public class BundleTypeAdapterFactory implements TypeAdapterFactory {
             }
 
             private List<Pair<String, Object>> readObject(JsonReader in) throws IOException {
-                List<Pair<String, Object>> object = new ArrayList<Pair<String, Object>>();
+                List<Pair<String, Object>> object = new ArrayList<>();
                 in.beginObject();
                 while (in.peek() != JsonToken.END_OBJECT) {
                     switch (in.peek()) {
                         case NAME:
                             String name = in.nextName();
                             Object value = readValue(in);
-                            object.add(new Pair<String, Object>(name, value));
+                            object.add(new Pair<>(name, value));
                             break;
                         case END_OBJECT:
                             break;

@@ -39,7 +39,7 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
 
         if (action == null) return;
 
-        Log.d (TAG, "Received broadcast intent [" + action + "] in context [" + context.toString() + "]");
+        Log.d (TAG, "Received broadcast intent [" + action + "] in context [" + context + "]");
         if (action.equals("com.eveningoutpost.dexdrip.diasync.libre2_bg")) {
             if (!bundle.containsKey("source") || !bundle.containsKey("libre2_value")) {
                 Log.e(TAG, "Received faulty libre2_bg intent");

@@ -15,12 +15,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
-import android.widget.EditText;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Locale;
 import java.util.Objects;
 
 public class DiasyncSettings extends AppCompatActivity implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -129,29 +124,20 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
                     final String old_value = glucose_units.getValue();
                     final String new_value = (String) value;
                     Log.d(TAG, "New glucose units = " + new_value);
-                    if (old_value == new_value) return false;
+                    if (Objects.equals(old_value, new_value)) return false;
 
-                    DecimalFormat format = new DecimalFormat();
                     switch (new_value) {
                         case "mmol":
-                            try {
-                                format.applyPattern("0.0");
-                                glucose_high.setText(format.format(format.parse(glucose_high.getText()).doubleValue() * 0.0555));
-                                glucose_low .setText(format.format(format.parse(glucose_low .getText()).doubleValue() * 0.0555));
-                            } catch (Exception e) {
-                                Log.d(TAG, "Something went wrong converting mg/dl -> mmol/l");
-                                return false;
-                            }
+                            if (glucose_high != null)
+                                glucose_high.setText(Glucose.stringMmol(Glucose.mgdlToMmol(glucose_high.getText())));
+                            if (glucose_low  != null)
+                                glucose_low. setText(Glucose.stringMmol(Glucose.mgdlToMmol(glucose_low. getText())));
                             break;
                         case "mgdl":
-                            try {
-                                format.applyPattern("0");
-                                glucose_high.setText(format.format(format.parse(glucose_high.getText()).doubleValue() * 18));
-                                glucose_low .setText(format.format(format.parse(glucose_low .getText()).doubleValue() * 18));
-                            } catch (Exception e) {
-                                Log.d(TAG, "Something went wrong converting mmol/l -> mg/dl");
-                                return false;
-                            }
+                            if (glucose_high != null)
+                                glucose_high.setText(Glucose.stringMgdl(Glucose.mmolToMgdl(glucose_high.getText())));
+                            if (glucose_low  != null)
+                                glucose_low. setText(Glucose.stringMgdl(Glucose.mmolToMgdl(glucose_low. getText())));
                             break;
                         default:
                             Log.wtf(TAG, "Unknown glucose unit type set.");

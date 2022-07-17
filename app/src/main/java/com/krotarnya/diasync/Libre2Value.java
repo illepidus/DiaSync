@@ -2,7 +2,7 @@ package com.krotarnya.diasync;
 
 import android.os.Bundle;
 
-public class Libre2Value {
+public class Libre2Value extends Glucose {
     public XDripValue xdrip_value;
     public XDripCalibration xdrip_calibration;
     public long timestamp;
@@ -21,19 +21,11 @@ public class Libre2Value {
         this(new Bundle());
     }
 
-    public double getValue() {
-        return value;
-    }
-
-    public double getMmolValue() {
-        return value * 0.0555;
-    }
-
     public double getCalibratedValue() {
         return value * xdrip_calibration.slope + xdrip_calibration.intercept;
     }
 
     public double getCalibratedMmolValue() {
-        return getCalibratedValue() * 0.0555;
+        return mgdlToMmol(getCalibratedValue());
     }
 }

@@ -47,7 +47,7 @@ public class Libre2Widget extends AppWidgetProvider {
     }
 
     /*
-    Не похоже, что нужно обновление через непосредственную переадачу данных, оставлю на всякий случай
+    Не похоже, что нужно обновление через непосредственную передадачу данных, оставлю на всякий случай
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);

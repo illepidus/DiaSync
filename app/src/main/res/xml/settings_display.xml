@@ -1,6 +1,4 @@
-<PreferenceScreen
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     app:key="settings_display">
 
     <PreferenceCategory app:title="General settings">
