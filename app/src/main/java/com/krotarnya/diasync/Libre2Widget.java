@@ -26,6 +26,12 @@ public class Libre2Widget extends AppWidgetProvider {
                                 int appWidgetId) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_libre2);
 
+        int height = appWidgetManager.getAppWidgetOptions(appWidgetId).getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+        int width = appWidgetManager.getAppWidgetOptions(appWidgetId).getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
+        Libre2GraphBuilder libre2_graph_builder = new Libre2GraphBuilder(context);
+        libre2_graph_builder.setWidth(width);
+        libre2_graph_builder.setHeight(height);
+        views.setImageViewBitmap(R.id.libre2_widget_graph, libre2_graph_builder.build());
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String glucose_units = prefs.getString("glucose_units", "mmol");
@@ -61,7 +67,7 @@ public class Libre2Widget extends AppWidgetProvider {
         views.setTextViewText(R.id.data_timer, String.valueOf(date_format.format(libre2_value.timestamp)));
         views.setTextColor(R.id.blood_glucose, Color.parseColor(blood_color));
 
-        views.setOnClickPendingIntent(R.id.root_layout, getPendingSelfIntent(context, WIDGET_CLICKED_TAG));
+        views.setOnClickPendingIntent(R.id.libre2_widget_layout, getPendingSelfIntent(context, WIDGET_CLICKED_TAG));
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
