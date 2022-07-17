@@ -4,5 +4,5 @@
     <color name="blood_high">#FFFFBB33</color>
     <color name="blood_low">#FFC30909</color>
     <color name="blood_normal">#FFFFFFFF</color>
-    <color name="widget_background">#FF000000</color>
+    <color name="widget_background">#B3000000</color>
 </resources>

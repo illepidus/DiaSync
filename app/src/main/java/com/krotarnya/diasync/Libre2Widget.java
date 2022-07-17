@@ -57,7 +57,7 @@ public class Libre2Widget extends AppWidgetProvider {
                 views.setTextViewText(R.id.blood_glucose, "----");
         }
         Date date = new Date(libre2_value.timestamp);
-        SimpleDateFormat date_format = new SimpleDateFormat("HH:mm");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat date_format = new SimpleDateFormat("HH:mm");
         views.setTextViewText(R.id.data_timer, String.valueOf(date_format.format(libre2_value.timestamp)));
         views.setTextColor(R.id.blood_glucose, Color.parseColor(blood_color));
 
