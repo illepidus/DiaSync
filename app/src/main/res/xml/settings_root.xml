@@ -5,10 +5,12 @@
     <Preference
         app:fragment="com.krotarnya.diasync.DiasyncSettings$ConnectivityFragment"
         app:title="Connectivity"
+        app:icon="@drawable/ic_connectivity_settings"
         app:useSimpleSummaryProvider="true" />
 
     <Preference
         app:fragment="com.krotarnya.diasync.DiasyncSettings$DisplayFragment"
+        app:icon="@drawable/ic_display_settings"
         app:title="Display"
         app:useSimpleSummaryProvider="true" />
 
