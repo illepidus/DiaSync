@@ -2,7 +2,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Theme.DiaSync.Libre2Widget"
-    android:weightSum="100"
     android:orientation="vertical"
     android:id="@+id/libre2_widget_layout"
     android:background="@color/widget_background" >
@@ -20,27 +19,41 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/blood_glucose"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="80"
+            android:layout_weight="1"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/libre2_widget_glucose"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="10"
             android:autoSizeTextType="uniform"
             android:contentDescription="@string/libre2_widget_description"
-            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:gravity="start"
             android:text="@string/libre2_widget_blood_glucose_text"
-            android:textColor="@color/blood_normal_text"
+            android:textColor="@color/glucose_normal_text"
+            android:textStyle="normal" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:textStyle="normal" />
 
         <TextView
             android:id="@+id/data_timer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="20"
+            android:layout_weight="2"
             android:autoSizeTextType="uniform"
             android:contentDescription="@string/libre2_widget_description"
             android:gravity="center"
             android:text="@string/libre2_widget_timer_text"
-            android:textColor="@color/blood_normal_text"
+            android:textColor="@color/glucose_normal_text"
             android:textStyle="normal" />
     </LinearLayout>
 </FrameLayout>

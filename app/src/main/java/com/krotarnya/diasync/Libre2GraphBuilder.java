@@ -65,6 +65,14 @@ public class Libre2GraphBuilder {
         return this;
     }
 
+    protected float cx(long x) {
+        return width * (x - x_min) / (x_max - x_min);
+    }
+
+    protected float cy(double y) {
+        return (float) (height - height * (y - y_min) / (y_max - y_min));
+    }
+
     public Bitmap build() {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         bitmap.eraseColor(Color.TRANSPARENT);
@@ -72,7 +80,7 @@ public class Libre2GraphBuilder {
         Paint paint    = new Paint();
 
         if (data.size() < 3) {
-            paint.setColor(context.getColor(R.color.blood_error_text));
+            paint.setColor(Glucose.errorTextColor());
             paint.setTextSize(((float) height) / 7);
             paint.setTextAlign(Paint.Align.CENTER);
             canvas.drawText("No data to plot", ((float) width) / 2, ((float)height) / 7 , paint);
@@ -83,12 +91,13 @@ public class Libre2GraphBuilder {
         for (int i = 0; i < data.size(); i++) {
             Libre2Value v = data.get(i);
             paint.setColor(Glucose.bloodGraphColor(v.getCalibratedValue()));
-            float cx = 0;
-            float cy = 0;
-            float r = width * 25000 / (x_max - x_min);
-            canvas.drawCircle(width * (v.timestamp - x_min) / (x_max - x_min), (float) (height - height * (v.getCalibratedValue() - y_min) / (y_max - y_min)), r, paint);
+            float r = width * 25000L / (x_max - x_min);
+            canvas.drawCircle(cx(v.timestamp), cy(v.getCalibratedValue()), r, paint);
         }
-
+        paint.setColor(Glucose.bloodGraphColor(69));
+        canvas.drawLine(0, cy(70), width, cy(70), paint);
+        paint.setColor(Glucose.bloodGraphColor(181));
+        canvas.drawLine(0, cy(180), width, cy(180), paint);
         return bitmap;
     }
 }

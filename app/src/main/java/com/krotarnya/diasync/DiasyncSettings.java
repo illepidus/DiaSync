@@ -119,51 +119,51 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor prefs_editor = prefs.edit();
 
-            EditTextPreference glucose_low = findPreference("glucose_low");
-            if (glucose_low != null) {
-                glucose_low.setOnBindEditTextListener(
+            EditTextPreference glucose_low_pref = findPreference("glucose_low_pref");
+            if (glucose_low_pref != null) {
+                glucose_low_pref.setOnBindEditTextListener(
                         editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL)
                 );
-                glucose_low.setOnPreferenceChangeListener((preference, value) -> {
+                glucose_low_pref.setOnPreferenceChangeListener((preference, value) -> {
                     String glucose_units = prefs.getString("glucose_units", "");
-                    float glucose_low_mgdl;
+                    float glucose_low;
                     switch (glucose_units) {
                         case "mmol":
-                            glucose_low_mgdl = (float) Glucose.mmolToMgdl((String) value);
+                            glucose_low = (float) Glucose.mmolToMgdl((String) value);
                             break;
                         case "mgdl":
-                            glucose_low_mgdl = (float) Glucose.glucose((String) value);
+                            glucose_low = (float) Glucose.get((String) value);
                             break;
                         default:
                             return false;
                     }
 
-                    prefs_editor.putFloat("glucose_low_mgdl", glucose_low_mgdl);
+                    prefs_editor.putFloat("glucose_low", glucose_low);
                     prefs_editor.apply();
                     return true;
                 });
             }
 
-            EditTextPreference glucose_high = findPreference("glucose_high");
-            if (glucose_high != null) {
-                glucose_high.setOnBindEditTextListener(
+            EditTextPreference glucose_high_pref = findPreference("glucose_high_pref");
+            if (glucose_high_pref != null) {
+                glucose_high_pref.setOnBindEditTextListener(
                     editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL)
                 );
-                glucose_high.setOnPreferenceChangeListener((preference, value) -> {
+                glucose_high_pref.setOnPreferenceChangeListener((preference, value) -> {
                     String glucose_units = prefs.getString("glucose_units", "");
-                    float glucose_high_mgdl;
+                    float glucose_high;
                     switch (glucose_units) {
                         case "mmol":
-                            glucose_high_mgdl = (float) Glucose.mmolToMgdl((String) value);
+                            glucose_high = (float) Glucose.mmolToMgdl((String) value);
                             break;
                         case "mgdl":
-                            glucose_high_mgdl = (float) Glucose.glucose((String) value);
+                            glucose_high = (float) Glucose.get((String) value);
                             break;
                         default:
                             return false;
                     }
 
-                    prefs_editor.putFloat("glucose_high_mgdl", glucose_high_mgdl);
+                    prefs_editor.putFloat("glucose_high", glucose_high);
                     prefs_editor.apply();
                     return true;
                 });
@@ -179,16 +179,16 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
 
                     switch (new_value) {
                         case "mmol":
-                            if (glucose_high != null)
-                                glucose_high.setText(Glucose.stringMmol(Glucose.mgdlToMmol(glucose_high.getText())));
-                            if (glucose_low  != null)
-                                glucose_low. setText(Glucose.stringMmol(Glucose.mgdlToMmol(glucose_low. getText())));
+                            if (glucose_high_pref != null)
+                                glucose_high_pref.setText(Glucose.stringMmol(Glucose.mgdlToMmol(glucose_high_pref.getText())));
+                            if (glucose_low_pref  != null)
+                                glucose_low_pref. setText(Glucose.stringMmol(Glucose.mgdlToMmol(glucose_low_pref. getText())));
                             break;
                         case "mgdl":
-                            if (glucose_high != null)
-                                glucose_high.setText(Glucose.stringMgdl(Glucose.mmolToMgdl(glucose_high.getText())));
-                            if (glucose_low  != null)
-                                glucose_low. setText(Glucose.stringMgdl(Glucose.mmolToMgdl(glucose_low. getText())));
+                            if (glucose_high_pref != null)
+                                glucose_high_pref.setText(Glucose.stringMgdl(Glucose.mmolToMgdl(glucose_high_pref.getText())));
+                            if (glucose_low_pref  != null)
+                                glucose_low_pref. setText(Glucose.stringMgdl(Glucose.mmolToMgdl(glucose_low_pref. getText())));
                             break;
                         default:
                             Log.wtf(TAG, "Unknown glucose unit type set.");

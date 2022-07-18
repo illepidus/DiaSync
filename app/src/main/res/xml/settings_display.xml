@@ -10,12 +10,12 @@
             app:title="Glucose units"
             app:useSimpleSummaryProvider="true"/>
         <EditTextPreference
-            app:key="glucose_low"
+            app:key="glucose_low_pref"
             app:title="Low value"
             app:defaultValue="3.9"
             app:useSimpleSummaryProvider="true" />
         <EditTextPreference
-            app:key="glucose_high"
+            app:key="glucose_high_pref"
             app:title="High value"
             app:defaultValue="10.0"
             app:useSimpleSummaryProvider="true" />
