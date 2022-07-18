@@ -132,7 +132,7 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
                             glucose_low = (float) Glucose.mmolToMgdl((String) value);
                             break;
                         case "mgdl":
-                            glucose_low = (float) Glucose.get((String) value);
+                            glucose_low = (float) Glucose.parse((String) value);
                             break;
                         default:
                             return false;
@@ -157,7 +157,7 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
                             glucose_high = (float) Glucose.mmolToMgdl((String) value);
                             break;
                         case "mgdl":
-                            glucose_high = (float) Glucose.get((String) value);
+                            glucose_high = (float) Glucose.parse((String) value);
                             break;
                         default:
                             return false;

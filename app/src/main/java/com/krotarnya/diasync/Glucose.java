@@ -56,13 +56,13 @@ public class Glucose {
         return v * 0.0555;
     }
     static double mgdlToMmol(String v) {
-        return mgdlToMmol(get(v));
+        return mgdlToMmol(parse(v));
     }
     static double mmolToMgdl(double v) {
         return v * 18;
     }
     static double mmolToMgdl(String v) {
-        return mmolToMgdl(get(v));
+        return mmolToMgdl(parse(v));
     }
 
     static double low()  { return getInstance().low; }
@@ -91,7 +91,7 @@ public class Glucose {
         return highGraphColor();
     }
 
-    static double get(String v) {
+    static double parse(String v) {
         if (v == null) return 0;
         try {
             Number n = DecimalFormat.getInstance().parse(v);
