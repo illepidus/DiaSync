@@ -72,7 +72,7 @@ public class Libre2GraphBuilder {
         Paint paint    = new Paint();
 
         if (data.size() < 3) {
-            paint.setColor(context.getColor(R.color.blood_error));
+            paint.setColor(context.getColor(R.color.blood_error_text));
             paint.setTextSize(((float) height) / 7);
             paint.setTextAlign(Paint.Align.CENTER);
             canvas.drawText("No data to plot", ((float) width) / 2, ((float)height) / 7 , paint);
@@ -82,8 +82,11 @@ public class Libre2GraphBuilder {
         paint.setStyle(Paint.Style.FILL);
         for (int i = 0; i < data.size(); i++) {
             Libre2Value v = data.get(i);
-            paint.setColor(Glucose.bloodColor(v.getCalibratedValue()));
-            canvas.drawCircle(((float)width * ((float)v.timestamp - (float)x_min) / ((float)x_max - (float)x_min)), (float)(height - height * (v.getCalibratedValue() - y_min) / (y_max - y_min)), ((float) (width)) / 70, paint);
+            paint.setColor(Glucose.bloodGraphColor(v.getCalibratedValue()));
+            float cx = 0;
+            float cy = 0;
+            float r = width * 25000 / (x_max - x_min);
+            canvas.drawCircle(width * (v.timestamp - x_min) / (x_max - x_min), (float) (height - height * (v.getCalibratedValue() - y_min) / (y_max - y_min)), r, paint);
         }
 
         return bitmap;

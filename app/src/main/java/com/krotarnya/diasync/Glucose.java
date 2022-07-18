@@ -41,18 +41,32 @@ public abstract class Glucose {
         return ((v >= low_value_mmol) && (v <= high_value_mmol));
     }
 
-    static int bloodColor(double v) {
+    static int bloodTextColor(double v) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(Diasync.getContext());
         float low_value_mmol = prefs.getFloat("low_value_mmol", 70.f);
         float high_value_mmol = prefs.getFloat("high_value_mmol", 180.f);
 
         if (v <= 0)
-            return ContextCompat.getColor(Diasync.getContext(), R.color.blood_error);
+            return ContextCompat.getColor(Diasync.getContext(), R.color.blood_error_text);
         if (v <  low_value_mmol)
-            return ContextCompat.getColor(Diasync.getContext(), R.color.blood_low);
+            return ContextCompat.getColor(Diasync.getContext(), R.color.blood_low_text);
         if (v <  high_value_mmol)
-            return ContextCompat.getColor(Diasync.getContext(), R.color.blood_normal);
-        return ContextCompat.getColor(Diasync.getContext(), R.color.blood_high);
+            return ContextCompat.getColor(Diasync.getContext(), R.color.blood_normal_text);
+        return ContextCompat.getColor(Diasync.getContext(), R.color.blood_high_text);
+    }
+
+    static int bloodGraphColor(double v) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(Diasync.getContext());
+        float low_value_mmol = prefs.getFloat("low_value_mmol", 70.f);
+        float high_value_mmol = prefs.getFloat("high_value_mmol", 180.f);
+
+        if (v <= 0)
+            return ContextCompat.getColor(Diasync.getContext(), R.color.blood_error_graph);
+        if (v <  low_value_mmol)
+            return ContextCompat.getColor(Diasync.getContext(), R.color.blood_low_graph);
+        if (v <  high_value_mmol)
+            return ContextCompat.getColor(Diasync.getContext(), R.color.blood_normal_graph);
+        return ContextCompat.getColor(Diasync.getContext(), R.color.blood_high_graph);
     }
 
     static double glucose(String v) {

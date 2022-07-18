@@ -28,6 +28,8 @@ public class Libre2Widget extends AppWidgetProvider {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String glucose_units = prefs.getString("glucose_units", "mmol");
+        Double glucose_low  = (double) prefs.getFloat("glucose_low_mgdl", 70.f);
+        Double glucose_high = (double) prefs.getFloat("glucose_high_mgdl", 120.f);
 
         DiasyncDB diasync_db = DiasyncDB.getInstance(context);
         Libre2Value libre2_value = diasync_db.getLastLibre2Value();
@@ -39,8 +41,8 @@ public class Libre2Widget extends AppWidgetProvider {
         libre2_graph_builder.setHeight(appWidgetManager.getAppWidgetOptions(appWidgetId).getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT));
         libre2_graph_builder.setXMin(t1 - 100000);
         libre2_graph_builder.setXMax(t2 + 100000);
-        libre2_graph_builder.setYMin(libre2_values.minCalibratedValue().getCalibratedValue() - 20);
-        libre2_graph_builder.setYMax(libre2_values.maxCalibratedValue().getCalibratedValue() + 20);
+        libre2_graph_builder.setYMin(Double.min((libre2_values.minCalibratedValue().getCalibratedValue()), glucose_low) - 20);
+        libre2_graph_builder.setYMax(Double.max((libre2_values.maxCalibratedValue().getCalibratedValue()), glucose_high) + 20);
         libre2_graph_builder.setData(libre2_values);
         views.setImageViewBitmap(R.id.libre2_widget_graph, libre2_graph_builder.build());
 
@@ -58,7 +60,7 @@ public class Libre2Widget extends AppWidgetProvider {
         Date date = new Date(libre2_value.timestamp);
         @SuppressLint("SimpleDateFormat") SimpleDateFormat date_format = new SimpleDateFormat("HH:mm");
         views.setTextViewText(R.id.data_timer, String.valueOf(date_format.format(libre2_value.timestamp)));
-        views.setTextColor(R.id.blood_glucose, Glucose.bloodColor(libre2_value.getCalibratedValue()));
+        views.setTextColor(R.id.blood_glucose, Glucose.bloodTextColor(libre2_value.getCalibratedValue()));
 
         views.setOnClickPendingIntent(R.id.libre2_widget_layout, getPendingSelfIntent(context, WIDGET_CLICKED_TAG));
 

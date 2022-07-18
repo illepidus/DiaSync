@@ -1,5 +1,4 @@
 <resources>
-    <!--TMP-->
     <string-array name="glucose_units_entries">
         <item>mg/dL</item>
         <item>mmol/L</item>
@@ -9,5 +8,4 @@
         <item>mgdl</item>
         <item>mmol</item>
     </string-array>
-    <!--TMP-->
 </resources>

@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="blood_error">#FFFF00FF</color>
-    <color name="blood_high">#FFFFBB33</color>
-    <color name="blood_low">#FFC30909</color>
-    <color name="blood_normal">#FFFFFFFF</color>
+    <color name="blood_error_text">#FFFF00FF</color>
+    <color name="blood_error_graph">#FFFF00FF</color>
+    <color name="blood_high_text">#FFFFBB33</color>
+    <color name="blood_high_graph">#FFFFBB33</color>
+    <color name="blood_low_text">#FFC30909</color>
+    <color name="blood_low_graph">#FFC30909</color>
+    <color name="blood_normal_text">#FFFFFFFF</color>
+    <color name="blood_normal_graph">#FF00BFFF</color>
     <color name="widget_background">#B3000000</color>
 </resources>
