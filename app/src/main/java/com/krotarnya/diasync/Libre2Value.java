@@ -3,8 +3,8 @@ package com.krotarnya.diasync;
 import android.os.Bundle;
 
 public class Libre2Value extends Glucose {
-    public XDripValue xdrip_value;
-    public XDripCalibration xdrip_calibration;
+    public final XDripValue xdrip_value;
+    public final XDripCalibration xdrip_calibration;
     public long timestamp;
     public String serial;
     public double value;

@@ -8,11 +8,13 @@ import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -113,18 +115,59 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String key) {
             setPreferencesFromResource(R.xml.settings_display, key);
+            Context context = DiasyncSettings.getContext();
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor prefs_editor = prefs.edit();
 
             EditTextPreference glucose_low = findPreference("glucose_low");
-            if (glucose_low != null)
+            if (glucose_low != null) {
                 glucose_low.setOnBindEditTextListener(
                         editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL)
                 );
+                glucose_low.setOnPreferenceChangeListener((preference, value) -> {
+                    String glucose_units = prefs.getString("glucose_units", "");
+                    float glucose_low_mgdl;
+                    switch (glucose_units) {
+                        case "mmol":
+                            glucose_low_mgdl = (float) Glucose.mmolToMgdl((String) value);
+                            break;
+                        case "mgdl":
+                            glucose_low_mgdl = (float) Glucose.glucose((String) value);
+                            break;
+                        default:
+                            return false;
+                    }
+
+                    prefs_editor.putFloat("glucose_low_mgdl", glucose_low_mgdl);
+                    prefs_editor.apply();
+                    return true;
+                });
+            }
 
             EditTextPreference glucose_high = findPreference("glucose_high");
-            if (glucose_high != null)
+            if (glucose_high != null) {
                 glucose_high.setOnBindEditTextListener(
-                        editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL)
+                    editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL)
                 );
+                glucose_high.setOnPreferenceChangeListener((preference, value) -> {
+                    String glucose_units = prefs.getString("glucose_units", "");
+                    float glucose_high_mgdl;
+                    switch (glucose_units) {
+                        case "mmol":
+                            glucose_high_mgdl = (float) Glucose.mmolToMgdl((String) value);
+                            break;
+                        case "mgdl":
+                            glucose_high_mgdl = (float) Glucose.glucose((String) value);
+                            break;
+                        default:
+                            return false;
+                    }
+
+                    prefs_editor.putFloat("glucose_high_mgdl", glucose_high_mgdl);
+                    prefs_editor.apply();
+                    return true;
+                });
+            }
 
             ListPreference glucose_units = findPreference("glucose_units");
             if (glucose_units != null) {
@@ -151,7 +194,7 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
                             Log.wtf(TAG, "Unknown glucose unit type set.");
                             return false;
                     }
-                    Context context = DiasyncSettings.getContext();
+
                     Intent widget_intent = new Intent(context, Libre2Widget.class);
                     widget_intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
                     int [] ids = AppWidgetManager.getInstance(context.getApplicationContext())

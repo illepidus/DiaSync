@@ -137,22 +137,22 @@ public class DiasyncDB extends SQLiteOpenHelper {
         }
     }
 
-    public List<Libre2Value> getLibre2Values(long from, long till) {
+    public Libre2ValueList getLibre2Values(long from, long till) {
         return getLibre2Values(from, till, Long.MAX_VALUE);
     }
 
-    public List<Libre2Value> getLastLibre2Values(long limit) {
+    public Libre2ValueList getLastLibre2Values(long limit) {
         return getLibre2Values(0, Long.MAX_VALUE, limit);
     }
 
     public Libre2Value getLastLibre2Value() {
-        List<Libre2Value> vals = getLastLibre2Values(1);
+        Libre2ValueList vals = getLastLibre2Values(1);
         if (vals.size() == 1)
             return vals.get(0);
         return new Libre2Value();
     }
 
-    public List<Libre2Value> getLibre2Values(long from, long till, long limit) {
+    public Libre2ValueList getLibre2Values(long from, long till, long limit) {
         List<Libre2Value> values = new ArrayList<>();
 
         String LIBRE2_SELECT_QUERY =
@@ -196,6 +196,6 @@ public class DiasyncDB extends SQLiteOpenHelper {
             }
         }
 
-        return values;
+        return new Libre2ValueList(values);
     }
 }

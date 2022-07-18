@@ -26,37 +26,30 @@ public class Libre2Widget extends AppWidgetProvider {
                                 int appWidgetId) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_libre2);
 
-        int height = appWidgetManager.getAppWidgetOptions(appWidgetId).getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
-        int width = appWidgetManager.getAppWidgetOptions(appWidgetId).getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
-        Libre2GraphBuilder libre2_graph_builder = new Libre2GraphBuilder(context);
-        libre2_graph_builder.setWidth(width);
-        libre2_graph_builder.setHeight(height);
-        views.setImageViewBitmap(R.id.libre2_widget_graph, libre2_graph_builder.build());
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String glucose_units = prefs.getString("glucose_units", "mmol");
-        double glucose_low  = Glucose.glucose(prefs.getString("glucose_low" , "3.9" ));
-        double glucose_high = Glucose.glucose(prefs.getString("glucose_high", "10.0"));
 
         DiasyncDB diasync_db = DiasyncDB.getInstance(context);
         Libre2Value libre2_value = diasync_db.getLastLibre2Value();
+        long t2 = System.currentTimeMillis(), t1 = t2 - 1800000;
+        Libre2ValueList libre2_values = diasync_db.getLibre2Values(t1, t2);
 
-        String blood_color = context.getString(R.color.blood_error);
-        double value;
+        Libre2GraphBuilder libre2_graph_builder = new Libre2GraphBuilder(context);
+        libre2_graph_builder.setWidth(appWidgetManager.getAppWidgetOptions(appWidgetId).getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH));
+        libre2_graph_builder.setHeight(appWidgetManager.getAppWidgetOptions(appWidgetId).getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT));
+        libre2_graph_builder.setXMin(t1 - 100000);
+        libre2_graph_builder.setXMax(t2 + 100000);
+        libre2_graph_builder.setYMin(libre2_values.minCalibratedValue().getCalibratedValue() - 20);
+        libre2_graph_builder.setYMax(libre2_values.maxCalibratedValue().getCalibratedValue() + 20);
+        libre2_graph_builder.setData(libre2_values);
+        views.setImageViewBitmap(R.id.libre2_widget_graph, libre2_graph_builder.build());
+
         switch (glucose_units) {
             case "mmol":
-                value = libre2_value.getCalibratedMmolValue();
-                views.setTextViewText(R.id.blood_glucose, Glucose.stringMmol(value));
-                blood_color = context.getString(R.color.blood_low);
-                if (value > glucose_low)  blood_color = context.getString(R.color.blood_normal);
-                if (value > glucose_high) blood_color = context.getString(R.color.blood_high);
+                views.setTextViewText(R.id.blood_glucose, Glucose.stringMmol(libre2_value.getCalibratedMmolValue()));
                 break;
             case "mgdl":
-                value = libre2_value.getCalibratedValue();
-                views.setTextViewText(R.id.blood_glucose, Glucose.stringMgdl(value));
-                blood_color = context.getString(R.color.blood_low);
-                if (value > glucose_low)  blood_color = context.getString(R.color.blood_normal);
-                if (value > glucose_high) blood_color = context.getString(R.color.blood_high);
+                views.setTextViewText(R.id.blood_glucose, Glucose.stringMgdl(libre2_value.getCalibratedValue()));
                 break;
             default:
                 Log.wtf(TAG, "Unknown glucose units");
@@ -65,7 +58,7 @@ public class Libre2Widget extends AppWidgetProvider {
         Date date = new Date(libre2_value.timestamp);
         @SuppressLint("SimpleDateFormat") SimpleDateFormat date_format = new SimpleDateFormat("HH:mm");
         views.setTextViewText(R.id.data_timer, String.valueOf(date_format.format(libre2_value.timestamp)));
-        views.setTextColor(R.id.blood_glucose, Color.parseColor(blood_color));
+        views.setTextColor(R.id.blood_glucose, Glucose.bloodColor(libre2_value.getCalibratedValue()));
 
         views.setOnClickPendingIntent(R.id.libre2_widget_layout, getPendingSelfIntent(context, WIDGET_CLICKED_TAG));
 

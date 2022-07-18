@@ -14,6 +14,11 @@ public class Libre2GraphBuilder {
     private final Context context;
     protected int width;
     protected int height;
+    protected long x_min;
+    protected long x_max;
+    protected double y_min;
+    protected double y_max;
+    protected Libre2ValueList data;
 
     public Libre2GraphBuilder(Context c) {
         context = c;
@@ -35,14 +40,52 @@ public class Libre2GraphBuilder {
         return this;
     }
 
+    public Libre2GraphBuilder setData(Libre2ValueList list) {
+        this.data = list;
+        return this;
+    }
+
+    public Libre2GraphBuilder setXMin(long v) {
+        x_min = v;
+        return this;
+    }
+
+    public Libre2GraphBuilder setXMax(long v) {
+        x_max = v;
+        return this;
+    }
+
+    public Libre2GraphBuilder setYMin(double v) {
+        y_min = v;
+        return this;
+    }
+
+    public Libre2GraphBuilder setYMax(double v) {
+        y_max = v;
+        return this;
+    }
+
     public Bitmap build() {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         bitmap.eraseColor(Color.TRANSPARENT);
         Canvas canvas = new Canvas(bitmap);
         Paint paint    = new Paint();
-                paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.RED);
-        canvas.drawCircle( width / 7,  height / 7 , 6, paint);
+
+        if (data.size() < 3) {
+            paint.setColor(context.getColor(R.color.blood_error));
+            paint.setTextSize(((float) height) / 7);
+            paint.setTextAlign(Paint.Align.CENTER);
+            canvas.drawText("No data to plot", ((float) width) / 2, ((float)height) / 7 , paint);
+            return bitmap;
+        }
+
+        paint.setStyle(Paint.Style.FILL);
+        for (int i = 0; i < data.size(); i++) {
+            Libre2Value v = data.get(i);
+            paint.setColor(Glucose.bloodColor(v.getCalibratedValue()));
+            canvas.drawCircle(((float)width * ((float)v.timestamp - (float)x_min) / ((float)x_max - (float)x_min)), (float)(height - height * (v.getCalibratedValue() - y_min) / (y_max - y_min)), ((float) (width)) / 70, paint);
+        }
+
         return bitmap;
     }
 }
