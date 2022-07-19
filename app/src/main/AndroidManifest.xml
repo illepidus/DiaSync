@@ -4,9 +4,10 @@
     package="com.krotarnya.diasync">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:name="com.krotarnya.diasync.Diasync"
+        android:name=".Diasync"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -16,6 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DiaSync"
         tools:targetApi="31">
+
+        <service
+            android:name=".WidgetUpdateService"
+            android:enabled="true"
+            android:exported="true" />
+
         <receiver
             android:name=".Libre2Widget"
             android:exported="false">
@@ -33,6 +40,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

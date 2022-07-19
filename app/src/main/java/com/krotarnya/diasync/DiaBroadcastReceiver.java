@@ -1,7 +1,5 @@
 package com.krotarnya.diasync;
 
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -55,7 +53,7 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
             DiasyncDB diasync_db = DiasyncDB.getInstance(broadcast_context);
             diasync_db.addLibre2Value(libre2_value);
 
-            Libre2Widget.update(context);
+            WidgetUpdateService.start(context);
             return;
         }
 

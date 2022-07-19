@@ -7,16 +7,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.RemoteViews;
-
 import androidx.preference.PreferenceManager;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.Objects;
@@ -72,7 +65,7 @@ public class Libre2Widget extends AppWidgetProvider {
                     views.setTextViewText(R.id.libre2_widget_glucose, "----");
             }
 
-            views.setTextViewText(R.id.data_timer, String.valueOf(SimpleDateFormat.getInstance().format(libre2_last_value.timestamp)));
+            views.setTextViewText(R.id.data_timer, String.valueOf((t2 - libre2_last_value.timestamp) / 1000));
             views.setTextColor(R.id.libre2_widget_glucose, Glucose.bloodTextColor(libre2_last_value.getCalibratedValue()));
         }
 
@@ -103,14 +96,14 @@ public class Libre2Widget extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
         String action = intent.getAction();
-        Log.d(TAG, "Received new intent action = " + action);
+        Log.d(TAG, "Received new intent action [" + action + "] in context [" + context + "]");
         if (Objects.equals(action, WIDGET_CLICKED_TAG)) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             String on_click = prefs.getString("libre2_widget_on_click", "settings");
             Log.d(TAG, "Widget clicked. Action = " + on_click);
             switch (on_click) {
                 case "update":
-                    update(context);
+                    WidgetUpdateService.start(context);
                     break;
                 case "settings":
                     Intent settingsIntent = new Intent(Intent.ACTION_VIEW);

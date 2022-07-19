@@ -11,6 +11,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
@@ -54,7 +55,7 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
         if ((action_bar != null) && (getSupportFragmentManager().getBackStackEntryCount() > 0)) {
             action_bar.setDisplayHomeAsUpEnabled(true);
         }
-        Libre2Widget.update(getContext());
+        WidgetUpdateService.start(getContext());
     }
 
     @Override
@@ -127,7 +128,7 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
 
                     prefs_editor.putString("glucose_low", Glucose.stringMgdl(glucose_low));
                     prefs_editor.apply();
-                    Libre2Widget.update(context);
+                    WidgetUpdateService.start(context);
                     return true;
                 });
             }
@@ -153,7 +154,7 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
 
                     prefs_editor.putString("glucose_high", Glucose.stringMgdl(glucose_high));
                     prefs_editor.apply();
-                    Libre2Widget.update(context);
+                    WidgetUpdateService.start(context);
                     return true;
                 });
             }
@@ -183,7 +184,7 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
                             Log.wtf(TAG, "Unknown glucose unit type set.");
                             return false;
                     }
-                    Libre2Widget.update(context);
+                    WidgetUpdateService.start(context);
                     return true;
                 });
             }
