@@ -7,6 +7,7 @@
             app:key="webhook_enabled"
             app:title="Enabled"
             app:defaultValue="false"
+            app:allowDividerBelow="true"
             />
 
         <EditTextPreference
@@ -14,6 +15,7 @@
             app:dependency="webhook_enabled"
             app:title="Webhook address"
             app:defaultValue="https://krotarnya.ru/diasync.php"
+            app:allowDividerAbove="true"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference

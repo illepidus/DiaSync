@@ -10,10 +10,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
@@ -57,17 +54,7 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
         if ((action_bar != null) && (getSupportFragmentManager().getBackStackEntryCount() > 0)) {
             action_bar.setDisplayHomeAsUpEnabled(true);
         }
-
-        /*THIS BLOCK IS HERE AS DiasyncSettings IS MAIN ACTIVITY REMOVE IT AS IT IS NOT TRUE*/
-        Intent widget_intent = new Intent(this, Libre2Widget.class);
-        widget_intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        int[] ids = AppWidgetManager.getInstance(getApplicationContext())
-                .getAppWidgetIds(new ComponentName(getApplicationContext(), Libre2Widget.class));
-        if (ids.length > 0) {
-            widget_intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-            sendBroadcast(widget_intent);
-        }
-        /*THIS IS TEST BLOCK*/
+        Libre2Widget.update(getContext());
     }
 
     @Override
@@ -126,20 +113,21 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
                 );
                 glucose_low_pref.setOnPreferenceChangeListener((preference, value) -> {
                     String glucose_units = prefs.getString("glucose_units", "");
-                    float glucose_low;
+                    double glucose_low;
                     switch (glucose_units) {
                         case "mmol":
-                            glucose_low = (float) Glucose.mmolToMgdl((String) value);
+                            glucose_low = Glucose.mmolToMgdl((String) value);
                             break;
                         case "mgdl":
-                            glucose_low = (float) Glucose.parse((String) value);
+                            glucose_low = Glucose.parse((String) value);
                             break;
                         default:
                             return false;
                     }
 
-                    prefs_editor.putFloat("glucose_low", glucose_low);
+                    prefs_editor.putString("glucose_low", Glucose.stringMgdl(glucose_low));
                     prefs_editor.apply();
+                    Libre2Widget.update(context);
                     return true;
                 });
             }
@@ -151,20 +139,21 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
                 );
                 glucose_high_pref.setOnPreferenceChangeListener((preference, value) -> {
                     String glucose_units = prefs.getString("glucose_units", "");
-                    float glucose_high;
+                    double glucose_high;
                     switch (glucose_units) {
                         case "mmol":
-                            glucose_high = (float) Glucose.mmolToMgdl((String) value);
+                            glucose_high = Glucose.mmolToMgdl((String) value);
                             break;
                         case "mgdl":
-                            glucose_high = (float) Glucose.parse((String) value);
+                            glucose_high = Glucose.parse((String) value);
                             break;
                         default:
                             return false;
                     }
 
-                    prefs_editor.putFloat("glucose_high", glucose_high);
+                    prefs_editor.putString("glucose_high", Glucose.stringMgdl(glucose_high));
                     prefs_editor.apply();
+                    Libre2Widget.update(context);
                     return true;
                 });
             }
@@ -194,15 +183,7 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
                             Log.wtf(TAG, "Unknown glucose unit type set.");
                             return false;
                     }
-
-                    Intent widget_intent = new Intent(context, Libre2Widget.class);
-                    widget_intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-                    int [] ids = AppWidgetManager.getInstance(context.getApplicationContext())
-                            .getAppWidgetIds(new ComponentName(context.getApplicationContext(), Libre2Widget.class));
-                    if (ids.length > 0) {
-                        widget_intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-                        context.sendBroadcast(widget_intent);
-                    }
+                    Libre2Widget.update(context);
                     return true;
                 });
             }

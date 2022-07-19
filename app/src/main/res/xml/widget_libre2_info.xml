@@ -3,11 +3,7 @@
     android:description="@string/libre2_widget_description"
     android:initialKeyguardLayout="@layout/widget_libre2"
     android:initialLayout="@layout/widget_libre2"
-    android:minWidth="110dp"
     android:minHeight="40dp"
-
-    android:previewLayout="@layout/widget_libre2"
-    android:targetCellWidth="2"
-    android:targetCellHeight="1"
-    android:updatePeriodMillis="1800000"
-    android:widgetCategory="home_screen" />
+    android:minWidth="110dp"
+    android:updatePeriodMillis="600000"
+    android:widgetCategory="home_screen|keyguard" />

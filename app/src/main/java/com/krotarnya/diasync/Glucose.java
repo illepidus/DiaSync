@@ -2,18 +2,19 @@ package com.krotarnya.diasync;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.icu.text.DecimalFormat;
+import android.icu.text.DecimalFormatSymbols;
+import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
-import java.text.DecimalFormat;
-import java.text.ParseException;
+import java.util.Locale;
 
 public class Glucose {
+    private static final String TAG = "Glucose";
     private static Glucose instance;
 
-    private final double low;
-    private final double high;
     private final int error_text_color;
     private final int error_graph_color;
     private final int low_text_color;
@@ -23,14 +24,16 @@ public class Glucose {
     private final int high_text_color;
     private final int high_graph_color;
 
+    private final SharedPreferences prefs;
     private final DecimalFormat mmol_format;
     private final DecimalFormat mgdl_format;
 
     public Glucose() {
         Context context = Diasync.getContext();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        mmol_format = new DecimalFormat("0.0");
-        mgdl_format = new DecimalFormat("0");
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        DecimalFormatSymbols decimal_format_symbols = new DecimalFormatSymbols(Locale.US);
+        mmol_format = new DecimalFormat("0.0", decimal_format_symbols);
+        mgdl_format = new DecimalFormat("0", decimal_format_symbols);
 
         error_text_color   = ContextCompat.getColor(context, R.color.glucose_error_text);
         error_graph_color  = ContextCompat.getColor(context, R.color.glucose_error_graph);
@@ -40,9 +43,7 @@ public class Glucose {
         normal_graph_color = ContextCompat.getColor(context, R.color.glucose_normal_graph);
         high_text_color    = ContextCompat.getColor(context, R.color.glucose_high_text);
         high_graph_color   = ContextCompat.getColor(context, R.color.glucose_high_graph);
-
-        low  = prefs.getFloat("glucose_low", 70.f);
-        high = prefs.getFloat("glucose_high", 180.f);
+        Log.v(TAG, "Constructor called");
     }
 
     public static synchronized Glucose getInstance() {
@@ -50,6 +51,10 @@ public class Glucose {
             instance = new Glucose();
         }
         return instance;
+    }
+
+    public static void update() {
+        instance = null;
     }
 
     static double mgdlToMmol(double v) {
@@ -65,8 +70,13 @@ public class Glucose {
         return mmolToMgdl(parse(v));
     }
 
-    static double low()  { return getInstance().low; }
-    static double high() { return getInstance().high;}
+    static double low()  {
+            return Double.parseDouble(getInstance().prefs.getString("glucose_low", "70"));
+    }
+
+    static double high()  {
+        return Double.parseDouble(getInstance().prefs.getString("glucose_high", "180"));
+    }
 
     static int errorTextColor()   { return getInstance().error_text_color;}
     static int errorGraphColor()  { return getInstance().error_graph_color;}
@@ -94,9 +104,9 @@ public class Glucose {
     static double parse(String v) {
         if (v == null) return 0;
         try {
-            Number n = DecimalFormat.getInstance().parse(v);
-            return (n == null) ? 0 : n.doubleValue();
-        } catch (ParseException e) {
+            return Double.parseDouble(v);
+        } catch (Exception e) {
+            Log.e(TAG, "Error parsing [" + v + "] to double");
             return 0;
         }
     }

@@ -7,17 +7,19 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 public class Libre2GraphBuilder {
     protected static final String TAG = "Libre2GraphBuilder";
 
     private final Context context;
-    protected int width;
-    protected int height;
-    protected long x_min;
-    protected long x_max;
-    protected double y_min;
-    protected double y_max;
+    protected int width = 100;
+    protected int height = 100;
+    protected long x_min = 0;
+    protected long x_max = 0;
+    protected double y_min = 0;
+    protected double y_max = 0;
+    protected boolean range_lines = false;
     protected Libre2ValueList data;
 
     public Libre2GraphBuilder(Context c) {
@@ -65,6 +67,11 @@ public class Libre2GraphBuilder {
         return this;
     }
 
+    public Libre2GraphBuilder setRangeLines(boolean v) {
+        range_lines = v;
+        return this;
+    }
+
     protected float cx(long x) {
         return width * (x - x_min) / (x_max - x_min);
     }
@@ -74,16 +81,18 @@ public class Libre2GraphBuilder {
     }
 
     public Bitmap build() {
+        Log.d(TAG, "Building graph");
+
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         bitmap.eraseColor(Color.TRANSPARENT);
         Canvas canvas = new Canvas(bitmap);
-        Paint paint    = new Paint();
+        Paint paint = new Paint();
 
-        if (data.size() < 3) {
+        if ((data == null) || (data.size() < 1)) {
             paint.setColor(Glucose.errorTextColor());
             paint.setTextSize(((float) height) / 7);
             paint.setTextAlign(Paint.Align.CENTER);
-            canvas.drawText("No data to plot", ((float) width) / 2, ((float)height) / 7 , paint);
+            canvas.drawText("No data to plot", ((float) width) / 2, ((float) height) / 7, paint);
             return bitmap;
         }
 
@@ -91,13 +100,16 @@ public class Libre2GraphBuilder {
         for (int i = 0; i < data.size(); i++) {
             Libre2Value v = data.get(i);
             paint.setColor(Glucose.bloodGraphColor(v.getCalibratedValue()));
-            float r = width * 25000L / (x_max - x_min);
+            float r = (float) ((double) (width * 25000L) / (x_max - x_min));
             canvas.drawCircle(cx(v.timestamp), cy(v.getCalibratedValue()), r, paint);
         }
-        paint.setColor(Glucose.bloodGraphColor(69));
-        canvas.drawLine(0, cy(70), width, cy(70), paint);
-        paint.setColor(Glucose.bloodGraphColor(181));
-        canvas.drawLine(0, cy(180), width, cy(180), paint);
+        if (range_lines) {
+            paint.setStrokeWidth((float) height / 75);
+            paint.setColor(Glucose.bloodGraphColor(69));
+            canvas.drawLine(0, cy(Glucose.low()), width, cy(Glucose.low()), paint);
+            paint.setColor(Glucose.bloodGraphColor(181));
+            canvas.drawLine(0, cy(Glucose.high()), width, cy(Glucose.high()), paint);
+        }
         return bitmap;
     }
 }

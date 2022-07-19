@@ -15,9 +15,7 @@ public class Libre2ValueList {
         return values.size();
     }
 
-    public Libre2Value get(int i) {
-        return values.get(i);
-    }
+    public Libre2Value get(int i) { return values.get(i); }
 
     public Libre2Value maxCalibratedValue() {
         return Collections.max(values, new Libre2CalibratedValueComp());

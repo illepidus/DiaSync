@@ -19,6 +19,38 @@
             app:title="High value"
             app:defaultValue="10.0"
             app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>>
+    </PreferenceCategory>
+    <PreferenceCategory app:title="Libre2 widget">
+        <ListPreference
+            app:key="libre2_widget_on_click"
+            app:entries="@array/libre2_widget_on_click_entries"
+            app:entryValues="@array/libre2_widget_on_click_values"
+            app:defaultValue="settings"
+            app:title="On click action"
+            app:useSimpleSummaryProvider="true"/>
+        <SwitchPreferenceCompat
+            app:key="libre2_widget_use_calibration"
+            app:title="Use xDrip calibrations"
+            app:defaultValue="true" />
+        <SwitchPreferenceCompat
+            app:key="libre2_widget_graph_enabled"
+            app:allowDividerBelow="true"
+            app:title="Graph enabled"
+            app:defaultValue="true" />
+        <ListPreference
+            app:key="libre2_widget_graph_period"
+            app:dependency="libre2_widget_graph_enabled"
+            app:allowDividerAbove="true"
+            app:entries="@array/libre2_widget_graph_period_entries"
+            app:entryValues="@array/libre2_widget_graph_period_values"
+            app:defaultValue="1800000"
+            app:title="Graph period"
+            app:useSimpleSummaryProvider="true"/>
+        <SwitchPreferenceCompat
+            app:key="libre2_widget_graph_range_lines"
+            app:title="Display range lines"
+            app:dependency="libre2_widget_graph_enabled"
+            app:defaultValue="false" />
+    </PreferenceCategory>
 
 </PreferenceScreen>
