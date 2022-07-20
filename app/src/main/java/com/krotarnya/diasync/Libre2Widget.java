@@ -11,7 +11,6 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import androidx.preference.PreferenceManager;
 
-import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 public class Libre2Widget extends AppWidgetProvider {
@@ -30,7 +29,7 @@ public class Libre2Widget extends AppWidgetProvider {
 
         long t2 = System.currentTimeMillis(), t1 = t2 - graph_period;
         DiasyncDB diasync_db = DiasyncDB.getInstance(context);
-        Libre2ValueList libre2_values = diasync_db.getLibre2Values(t1, t2);
+        Libre2ValueList libre2_values = diasync_db.getLibre2Values(t1, t2 + 60000);
 
         if ((libre2_values == null) || (libre2_values.size() == 0)) {
             views.setTextViewText(R.id.libre2_widget_glucose, "----");
@@ -65,7 +64,7 @@ public class Libre2Widget extends AppWidgetProvider {
                     views.setTextViewText(R.id.libre2_widget_glucose, "----");
             }
 
-            views.setTextViewText(R.id.data_timer, String.valueOf((t2 - libre2_last_value.timestamp) / 1000));
+            views.setTextViewText(R.id.data_timer, (t2 - libre2_last_value.timestamp) / 1000 + " seconds ago");
             views.setTextColor(R.id.libre2_widget_glucose, Glucose.bloodTextColor(libre2_last_value.getCalibratedValue()));
         }
 
@@ -103,7 +102,7 @@ public class Libre2Widget extends AppWidgetProvider {
             Log.d(TAG, "Widget clicked. Action = " + on_click);
             switch (on_click) {
                 case "update":
-                    WidgetUpdateService.start(context);
+                    WidgetUpdateService.pleaseStart(context);
                     break;
                 case "settings":
                     Intent settingsIntent = new Intent(Intent.ACTION_VIEW);
@@ -125,16 +124,5 @@ public class Libre2Widget extends AppWidgetProvider {
         Intent intent = new Intent(context, Libre2Widget.class);
         intent.setAction(action);
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-    }
-
-    public static void update(Context context) {
-        Intent widget_intent = new Intent(context, Libre2Widget.class);
-        widget_intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        int [] ids = AppWidgetManager.getInstance(context.getApplicationContext())
-                .getAppWidgetIds(new ComponentName(context.getApplicationContext(), Libre2Widget.class));
-        if (ids.length > 0) {
-            widget_intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-            context.sendBroadcast(widget_intent);
-        }
     }
 }

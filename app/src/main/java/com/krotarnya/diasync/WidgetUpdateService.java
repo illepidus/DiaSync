@@ -15,10 +15,10 @@ public class WidgetUpdateService extends Service {
     private static final String TAG = "WidgetUpdateService";
     private boolean isRegistered = false;
 
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            final PowerManager.WakeLock wl = getWakeLock("diasync-widget-broadcast", 20000);
+            final PowerManager.WakeLock wl = Diasync.getWakeLock("diasync-widget-broadcast", 30000);
             if (intent.getAction().compareTo(Intent.ACTION_TIME_TICK) == 0) {
                 updateWidgets();
             } else if (intent.getAction().compareTo(Intent.ACTION_SCREEN_ON) == 0) {
@@ -27,7 +27,7 @@ public class WidgetUpdateService extends Service {
             } else if (intent.getAction().compareTo(Intent.ACTION_SCREEN_OFF) == 0) {
                 disableClockTicks();
             }
-            releaseWakeLock(wl);
+            Diasync.releaseWakeLock(wl);
         }
     };
 
@@ -86,27 +86,7 @@ public class WidgetUpdateService extends Service {
         isRegistered = true;
     }
 
-    public static PowerManager.WakeLock getWakeLock(final String name, int millis) {
-        final PowerManager pm = (PowerManager) Diasync.getContext().getSystemService(Context.POWER_SERVICE);
-        final PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, name);
-        wl.acquire(millis);
-        Log.d(TAG, "getWakeLock: " + name + " " + wl.toString());
-        return wl;
-    }
-
-    public static synchronized void releaseWakeLock(final PowerManager.WakeLock wl) {
-        Log.d(TAG, "releaseWakeLock: " + wl.toString());
-        if (wl == null) return;
-        if (wl.isHeld()) {
-            try {
-                wl.release();
-            } catch (Exception e) {
-                Log.e(TAG, "Error releasing wakelock: " + e);
-            }
-        }
-    }
-
-    public static void start(Context context) {
+    public static void pleaseStart(Context context) {
         if (AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, Libre2Widget.class)).length == 0) {
             Log.d(TAG, "No widgets exists in context[" + context + "] wherefore no need to update them");
             return;
@@ -120,8 +100,15 @@ public class WidgetUpdateService extends Service {
         }
     }
 
-    public void updateWidgets() {
-        Log.d(TAG, "Updating widgets");
-        Libre2Widget.update(getApplication());
+    private void updateWidgets() {
+        Intent widget_intent = new Intent(getApplicationContext(), Libre2Widget.class);
+        widget_intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int [] ids = AppWidgetManager.getInstance(getApplicationContext())
+                .getAppWidgetIds(new ComponentName(getApplicationContext(), Libre2Widget.class));
+        if (ids.length > 0) {
+            widget_intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+            Log.d(TAG, "Updating widgets");
+            getApplicationContext().sendBroadcast(widget_intent);
+        }
     }
 }
