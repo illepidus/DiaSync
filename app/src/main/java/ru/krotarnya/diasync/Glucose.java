@@ -1,4 +1,4 @@
-package com.krotarnya.diasync;
+package ru.krotarnya.diasync;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,6 +8,8 @@ import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
+
+import ru.krotarnya.diasync.R;
 
 import java.util.Locale;
 

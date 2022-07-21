@@ -1,4 +1,4 @@
-package com.krotarnya.diasync;
+package ru.krotarnya.diasync;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.krotarnya.diasync;
+package ru.krotarnya.diasync;
 
 import android.content.Context;
 import android.content.res.Resources;

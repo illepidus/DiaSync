@@ -1,4 +1,4 @@
-package com.krotarnya.diasync;
+package ru.krotarnya.diasync;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -15,6 +15,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+
+import ru.krotarnya.diasync.R;
 
 import java.util.Objects;
 

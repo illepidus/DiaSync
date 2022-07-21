@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.krotarnya.diasync">
+    package="ru.krotarnya.diasync">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:name=".Diasync"
+        android:name="ru.krotarnya.diasync.Diasync"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -16,12 +16,12 @@
         tools:targetApi="31">
 
         <service
-            android:name=".WidgetUpdateService"
+            android:name="ru.krotarnya.diasync.WidgetUpdateService"
             android:enabled="true"
             android:exported="true" />
 
         <receiver
-            android:name=".Libre2Widget"
+            android:name="ru.krotarnya.diasync.Libre2Widget"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -33,7 +33,7 @@
         </receiver>
 
         <activity
-            android:name=".DiasyncSettings"
+            android:name="ru.krotarnya.diasync.DiasyncSettings"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,7 +42,7 @@
         </activity>
 
         <receiver
-            android:name=".DiaBroadcastReceiver"
+            android:name="ru.krotarnya.diasync.DiaBroadcastReceiver"
             android:exported="true"
             android:permission="android.permission.INTERNET">
             <intent-filter>

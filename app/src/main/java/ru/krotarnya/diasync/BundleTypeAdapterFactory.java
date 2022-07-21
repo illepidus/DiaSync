@@ -1,4 +1,4 @@
-package com.krotarnya.diasync;
+package ru.krotarnya.diasync;
 
 /*
  * Copyright (C) 2015 Gson Type Adapter Authors.

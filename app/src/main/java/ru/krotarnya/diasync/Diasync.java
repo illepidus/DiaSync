@@ -1,5 +1,6 @@
-package com.krotarnya.diasync;
+package ru.krotarnya.diasync;
 
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.os.PowerManager;
@@ -38,4 +39,9 @@ public class Diasync extends Application {
             }
         }
     }
+
+    private static void clearApplicationUserData() {
+        ((ActivityManager)getContext().getSystemService(ACTIVITY_SERVICE))
+                .clearApplicationUserData(); // note: it has a return value!
+   }
 }
