@@ -8,9 +8,6 @@ import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
-
-import ru.krotarnya.diasync.R;
-
 import java.util.Locale;
 
 public class Glucose {

@@ -72,11 +72,11 @@ public class Libre2GraphBuilder {
         return this;
     }
 
-    protected float cx(long x) {
-        return width * (x - x_min) / (x_max - x_min);
+    protected float px(long x) {
+        return (float) width * (x - x_min) / (x_max - x_min);
     }
 
-    protected float cy(double y) {
+    protected float py(double y) {
         return (float) (height - height * (y - y_min) / (y_max - y_min));
     }
 
@@ -89,10 +89,6 @@ public class Libre2GraphBuilder {
         Paint paint = new Paint();
 
         if ((data == null) || (data.size() < 1)) {
-            paint.setColor(Glucose.errorTextColor());
-            paint.setTextSize(((float) height) / 7);
-            paint.setTextAlign(Paint.Align.CENTER);
-            canvas.drawText("No data to plot", ((float) width) / 2, ((float) height) / 7, paint);
             return bitmap;
         }
 
@@ -101,14 +97,14 @@ public class Libre2GraphBuilder {
             Libre2Value v = data.get(i);
             paint.setColor(Glucose.bloodGraphColor(v.getCalibratedValue()));
             float r = (float) ((double) (width * 25000L) / (x_max - x_min));
-            canvas.drawCircle(cx(v.timestamp), cy(v.getCalibratedValue()), r, paint);
+            canvas.drawCircle(px(v.timestamp), py(v.getCalibratedValue()), r, paint);
         }
         if (range_lines) {
             paint.setStrokeWidth((float) height / 75);
             paint.setColor(Glucose.bloodGraphColor(69));
-            canvas.drawLine(0, cy(Glucose.low()), width, cy(Glucose.low()), paint);
+            canvas.drawLine(0, py(Glucose.low()), width, py(Glucose.low()), paint);
             paint.setColor(Glucose.bloodGraphColor(181));
-            canvas.drawLine(0, cy(Glucose.high()), width, cy(Glucose.high()), paint);
+            canvas.drawLine(0, py(Glucose.high()), width, py(Glucose.high()), paint);
         }
         return bitmap;
     }

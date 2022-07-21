@@ -18,7 +18,6 @@ public class WidgetUpdateService extends Service {
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            final PowerManager.WakeLock wl = Diasync.getWakeLock("diasync-widget-broadcast", 30000);
             if (intent.getAction().compareTo(Intent.ACTION_TIME_TICK) == 0) {
                 updateWidgets();
             } else if (intent.getAction().compareTo(Intent.ACTION_SCREEN_ON) == 0) {
@@ -27,7 +26,6 @@ public class WidgetUpdateService extends Service {
             } else if (intent.getAction().compareTo(Intent.ACTION_SCREEN_OFF) == 0) {
                 disableClockTicks();
             }
-            Diasync.releaseWakeLock(wl);
         }
     };
 

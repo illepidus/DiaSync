@@ -11,12 +11,14 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.text.InputType;
 import android.util.Log;
-
-import ru.krotarnya.diasync.R;
 
 import java.util.Objects;
 
@@ -56,7 +58,6 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
         if ((action_bar != null) && (getSupportFragmentManager().getBackStackEntryCount() > 0)) {
             action_bar.setDisplayHomeAsUpEnabled(true);
         }
-        WidgetUpdateService.pleaseStart(getContext());
     }
 
     @Override
@@ -97,11 +98,32 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String key) {
             setPreferencesFromResource(R.xml.settings_root, key);
+
             Preference clear_data = findPreference("clear_data");
+            if (clear_data != null)
             clear_data.setOnPreferenceClickListener(preference -> {
+                Log.d(TAG, "Asked for clear data and force close");
                 Diasync.clearDataForceClose();
                 return true;
             });
+
+            Context context = DiasyncSettings.getContext();
+            if (context != null) {
+                Log.d(TAG, "Checking for battery optimization");
+                String packageName = context.getPackageName();
+                try {
+                    PowerManager pm = (PowerManager) context.getSystemService(POWER_SERVICE);
+                    if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                        intent.setData(Uri.parse("package:" + packageName));
+                        context.startActivity(intent);
+                    }
+                }
+                catch (Exception e) {
+                    Log.d(TAG, "Wasn't able to check for batter optimization");
+                }
+            }
         }
     }
 
