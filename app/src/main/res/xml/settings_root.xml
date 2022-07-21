@@ -3,15 +3,24 @@
     app:key="settings_root">
 
     <Preference
-        app:fragment="ru.krotarnya.diasync.DiasyncSettings$ConnectivityFragment"
-        app:title="Connectivity"
-        app:icon="@drawable/ic_connectivity_settings"
-        app:useSimpleSummaryProvider="true" />
-
-    <Preference
         app:fragment="ru.krotarnya.diasync.DiasyncSettings$DisplayFragment"
         app:icon="@drawable/ic_display_settings"
         app:title="Display"
+        app:allowDividerBelow="true"
         app:useSimpleSummaryProvider="true" />
+
+    <Preference
+        app:fragment="ru.krotarnya.diasync.DiasyncSettings$ConnectivityFragment"
+        app:title="Connectivity"
+        app:icon="@drawable/ic_connectivity_settings"
+        app:allowDividerBelow="true"
+        app:useSimpleSummaryProvider="true" />
+
+    <Preference
+        app:key="clear_data"
+        app:icon="@drawable/ic_clear_data"
+        app:title="CLEAR ALL DATA"
+        app:allowDividerAbove="true"
+        app:useSimpleSummaryProvider="true"  />
 
 </PreferenceScreen>

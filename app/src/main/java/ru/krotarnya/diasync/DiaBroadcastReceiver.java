@@ -28,14 +28,14 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         broadcast_context = context;
         final String action = intent.getAction();
+        if (action == null) return;
+
         Bundle bundle = new Bundle(intent.getExtras());
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean webhook_enabled = prefs.getBoolean("webhook_enabled", false);
         boolean webhook_enabled_follower = prefs.getBoolean("webhook_enabled_follower", false);
         webhook_address = prefs.getString("webhook_address", "undefined");
         webhook_token = prefs.getString("webhook_token", "undefined");
-
-        if (action == null) return;
 
         Log.d (TAG, "Received broadcast intent [" + action + "] in context [" + context + "]");
         if (action.equals("com.eveningoutpost.dexdrip.diasync.libre2_bg")) {
