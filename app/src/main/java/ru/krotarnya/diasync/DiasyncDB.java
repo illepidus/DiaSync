@@ -145,13 +145,6 @@ public class DiasyncDB extends SQLiteOpenHelper {
         return getLibre2Values(0, Long.MAX_VALUE, limit);
     }
 
-    public Libre2Value getLastLibre2Value() {
-        Libre2ValueList vals = getLastLibre2Values(1);
-        if (vals.size() == 1)
-            return vals.get(0);
-        return new Libre2Value();
-    }
-
     public Libre2ValueList getLibre2Values(long from, long till, long limit) {
         List<Libre2Value> values = new ArrayList<>();
 

@@ -52,10 +52,6 @@ public class Glucose {
         return instance;
     }
 
-    public static void update() {
-        instance = null;
-    }
-
     static double mgdlToMmol(double v) {
         return v * 0.0555;
     }
