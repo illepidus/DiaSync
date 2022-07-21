@@ -4,7 +4,9 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.PowerManager;
+import android.provider.Settings;
 import android.util.Log;
 
 public class Diasync extends Application {
@@ -25,13 +27,12 @@ public class Diasync extends Application {
         final PowerManager pm = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
         final PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, name);
         wl.acquire(millis);
-        Log.d(TAG, "getWakeLock: " + name + " " + wl.toString() + "in context [" + getContext() + "]");
+        Log.d(TAG, "getWakeLock: " + name + " " + wl + "in context [" + getContext() + "]");
         return wl;
     }
 
     public static synchronized void releaseWakeLock(final PowerManager.WakeLock wl) {
         Log.d(TAG, "releaseWakeLock: " + wl.toString());
-        if (wl == null) return;
         if (wl.isHeld()) {
             try {
                 wl.release();
