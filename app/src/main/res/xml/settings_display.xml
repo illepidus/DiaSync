@@ -51,6 +51,11 @@
             app:title="Display range lines"
             app:dependency="libre2_widget_graph_enabled"
             app:defaultValue="false" />
+        <SwitchPreferenceCompat
+            app:key="libre2_widget_graph_range_zones"
+            app:title="Display range zones"
+            app:dependency="libre2_widget_graph_enabled"
+            app:defaultValue="false" />
     </PreferenceCategory>
 
 </PreferenceScreen>

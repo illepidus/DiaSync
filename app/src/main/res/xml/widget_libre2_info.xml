@@ -4,6 +4,7 @@
     android:initialKeyguardLayout="@layout/widget_libre2"
     android:initialLayout="@layout/widget_libre2"
     android:minHeight="40dp"
-    android:minWidth="110dp"
+    android:minWidth="40dp"
     android:updatePeriodMillis="600000"
+    android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen|keyguard" />

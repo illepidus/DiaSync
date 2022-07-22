@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 import androidx.preference.PreferenceManager;
@@ -24,6 +25,7 @@ public class Libre2Widget extends AppWidgetProvider {
         String glucose_units = prefs.getString("glucose_units", "mmol");
         boolean graph_enabled = prefs.getBoolean("libre2_widget_graph_enabled", true);
         boolean graph_range_lines = prefs.getBoolean("libre2_widget_graph_range_lines", false);
+        boolean graph_range_zones = prefs.getBoolean("libre2_widget_graph_range_zones", false);
         long graph_period = Long.parseLong(prefs.getString("libre2_widget_graph_period", "1800000"));
 
         long t2 = System.currentTimeMillis(), t1 = t2 - graph_period;
@@ -32,7 +34,7 @@ public class Libre2Widget extends AppWidgetProvider {
 
         if ((libre2_values == null) || (libre2_values.size() == 0)) {
             views.setTextViewText(R.id.libre2_widget_glucose, "----");
-            views.setTextViewText(R.id.libre2_widget_glucose, "----");
+            views.setTextViewText(R.id.Libre2_widget_message, "NO DATA");
             views.setImageViewResource(R.id.libre2_widget_graph, android.R.color.transparent);
         }
         else {
@@ -52,22 +54,29 @@ public class Libre2Widget extends AppWidgetProvider {
             }
 
             if (ago < - 60000) {
+                //DATA FROM FAR FUTURE
                 Log.w(TAG, "Received data from far future. Don't know how to display it");
                 views.setTextViewText(R.id.libre2_widget_glucose, "----");
-                views.setTextViewText(R.id.libre2_widget_glucose, "----");
+                views.setTextViewText(R.id.Libre2_widget_message, "DATA FROM FAR FUTURE");
                 views.setImageViewResource(R.id.libre2_widget_graph, android.R.color.transparent);
-            } else if (ago < 0) {
-                //ASSUMING IT'S RIGHT NOW
-                ago = 0;
             } else if (ago < 60000) {
-                //NOTHING SPECIAL
+                //FRESH
+                views.setTextViewText(R.id.Libre2_widget_message, "");
             } else {
-                //TOO OLD DATA
+                //DATA IS OLD
+                if (ago / 60000 == 1)
+                    views.setTextViewText(R.id.Libre2_widget_message, "1 minute ago");
+                else
+                    views.setTextViewText(R.id.Libre2_widget_message, ago / 60000 + " minutes ago");
+                if (ago > 600000) {
+                    //DATA IS WAY TOO OLD
+                    //TODO: crossout R.id.libre2_widget_glucose
+                }
             }
 
             if (graph_enabled) {
                 int width =  appWidgetManager.getAppWidgetOptions(appWidgetId).getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
-                int height = appWidgetManager.getAppWidgetOptions(appWidgetId).getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
+                int height = appWidgetManager.getAppWidgetOptions(appWidgetId).getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
                 if (width > 0 && height > 0) {
                     try {
                         views.setImageViewBitmap(R.id.libre2_widget_graph, new Libre2GraphBuilder(context)
@@ -78,6 +87,7 @@ public class Libre2Widget extends AppWidgetProvider {
                             .setYMin(Double.min((libre2_values.minCalibratedValue().getCalibratedValue()), Glucose.low()) - 18)
                             .setYMax(Double.max((libre2_values.maxCalibratedValue().getCalibratedValue()), Glucose.high()) + 18)
                             .setRangeLines(graph_range_lines)
+                            .setRangeZones(graph_range_zones)
                             .setData(libre2_values)
                             .build());
                     } catch (Exception e) {
@@ -92,8 +102,6 @@ public class Libre2Widget extends AppWidgetProvider {
                 views.setImageViewResource(R.id.libre2_widget_graph, android.R.color.transparent);
             }
 
-
-            views.setTextViewText(R.id.data_timer, (ago) / 60000 + " minutes ago");
             views.setTextColor(R.id.libre2_widget_glucose, Glucose.bloodTextColor(libre2_last_value.getCalibratedValue()));
         }
 
@@ -108,6 +116,12 @@ public class Libre2Widget extends AppWidgetProvider {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
     }
+
+    @Override
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
+        updateAppWidget(context, appWidgetManager, appWidgetId);
+    }
+
 
     @Override
     public void onEnabled(Context context) {

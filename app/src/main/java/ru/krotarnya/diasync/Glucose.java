@@ -18,10 +18,14 @@ public class Glucose {
     private final int error_graph_color;
     private final int low_text_color;
     private final int low_graph_color;
+    private final int low_graph_zone_color;
     private final int normal_text_color;
     private final int normal_graph_color;
+    private final int normal_graph_zone_color;
     private final int high_text_color;
     private final int high_graph_color;
+    private final int high_graph_zone_color;
+
 
     private final SharedPreferences prefs;
     private final DecimalFormat mmol_format;
@@ -34,14 +38,17 @@ public class Glucose {
         mmol_format = new DecimalFormat("0.0", decimal_format_symbols);
         mgdl_format = new DecimalFormat("0", decimal_format_symbols);
 
-        error_text_color   = ContextCompat.getColor(context, R.color.glucose_error_text);
-        error_graph_color  = ContextCompat.getColor(context, R.color.glucose_error_graph);
-        low_text_color     = ContextCompat.getColor(context, R.color.glucose_low_text);
-        low_graph_color    = ContextCompat.getColor(context, R.color.glucose_low_graph);
-        normal_text_color  = ContextCompat.getColor(context, R.color.glucose_normal_text);
-        normal_graph_color = ContextCompat.getColor(context, R.color.glucose_normal_graph);
-        high_text_color    = ContextCompat.getColor(context, R.color.glucose_high_text);
-        high_graph_color   = ContextCompat.getColor(context, R.color.glucose_high_graph);
+        error_text_color        = ContextCompat.getColor(context, R.color.glucose_error_text);
+        error_graph_color       = ContextCompat.getColor(context, R.color.glucose_error_graph);
+        low_text_color          = ContextCompat.getColor(context, R.color.glucose_low_text);
+        low_graph_color         = ContextCompat.getColor(context, R.color.glucose_low_graph);
+        low_graph_zone_color    = ContextCompat.getColor(context, R.color.glucose_low_graph_zone);
+        normal_text_color       = ContextCompat.getColor(context, R.color.glucose_normal_text);
+        normal_graph_color      = ContextCompat.getColor(context, R.color.glucose_normal_graph);
+        normal_graph_zone_color = ContextCompat.getColor(context, R.color.glucose_normal_graph_zone);
+        high_text_color         = ContextCompat.getColor(context, R.color.glucose_high_text);
+        high_graph_color        = ContextCompat.getColor(context, R.color.glucose_high_graph);
+        high_graph_zone_color   = ContextCompat.getColor(context, R.color.glucose_high_graph_zone);
         Log.v(TAG, "Constructor called");
     }
 
@@ -77,10 +84,13 @@ public class Glucose {
     static int errorGraphColor()  { return getInstance().error_graph_color;}
     static int lowTextColor()     { return getInstance().low_text_color;}
     static int lowGraphColor()    { return getInstance().low_graph_color;}
+    static int lowGraphZoneColor() { return getInstance().low_graph_zone_color;}
     static int normalTextColor()  { return getInstance().normal_text_color;}
     static int normalGraphColor() { return getInstance().normal_graph_color;}
+    static int normalGraphZoneColor() { return getInstance().normal_graph_zone_color;}
     static int highTextColor()    { return getInstance().high_text_color;}
     static int highGraphColor()   { return getInstance().high_graph_color;}
+    static int highGraphZoneColor() { return getInstance().high_graph_zone_color;}
 
     static int bloodTextColor(double v) {
         if (v <= 0)     return errorTextColor();

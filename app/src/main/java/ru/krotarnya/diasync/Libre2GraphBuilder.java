@@ -20,6 +20,8 @@ public class Libre2GraphBuilder {
     protected double y_min = 0;
     protected double y_max = 0;
     protected boolean range_lines = false;
+    protected boolean range_zones = false;
+    protected boolean border = false;
     protected Libre2ValueList data;
 
     public Libre2GraphBuilder(Context c) {
@@ -72,6 +74,16 @@ public class Libre2GraphBuilder {
         return this;
     }
 
+    public Libre2GraphBuilder setRangeZones(boolean v) {
+        range_zones = v;
+        return this;
+    }
+
+    public Libre2GraphBuilder setBorder(boolean v) {
+        border = v;
+        return this;
+    }
+
     protected float px(long x) {
         return (float) width * (x - x_min) / (x_max - x_min);
     }
@@ -88,6 +100,34 @@ public class Libre2GraphBuilder {
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint();
 
+        if (border) {
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth((float) height / 75);
+            paint.setColor(Color.GREEN);
+            paint.setStrokeWidth(1);
+            canvas.drawRect(0, 0, width, height, paint);
+        }
+
+        if (range_zones) {
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(Glucose.highGraphZoneColor());
+            canvas.drawRect(0, 0, width, py(Glucose.high()), paint);
+            paint.setColor(Glucose.normalGraphZoneColor());
+            canvas.drawRect(0, py(Glucose.low()), width, py(Glucose.high()), paint);
+            paint.setColor(Glucose.lowGraphZoneColor());
+            canvas.drawRect(0, py(Glucose.low()), width, height, paint);
+
+        }
+
+        if (range_lines) {
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(Float.min((float) height / 100, (float) width / 100));
+            paint.setColor(Glucose.lowGraphColor());
+            canvas.drawLine(0, py(Glucose.low()), width, py(Glucose.low()), paint);
+            paint.setColor(Glucose.highGraphColor());
+            canvas.drawLine(0, py(Glucose.high()), width, py(Glucose.high()), paint);
+        }
+
         if ((data == null) || (data.size() < 1)) {
             return bitmap;
         }
@@ -99,13 +139,7 @@ public class Libre2GraphBuilder {
             float r = (float) ((double) (width * 25000L) / (x_max - x_min));
             canvas.drawCircle(px(v.timestamp), py(v.getCalibratedValue()), r, paint);
         }
-        if (range_lines) {
-            paint.setStrokeWidth((float) height / 75);
-            paint.setColor(Glucose.bloodGraphColor(69));
-            canvas.drawLine(0, py(Glucose.low()), width, py(Glucose.low()), paint);
-            paint.setColor(Glucose.bloodGraphColor(181));
-            canvas.drawLine(0, py(Glucose.high()), width, py(Glucose.high()), paint);
-        }
+
         return bitmap;
     }
 }
