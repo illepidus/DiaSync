@@ -1,10 +1,13 @@
 package ru.krotarnya.diasync;
 
+import android.util.Log;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 public class Libre2ValueList {
+    private static String TAG = "Libre2ValueList";
     private final List<Libre2Value> values;
 
     Libre2ValueList(List<Libre2Value> v) {
@@ -17,20 +20,35 @@ public class Libre2ValueList {
 
     public Libre2Value get(int i) { return values.get(i); }
 
-    public Libre2Value maxCalibratedValue() {
-        return Collections.max(values, new Libre2CalibratedValueComp());
+    public DiasyncConstants.TREND_ARROW_VALUES trendArrow(boolean use_calibration) {
+        Libre2Value lastValue = maxTimestamp();
+        if (lastValue == null || lastValue.getValue(use_calibration) == 0) return DiasyncConstants.TREND_ARROW_VALUES.NONE;
+        double last_value = lastValue.getValue(use_calibration);
+        long last_timestamp = lastValue.timestamp;
+        double sum = 0;
+        int count = 0;
+        for (Libre2Value value : values) {
+            if (last_timestamp - value.timestamp < 600000 && last_timestamp != value.timestamp) {
+                sum += value.getValue(use_calibration);
+                count++;
+            }
+        }
+        if (sum <= 0 || count <= 0) return DiasyncConstants.TREND_ARROW_VALUES.NOT_COMPUTABLE;
+        Log.d(TAG, "Delta = " + (last_value - sum/count) + "; TREND = " + DiasyncConstants.TREND_ARROW_VALUES.getTrend(last_value - sum/count));
+        return DiasyncConstants.TREND_ARROW_VALUES.getTrend(last_value - sum/count);
     }
 
-    public Libre2Value minCalibratedValue() {
-        return Collections.min(values, new Libre2CalibratedValueComp());
+    public String trendArrowName(boolean use_calibration) {
+        return trendArrow(use_calibration).trendName();
+    }
+    public String trendArrowSymbol(boolean use_calibration) { return trendArrow(use_calibration).arrowSymbol(); }
+
+    public Libre2Value maxValue(boolean use_calibration) {
+        return Collections.max(values, new Libre2ValueComp(use_calibration));
     }
 
-    public Libre2Value maxValue() {
-        return Collections.max(values, new Libre2ValueComp());
-    }
-
-    public Libre2Value minValue() {
-        return Collections.min(values, new Libre2ValueComp());
+    public Libre2Value minValue(boolean use_calibration) {
+        return Collections.min(values, new Libre2ValueComp(use_calibration));
     }
 
     public Libre2Value minTimestamp() {
@@ -41,17 +59,16 @@ public class Libre2ValueList {
         return Collections.max(values, new Libre2TimestampComp());
     }
 
-    static class Libre2CalibratedValueComp implements Comparator<Libre2Value> {
-        @Override
-        public int compare(Libre2Value v1, Libre2Value v2) {
-            return Double.compare(v1.value, v2.value);
-        }
-    }
-
     static class Libre2ValueComp implements Comparator<Libre2Value> {
+        final boolean use_calibration;
+
+        public Libre2ValueComp(boolean use_calibration){
+            this.use_calibration = use_calibration;
+        }
+
         @Override
         public int compare(Libre2Value v1, Libre2Value v2) {
-            return Double.compare(v1.getCalibratedValue(), v2.getCalibratedValue());
+            return Double.compare(v1.getValue(use_calibration), v2.getValue(use_calibration));
         }
     }
 
@@ -62,3 +79,4 @@ public class Libre2ValueList {
         }
     }
 }
+

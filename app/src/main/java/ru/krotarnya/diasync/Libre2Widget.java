@@ -35,6 +35,7 @@ public class Libre2Widget extends AppWidgetProvider {
 
         if ((libre2_values == null) || (libre2_values.size() == 0)) {
             views.setTextViewText(R.id.libre2_widget_glucose, "----");
+            views.setTextViewText(R.id.libre2_widget_trend, "-");
             views.setTextViewText(R.id.Libre2_widget_message, "NO DATA");
             views.setImageViewResource(R.id.libre2_widget_graph, android.R.color.transparent);
         }
@@ -44,22 +45,17 @@ public class Libre2Widget extends AppWidgetProvider {
 
             switch (glucose_units) {
                 case "mmol":
-                    if (use_calibration)
-                        views.setTextViewText(R.id.libre2_widget_glucose, Glucose.stringMmol(libre2_last_value.getCalibratedMmolValue()));
-                    else
-                        views.setTextViewText(R.id.libre2_widget_glucose, Glucose.stringMmol(libre2_last_value.getMmolValue()));
+                        views.setTextViewText(R.id.libre2_widget_glucose, Glucose.stringMmol(libre2_last_value.getMmolValue(use_calibration)));
                     break;
                 case "mgdl":
-                    if (use_calibration)
-                        views.setTextViewText(R.id.libre2_widget_glucose, Glucose.stringMgdl(libre2_last_value.getCalibratedValue()));
-                    else
-                        views.setTextViewText(R.id.libre2_widget_glucose, Glucose.stringMgdl(libre2_last_value.getValue()));
+                        views.setTextViewText(R.id.libre2_widget_glucose, Glucose.stringMgdl(libre2_last_value.getValue(use_calibration)));
                     break;
                 default:
                     Log.wtf(TAG, "Unknown glucose units");
                     views.setTextViewText(R.id.libre2_widget_glucose, "----");
             }
 
+            views.setTextViewText(R.id.libre2_widget_trend, libre2_values.trendArrowSymbol(true));
             if (ago < - 60000) {
                 //DATA FROM FAR FUTURE
                 Log.w(TAG, "Received data from far future. Don't know how to display it");
@@ -91,8 +87,8 @@ public class Libre2Widget extends AppWidgetProvider {
                             .setHeight(height)
                             .setXMin(t1 - 60000)
                             .setXMax(t2 + 60000)
-                            .setYMin(use_calibration ? Double.min((libre2_values.minCalibratedValue().getCalibratedValue()), Glucose.low()) - 18 : Double.min((libre2_values.minValue().getValue()), Glucose.low()) - 18)
-                            .setYMax(use_calibration ? Double.max((libre2_values.maxCalibratedValue().getCalibratedValue()), Glucose.high()) + 18 : Double.max((libre2_values.maxValue().getValue()), Glucose.high()) + 18)
+                            .setYMin(Double.min((libre2_values.minValue(use_calibration).getValue(use_calibration)), Glucose.low()) - 18)
+                            .setYMax(Double.max((libre2_values.maxValue(use_calibration).getValue(use_calibration)), Glucose.high()) + 18)
                             .setRangeLines(graph_range_lines)
                             .setRangeZones(graph_range_zones)
                             .setUseCalibration(use_calibration)
@@ -110,7 +106,7 @@ public class Libre2Widget extends AppWidgetProvider {
                 views.setImageViewResource(R.id.libre2_widget_graph, android.R.color.transparent);
             }
 
-            views.setTextColor(R.id.libre2_widget_glucose, Glucose.bloodTextColor(libre2_last_value.getCalibratedValue()));
+            views.setTextColor(R.id.libre2_widget_glucose, Glucose.bloodTextColor(libre2_last_value.getValue(use_calibration)));
         }
 
         views.setOnClickPendingIntent(R.id.libre2_widget_layout, getPendingSelfIntent(context, WIDGET_CLICKED_TAG));

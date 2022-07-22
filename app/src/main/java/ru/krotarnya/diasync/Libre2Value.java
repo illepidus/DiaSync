@@ -21,19 +21,11 @@ public class Libre2Value {
         this(new Bundle());
     }
 
-    public double getValue() {
-        return value;
+    public double getValue(boolean use_calibration) {
+        return use_calibration ? value * xdrip_calibration.slope + xdrip_calibration.intercept : value;
     }
 
-    public double getMmolValue() {
-        return Glucose.mgdlToMmol(getValue());
-    }
-
-    public double getCalibratedValue() {
-        return value * xdrip_calibration.slope + xdrip_calibration.intercept;
-    }
-
-    public double getCalibratedMmolValue() {
-        return Glucose.mgdlToMmol(getCalibratedValue());
+    public double getMmolValue(boolean use_calibration) {
+        return Glucose.mgdlToMmol(getValue(use_calibration));
     }
 }

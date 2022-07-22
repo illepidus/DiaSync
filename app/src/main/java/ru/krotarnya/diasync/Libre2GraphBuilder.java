@@ -138,17 +138,11 @@ public class Libre2GraphBuilder {
         }
 
         paint.setStyle(Paint.Style.FILL);
+        float r = (float) ((double) (width * 25000L) / (x_max - x_min));
         for (int i = 0; i < data.size(); i++) {
             Libre2Value v = data.get(i);
-            float r = (float) ((double) (width * 25000L) / (x_max - x_min));
-            if (use_calibration) {
-                paint.setColor(Glucose.bloodGraphColor(v.getCalibratedValue()));
-                canvas.drawCircle(px(v.timestamp), py(v.getCalibratedValue()), r, paint);
-            }
-            else {
-                paint.setColor(Glucose.bloodGraphColor(v.getCalibratedValue()));
-                canvas.drawCircle(px(v.timestamp), py(v.getCalibratedValue()), r, paint);
-            }
+                paint.setColor(Glucose.bloodGraphColor(v.getValue(use_calibration)));
+                canvas.drawCircle(px(v.timestamp), py(v.getValue(use_calibration)), r, paint);
         }
 
         return bitmap;

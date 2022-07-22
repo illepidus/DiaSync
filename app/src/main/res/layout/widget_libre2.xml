@@ -21,8 +21,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:textStyle="normal" />
+            android:layout_weight="2" />
 
         <TextView
             android:id="@+id/libre2_widget_glucose"
@@ -34,14 +33,22 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:gravity="start"
-            android:text="@string/libre2_widget_blood_glucose_text"
+            android:text="@string/libre2_widget_glucose_text"
             android:textColor="@color/glucose_normal_text"
             android:textStyle="normal" />
 
         <TextView
+            android:id="@+id/libre2_widget_trend"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="10"
+            android:autoSizeTextType="uniform"
+            android:contentDescription="@string/libre2_widget_description"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:gravity="start"
+            android:text="@string/libre2_widget_trend_text"
+            android:textColor="@color/glucose_normal_text"
             android:textStyle="normal" />
 
         <TextView
