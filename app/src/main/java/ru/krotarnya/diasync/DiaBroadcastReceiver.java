@@ -53,7 +53,7 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
             DiasyncDB diasync_db = DiasyncDB.getInstance(broadcast_context);
             diasync_db.addLibre2Value(libre2_value);
 
-            WidgetUpdateService.pleaseStart(context);
+            WidgetUpdateService.pleaseUpdate(context);
             return;
         }
 

@@ -156,7 +156,6 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
 
                     prefs_editor.putString("glucose_low", Glucose.stringMgdl(glucose_low));
                     prefs_editor.apply();
-                    WidgetUpdateService.pleaseStart(context);
                     return true;
                 });
             }
@@ -182,7 +181,6 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
 
                     prefs_editor.putString("glucose_high", Glucose.stringMgdl(glucose_high));
                     prefs_editor.apply();
-                    WidgetUpdateService.pleaseStart(context);
                     return true;
                 });
             }
@@ -212,7 +210,6 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
                             Log.wtf(TAG, "Unknown glucose unit type set.");
                             return false;
                     }
-                    WidgetUpdateService.pleaseStart(context);
                     return true;
                 });
             }

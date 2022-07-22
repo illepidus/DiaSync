@@ -19,6 +19,7 @@ public class Libre2GraphBuilder {
     protected long x_max = 0;
     protected double y_min = 0;
     protected double y_max = 0;
+    protected boolean use_calibration = true;
     protected boolean range_lines = false;
     protected boolean range_zones = false;
     protected boolean border = false;
@@ -84,6 +85,11 @@ public class Libre2GraphBuilder {
         return this;
     }
 
+    public Libre2GraphBuilder setUseCalibration(boolean v) {
+        use_calibration = v;
+        return this;
+    }
+
     protected float px(long x) {
         return (float) width * (x - x_min) / (x_max - x_min);
     }
@@ -116,7 +122,6 @@ public class Libre2GraphBuilder {
             canvas.drawRect(0, py(Glucose.low()), width, py(Glucose.high()), paint);
             paint.setColor(Glucose.lowGraphZoneColor());
             canvas.drawRect(0, py(Glucose.low()), width, height, paint);
-
         }
 
         if (range_lines) {
@@ -135,9 +140,15 @@ public class Libre2GraphBuilder {
         paint.setStyle(Paint.Style.FILL);
         for (int i = 0; i < data.size(); i++) {
             Libre2Value v = data.get(i);
-            paint.setColor(Glucose.bloodGraphColor(v.getCalibratedValue()));
             float r = (float) ((double) (width * 25000L) / (x_max - x_min));
-            canvas.drawCircle(px(v.timestamp), py(v.getCalibratedValue()), r, paint);
+            if (use_calibration) {
+                paint.setColor(Glucose.bloodGraphColor(v.getCalibratedValue()));
+                canvas.drawCircle(px(v.timestamp), py(v.getCalibratedValue()), r, paint);
+            }
+            else {
+                paint.setColor(Glucose.bloodGraphColor(v.getCalibratedValue()));
+                canvas.drawCircle(px(v.timestamp), py(v.getCalibratedValue()), r, paint);
+            }
         }
 
         return bitmap;

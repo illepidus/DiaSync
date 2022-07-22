@@ -55,10 +55,8 @@ public class WidgetUpdateService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (broadcastReceiver != null) {
-            unregisterReceiver(broadcastReceiver);
-            isRegistered = false;
-        }
+        unregisterReceiver(broadcastReceiver);
+        isRegistered = false;
     }
 
     private void enableClockTicks() {
@@ -84,11 +82,7 @@ public class WidgetUpdateService extends Service {
         isRegistered = true;
     }
 
-    public static void pleaseStart(Context context) {
-        if (AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, Libre2Widget.class)).length == 0) {
-            Log.d(TAG, "No widgets exists in context[" + context + "] wherefore no need to update them");
-            return;
-        }
+    public static void pleaseUpdate(Context context) {
         try {
             context.startService(new Intent(context, WidgetUpdateService.class));
             Log.d(TAG, "Starting service in context [" + context + "]");

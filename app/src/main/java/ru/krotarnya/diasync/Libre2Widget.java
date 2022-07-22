@@ -23,6 +23,7 @@ public class Libre2Widget extends AppWidgetProvider {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String glucose_units = prefs.getString("glucose_units", "mmol");
+        boolean use_calibration = prefs.getBoolean("libre2_widget_use_calibration", true);
         boolean graph_enabled = prefs.getBoolean("libre2_widget_graph_enabled", true);
         boolean graph_range_lines = prefs.getBoolean("libre2_widget_graph_range_lines", false);
         boolean graph_range_zones = prefs.getBoolean("libre2_widget_graph_range_zones", false);
@@ -43,10 +44,16 @@ public class Libre2Widget extends AppWidgetProvider {
 
             switch (glucose_units) {
                 case "mmol":
-                    views.setTextViewText(R.id.libre2_widget_glucose, Glucose.stringMmol(libre2_last_value.getCalibratedMmolValue()));
+                    if (use_calibration)
+                        views.setTextViewText(R.id.libre2_widget_glucose, Glucose.stringMmol(libre2_last_value.getCalibratedMmolValue()));
+                    else
+                        views.setTextViewText(R.id.libre2_widget_glucose, Glucose.stringMmol(libre2_last_value.getMmolValue()));
                     break;
                 case "mgdl":
-                    views.setTextViewText(R.id.libre2_widget_glucose, Glucose.stringMgdl(libre2_last_value.getCalibratedValue()));
+                    if (use_calibration)
+                        views.setTextViewText(R.id.libre2_widget_glucose, Glucose.stringMgdl(libre2_last_value.getCalibratedValue()));
+                    else
+                        views.setTextViewText(R.id.libre2_widget_glucose, Glucose.stringMgdl(libre2_last_value.getValue()));
                     break;
                 default:
                     Log.wtf(TAG, "Unknown glucose units");
@@ -84,10 +91,11 @@ public class Libre2Widget extends AppWidgetProvider {
                             .setHeight(height)
                             .setXMin(t1 - 60000)
                             .setXMax(t2 + 60000)
-                            .setYMin(Double.min((libre2_values.minCalibratedValue().getCalibratedValue()), Glucose.low()) - 18)
-                            .setYMax(Double.max((libre2_values.maxCalibratedValue().getCalibratedValue()), Glucose.high()) + 18)
+                            .setYMin(use_calibration ? Double.min((libre2_values.minCalibratedValue().getCalibratedValue()), Glucose.low()) - 18 : Double.min((libre2_values.minValue().getValue()), Glucose.low()) - 18)
+                            .setYMax(use_calibration ? Double.max((libre2_values.maxCalibratedValue().getCalibratedValue()), Glucose.high()) + 18 : Double.max((libre2_values.maxValue().getValue()), Glucose.high()) + 18)
                             .setRangeLines(graph_range_lines)
                             .setRangeZones(graph_range_zones)
+                            .setUseCalibration(use_calibration)
                             .setData(libre2_values)
                             .build());
                     } catch (Exception e) {
@@ -144,7 +152,7 @@ public class Libre2Widget extends AppWidgetProvider {
             Log.d(TAG, "Widget clicked. Action = " + on_click);
             switch (on_click) {
                 case "update":
-                    WidgetUpdateService.pleaseStart(context);
+                    WidgetUpdateService.pleaseUpdate(context);
                     break;
                 case "settings":
                     Intent settingsIntent = new Intent(Intent.ACTION_VIEW);
