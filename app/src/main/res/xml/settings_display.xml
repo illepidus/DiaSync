@@ -3,59 +3,59 @@
 
     <PreferenceCategory app:title="General settings">
         <ListPreference
-            app:key="glucose_units"
+            app:defaultValue="mmol"
             app:entries="@array/glucose_units_entries"
             app:entryValues="@array/glucose_units_values"
-            app:defaultValue="mmol"
+            app:key="glucose_units"
             app:title="Glucose units"
-            app:useSimpleSummaryProvider="true"/>
-        <EditTextPreference
-            app:key="glucose_low_pref"
-            app:title="Low value"
-            app:defaultValue="3.9"
             app:useSimpleSummaryProvider="true" />
         <EditTextPreference
+            app:defaultValue="3.9"
+            app:key="glucose_low_pref"
+            app:title="Low value"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:defaultValue="10.0"
             app:key="glucose_high_pref"
             app:title="High value"
-            app:defaultValue="10.0"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
     <PreferenceCategory app:title="Libre2 widget">
         <ListPreference
-            app:key="libre2_widget_on_click"
+            app:defaultValue="settings"
             app:entries="@array/libre2_widget_on_click_entries"
             app:entryValues="@array/libre2_widget_on_click_values"
-            app:defaultValue="settings"
+            app:key="libre2_widget_on_click"
             app:title="On click action"
-            app:useSimpleSummaryProvider="true"/>
+            app:useSimpleSummaryProvider="true" />
         <SwitchPreferenceCompat
+            app:defaultValue="true"
             app:key="libre2_widget_use_calibration"
-            app:title="Use xDrip calibrations"
-            app:defaultValue="true" />
+            app:title="Use xDrip calibrations" />
         <SwitchPreferenceCompat
-            app:key="libre2_widget_graph_enabled"
             app:allowDividerBelow="true"
-            app:title="Graph enabled"
-            app:defaultValue="true" />
+            app:defaultValue="true"
+            app:key="libre2_widget_graph_enabled"
+            app:title="Graph enabled" />
         <ListPreference
-            app:key="libre2_widget_graph_period"
-            app:dependency="libre2_widget_graph_enabled"
             app:allowDividerAbove="true"
+            app:defaultValue="1800000"
+            app:dependency="libre2_widget_graph_enabled"
             app:entries="@array/libre2_widget_graph_period_entries"
             app:entryValues="@array/libre2_widget_graph_period_values"
-            app:defaultValue="1800000"
+            app:key="libre2_widget_graph_period"
             app:title="Graph period"
-            app:useSimpleSummaryProvider="true"/>
+            app:useSimpleSummaryProvider="true" />
         <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:dependency="libre2_widget_graph_enabled"
             app:key="libre2_widget_graph_range_lines"
-            app:title="Display range lines"
-            app:dependency="libre2_widget_graph_enabled"
-            app:defaultValue="false" />
+            app:title="Display range lines" />
         <SwitchPreferenceCompat
-            app:key="libre2_widget_graph_range_zones"
-            app:title="Display range zones"
+            app:defaultValue="false"
             app:dependency="libre2_widget_graph_enabled"
-            app:defaultValue="false" />
+            app:key="libre2_widget_graph_range_zones"
+            app:title="Display range zones" />
     </PreferenceCategory>
 
 </PreferenceScreen>
