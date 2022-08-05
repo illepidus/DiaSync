@@ -138,6 +138,7 @@ public class Libre2GraphBuilder {
 
         paint.setStyle(Paint.Style.FILL);
         float r = (float) ((double) (width * 25000L) / (x_max - x_min));
+        if (r > (float) height / 50) r = (float) height / 50;
         for (int i = 0; i < data.size(); i++) {
             Libre2Value v = data.get(i);
                 paint.setColor(Glucose.bloodGraphColor(v.getValue(use_calibration)));

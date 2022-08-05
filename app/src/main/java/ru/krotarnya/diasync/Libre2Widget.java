@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -55,6 +56,7 @@ public class Libre2Widget extends AppWidgetProvider {
                     views.setTextViewText(R.id.libre2_widget_glucose, "----");
             }
 
+            views.setInt(R.id.libre2_widget_glucose, "setPaintFlags", Paint.ANTI_ALIAS_FLAG);
             views.setTextViewText(R.id.libre2_widget_trend, libre2_values.trendArrowSymbol(true));
             if (ago < - 60000) {
                 //DATA FROM FAR FUTURE
@@ -72,8 +74,7 @@ public class Libre2Widget extends AppWidgetProvider {
                 else
                     views.setTextViewText(R.id.Libre2_widget_message, ago / 60000 + " minutes ago");
                 if (ago > 600000) {
-                    //DATA IS WAY TOO OLD
-                    //TODO: crossout R.id.libre2_widget_glucose
+                    views.setInt(R.id.libre2_widget_glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
                 }
             }
 
@@ -105,7 +106,6 @@ public class Libre2Widget extends AppWidgetProvider {
             else {
                 views.setImageViewResource(R.id.libre2_widget_graph, android.R.color.transparent);
             }
-
             views.setTextColor(R.id.libre2_widget_glucose, Glucose.bloodTextColor(libre2_last_value.getValue(use_calibration)));
         }
 

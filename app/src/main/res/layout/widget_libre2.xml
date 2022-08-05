@@ -21,7 +21,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2" />
+            android:layout_weight="4"/>
 
         <TextView
             android:id="@+id/libre2_widget_glucose"
@@ -55,7 +55,7 @@
             android:id="@+id/Libre2_widget_message"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="4"
             android:autoSizeTextType="uniform"
             android:contentDescription="@string/libre2_widget_description"
             android:gravity="center"
