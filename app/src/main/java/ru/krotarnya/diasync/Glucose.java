@@ -60,7 +60,7 @@ public class Glucose {
     }
 
     static double mgdlToMmol(double v) {
-        return v * 0.0555;
+        return v * DiasyncConstants.MG_DL_TO_MMOL_L;
     }
     static double mgdlToMmol(String v) {
         return mgdlToMmol(parse(v));

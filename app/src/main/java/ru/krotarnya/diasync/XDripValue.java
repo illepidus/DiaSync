@@ -2,15 +2,13 @@ package ru.krotarnya.diasync;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+
 public class XDripValue {
     public final XDripCalibration calibration;
     public long timestamp;
     public double value;
     public String arrow;
-
-    XDripValue() {
-        this(new Bundle());
-    }
 
     XDripValue(Bundle bundle) {
         timestamp = bundle.getLong("xdrip_timestamp", 0);
@@ -19,6 +17,7 @@ public class XDripValue {
         calibration = new XDripCalibration(bundle);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return  "xdrip_timestamp: " + timestamp + "\n" +

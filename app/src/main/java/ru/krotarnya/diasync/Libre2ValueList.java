@@ -7,7 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Libre2ValueList {
-    private static String TAG = "Libre2ValueList";
+    private static final String TAG = "Libre2ValueList";
     private final List<Libre2Value> values;
 
     Libre2ValueList(List<Libre2Value> v) {

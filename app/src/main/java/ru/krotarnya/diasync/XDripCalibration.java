@@ -2,6 +2,8 @@ package ru.krotarnya.diasync;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+
 public class XDripCalibration {
     public long timestamp;
     public double slope;
@@ -13,6 +15,7 @@ public class XDripCalibration {
         intercept = bundle.getDouble("xdrip_calibration_intercept", 0);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return  "calibration_timestamp: " + timestamp + "\n" +

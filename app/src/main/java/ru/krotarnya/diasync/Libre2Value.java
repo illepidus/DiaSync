@@ -2,6 +2,8 @@ package ru.krotarnya.diasync;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+
 public class Libre2Value {
     public final XDripValue xdrip_value;
     public final XDripCalibration xdrip_calibration;
@@ -29,6 +31,7 @@ public class Libre2Value {
         return Glucose.mgdlToMmol(getValue(use_calibration));
     }
 
+    @NonNull
     @Override
     public String toString() {
         return  "libre2_timestamp: " + timestamp + "\n" +

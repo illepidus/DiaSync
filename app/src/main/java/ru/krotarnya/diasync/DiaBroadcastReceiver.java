@@ -52,7 +52,7 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
             Libre2Value libre2_value = new Libre2Value(bundle);
             DiasyncDB diasync_db = DiasyncDB.getInstance(broadcast_context);
             diasync_db.addLibre2Value(libre2_value);
-            Log.d(TAG, "Received: \n" + libre2_value.toString());
+            Log.d(TAG, "Received: \n" + libre2_value);
 
             WidgetUpdateService.pleaseUpdate(context);
             return;

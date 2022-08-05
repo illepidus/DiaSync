@@ -15,10 +15,10 @@ public class DiasyncConstants {
         NOT_COMPUTABLE(8, "", "NotComputable", null),
         OUT_OF_RANGE(9, "", "RateOutOfRange", null);
 
-        private final int id;
         private final String symbol;
         private final String name;
         private final Double threshold;
+        private final int id;
 
         TREND_ARROW_VALUES(int id, String symbol, String name, Double threshold) {
             this.id = id;
