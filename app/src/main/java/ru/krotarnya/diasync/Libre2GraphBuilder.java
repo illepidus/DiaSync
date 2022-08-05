@@ -102,9 +102,8 @@ public class Libre2GraphBuilder {
         Log.d(TAG, "Building graph");
 
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        bitmap.eraseColor(Color.TRANSPARENT);
         Canvas canvas = new Canvas(bitmap);
-        Paint paint = new Paint();
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         if (border) {
             paint.setStyle(Paint.Style.STROKE);

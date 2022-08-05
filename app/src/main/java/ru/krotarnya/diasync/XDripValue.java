@@ -18,4 +18,12 @@ public class XDripValue {
         arrow = bundle.getString("xdrip_arrow", "none");
         calibration = new XDripCalibration(bundle);
     }
+
+    @Override
+    public String toString() {
+        return  "xdrip_timestamp: " + timestamp + "\n" +
+                "xdrip_value: " + value + "\n" +
+                "xdrip_arrow:" + arrow + "\n" +
+                calibration.toString();
+    }
 }

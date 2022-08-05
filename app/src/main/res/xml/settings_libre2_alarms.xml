@@ -1,0 +1,17 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:key="settings_libre2_alarms">
+
+    <PreferenceCategory app:title="Low alarm">
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="libre2_low_alarm"
+            app:title="Low alarm" />
+    </PreferenceCategory>
+    <PreferenceCategory app:title="High alarm">
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="libre2_high_alarm"
+            app:title="High alarm" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -28,4 +28,12 @@ public class Libre2Value {
     public double getMmolValue(boolean use_calibration) {
         return Glucose.mgdlToMmol(getValue(use_calibration));
     }
+
+    @Override
+    public String toString() {
+        return  "libre2_timestamp: " + timestamp + "\n" +
+                "libre2_serial: " + serial + "\n" +
+                "libre2_value:" + value + "\n" +
+                xdrip_value.toString();
+    }
 }
