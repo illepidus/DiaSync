@@ -25,15 +25,16 @@ public class Glucose {
     private final int high_text_color;
     private final int high_graph_color;
     private final int high_graph_zone_color;
+    private double low;
+    private double high;
 
-
-    private final SharedPreferences prefs;
     private final DecimalFormat mmol_format;
     private final DecimalFormat mgdl_format;
 
     public Glucose() {
         Context context = Diasync.getContext();
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
         DecimalFormatSymbols decimal_format_symbols = new DecimalFormatSymbols(Locale.US);
         mmol_format = new DecimalFormat("0.0", decimal_format_symbols);
         mgdl_format = new DecimalFormat("0", decimal_format_symbols);
@@ -49,6 +50,20 @@ public class Glucose {
         high_text_color         = ContextCompat.getColor(context, R.color.glucose_high_text);
         high_graph_color        = ContextCompat.getColor(context, R.color.glucose_high_graph);
         high_graph_zone_color   = ContextCompat.getColor(context, R.color.glucose_high_graph_zone);
+        low = Double.parseDouble(prefs.getString("glucose_low", "70"));
+        high = Double.parseDouble(prefs.getString("glucose_high", "170"));
+
+        prefs.registerOnSharedPreferenceChangeListener((p, key) -> {
+            if (key.equals("glucose_low")) {
+                low = Double.parseDouble(p.getString("glucose_low", "70"));
+                Log.v(TAG, "glucose_low = " + low);
+            }
+            if (key.equals("glucose_high")) {
+                high = Double.parseDouble(p.getString("glucose_high", "170"));
+                Log.v(TAG, "glucose_high = " + high);
+            }
+        });
+
         Log.v(TAG, "Constructor called");
     }
 
@@ -72,14 +87,6 @@ public class Glucose {
         return mmolToMgdl(parse(v));
     }
 
-    static double low()  {
-            return Double.parseDouble(getInstance().prefs.getString("glucose_low", "70"));
-    }
-
-    static double high()  {
-        return Double.parseDouble(getInstance().prefs.getString("glucose_high", "180"));
-    }
-
     static int errorTextColor()   { return getInstance().error_text_color;}
     static int errorGraphColor()  { return getInstance().error_graph_color;}
     static int lowTextColor()     { return getInstance().low_text_color;}
@@ -91,6 +98,8 @@ public class Glucose {
     static int highTextColor()    { return getInstance().high_text_color;}
     static int highGraphColor()   { return getInstance().high_graph_color;}
     static int highGraphZoneColor() { return getInstance().high_graph_zone_color;}
+    static double high() { return getInstance().high;}
+    static double low() { return getInstance().low;}
 
     static int bloodTextColor(double v) {
         if (v <= 0)     return errorTextColor();
