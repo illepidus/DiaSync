@@ -1,0 +1,19 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:key="settings_alerts">
+
+    <PreferenceCategory app:title="Libre 2 alerts">
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="libre2_low_alert_enabled"
+            app:title="Low alert" />
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="libre2_high_alert_enabled"
+            app:title="High alert" />
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="libre2_no_data_alert_enabled"
+            app:title="No data alert" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

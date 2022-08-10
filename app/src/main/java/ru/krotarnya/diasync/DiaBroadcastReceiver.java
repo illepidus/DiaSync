@@ -3,6 +3,10 @@ package ru.krotarnya.diasync;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -52,6 +56,27 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
             Libre2Value libre2_value = new Libre2Value(bundle);
             DiasyncDB diasync_db = DiasyncDB.getInstance(broadcast_context);
             diasync_db.addLibre2Value(libre2_value);
+
+            if (prefs.getBoolean("libre2_low_alert_enabled", false) && libre2_value.getValue(true) <= Glucose.low()) {
+                try {
+                    MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.alarm_low);
+                    mediaPlayer.start();
+                    Log.d(TAG, "Low alert!");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (prefs.getBoolean("libre2_high_alert_enabled", false) && libre2_value.getValue(true) >= Glucose.high()) {
+                try {
+                    MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.alarm_high);
+                    mediaPlayer.start();
+                    Log.d(TAG, "High alert!");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
             Log.d(TAG, "Received: \n" + libre2_value);
 
             WidgetUpdateService.pleaseUpdate(context);

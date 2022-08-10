@@ -222,4 +222,11 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
             setPreferencesFromResource(R.xml.settings_connectivity, key);
         }
     }
+
+    public static class AlertsFragment extends PreferenceFragmentCompat {
+        @Override
+        public void onCreatePreferences(Bundle savedInstanceState, String key) {
+            setPreferencesFromResource(R.xml.settings_alerts, key);
+        }
+    }
 }

@@ -17,6 +17,13 @@
         app:useSimpleSummaryProvider="true" />
 
     <Preference
+        app:fragment="ru.krotarnya.diasync.DiasyncSettings$AlertsFragment"
+        app:title="Alerts"
+        app:icon="@drawable/ic_alerts_settings"
+        app:allowDividerBelow="true"
+        app:useSimpleSummaryProvider="true" />
+
+    <Preference
         app:key="clear_data"
         app:icon="@drawable/ic_clear_data"
         app:title="CLEAR ALL DATA"
