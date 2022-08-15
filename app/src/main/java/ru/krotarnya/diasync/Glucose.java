@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 import java.util.Locale;
 
-public class Glucose {
+public class Glucose implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "Glucose";
     private static Glucose instance;
 
@@ -52,21 +52,7 @@ public class Glucose {
         high_graph_zone_color   = ContextCompat.getColor(context, R.color.glucose_high_graph_zone);
         low = Double.parseDouble(prefs.getString("glucose_low", "70"));
         high = Double.parseDouble(prefs.getString("glucose_high", "180"));
-
-        //Never us lambda here as anonymous inner class would be garbage collected
-        SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-            public void onSharedPreferenceChanged(SharedPreferences p, String key) {
-                if (key.equals("glucose_low")) {
-                    low = Double.parseDouble(p.getString("glucose_low", "70"));
-                    Log.v(TAG, "glucose_low = " + low);
-                }
-                if (key.equals("glucose_high")) {
-                    high = Double.parseDouble(p.getString("glucose_high", "180"));
-                    Log.v(TAG, "glucose_high = " + high);
-                }
-            }
-        };
-        prefs.registerOnSharedPreferenceChangeListener(listener);
+        prefs.registerOnSharedPreferenceChangeListener(this);
         Log.v(TAG, "Constructor called");
     }
 
@@ -134,5 +120,17 @@ public class Glucose {
 
     static String stringMgdl(double v) {
         return getInstance().mgdl_format.format(v);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences p, String key) {
+        if (key.equals("glucose_low")) {
+            low = Double.parseDouble(p.getString("glucose_low", "70"));
+            Log.v(TAG, "glucose_low = " + low);
+        }
+        if (key.equals("glucose_high")) {
+            high = Double.parseDouble(p.getString("glucose_high", "180"));
+            Log.v(TAG, "glucose_high = " + high);
+        }
     }
 }
