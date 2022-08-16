@@ -66,7 +66,7 @@ public class Alerter {
             else if (high_alert) alert(R.raw.alarm_high);
             else if (no_data_alert) alert(R.raw.alarm_no_data);
         }
-        alert(R.raw.alarm_high); //TODO: remove this
+        //alert(R.raw.alarm_high); //TODO: remove this
     }
 
     private static void alert(int resource) {
