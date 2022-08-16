@@ -31,6 +31,14 @@ public class Libre2Value {
         return Glucose.mgdlToMmol(getValue(use_calibration));
     }
 
+    public boolean isLow(boolean use_calibrations) {
+        return (getValue(use_calibrations) < Glucose.low());
+    }
+
+    public boolean isHigh(boolean use_calibrations) {
+        return (getValue(use_calibrations) > Glucose.high());
+    }
+
     @NonNull
     @Override
     public String toString() {

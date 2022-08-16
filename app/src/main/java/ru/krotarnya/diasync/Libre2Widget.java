@@ -135,9 +135,11 @@ public class Libre2Widget extends AppWidgetProvider {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             String on_click = prefs.getString("libre2_widget_on_click", "settings");
             Log.d(TAG, "Widget clicked. Action = " + on_click);
+            WidgetUpdateService.pleaseUpdate(context);
+            Alerter.checkAlerts();
+
             switch (on_click) {
                 case "update":
-                    WidgetUpdateService.pleaseUpdate(context);
                     break;
                 case "settings":
                     Intent settingsIntent = new Intent(Intent.ACTION_VIEW);

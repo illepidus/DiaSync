@@ -57,15 +57,7 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
             DiasyncDB diasync_db = DiasyncDB.getInstance(broadcast_context);
             diasync_db.addLibre2Value(libre2_value);
 
-            Alerter alerter = new Alerter(context);
-            if (prefs.getBoolean("libre2_low_alert_enabled", false) && libre2_value.getValue(true) <= Glucose.low()) {
-                alerter.detonate();
-            }
-
-            if (prefs.getBoolean("libre2_high_alert_enabled", false) && libre2_value.getValue(true) >= Glucose.high()) {
-                alerter.detonate();
-            }
-
+            Alerter.checkAlerts();
             Log.d(TAG, "Received: \n" + libre2_value);
             WidgetUpdateService.pleaseUpdate(context);
             return;
