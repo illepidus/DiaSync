@@ -57,28 +57,16 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
             DiasyncDB diasync_db = DiasyncDB.getInstance(broadcast_context);
             diasync_db.addLibre2Value(libre2_value);
 
+            Alerter alerter = new Alerter(context);
             if (prefs.getBoolean("libre2_low_alert_enabled", false) && libre2_value.getValue(true) <= Glucose.low()) {
-                try {
-                    MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.alarm_low);
-                    mediaPlayer.start();
-                    Log.d(TAG, "Low alert!");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                alerter.detonate();
             }
 
             if (prefs.getBoolean("libre2_high_alert_enabled", false) && libre2_value.getValue(true) >= Glucose.high()) {
-                try {
-                    MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.alarm_high);
-                    mediaPlayer.start();
-                    Log.d(TAG, "High alert!");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                alerter.detonate();
             }
 
             Log.d(TAG, "Received: \n" + libre2_value);
-
             WidgetUpdateService.pleaseUpdate(context);
             return;
         }
