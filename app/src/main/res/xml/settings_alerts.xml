@@ -1,6 +1,18 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     app:key="settings_alerts">
 
+    <SeekBarPreference
+        app:title="Snooze alerts"
+        app:key="alerts_snooze"
+        app:summary="Snooze alerts"
+        app:updatesContinuously="true"
+        />
+    <Preference
+        app:title="Resume alerts"
+        app:key="alerts_resume"
+        app:summary="Resume alerts"/>
+
+
     <PreferenceCategory app:title="Libre 2 alerts">
         <SwitchPreferenceCompat
             app:defaultValue="false"
