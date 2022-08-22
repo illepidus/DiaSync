@@ -98,7 +98,6 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String key) {
             setPreferencesFromResource(R.xml.settings_root, key);
-
             Preference clear_data = findPreference("clear_data");
             if (clear_data != null)
             clear_data.setOnPreferenceClickListener(preference -> {
