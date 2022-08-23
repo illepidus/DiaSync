@@ -1,16 +1,15 @@
 package ru.krotarnya.diasync;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.util.Log;
-import android.util.TypedValue;
 import androidx.preference.PreferenceManager;
-
-import java.text.DateFormat;
 
 public class Alerter {
     private static Alerter instance;
@@ -32,14 +31,13 @@ public class Alerter {
         return instance;
     }
 
-    public static void checkAlerts() {
-        Log.d(TAG, "Checking alerts status");
+    public static void check() {
+        Log.d(TAG, "Checking...");
         long millis = System.currentTimeMillis();
         if (getInstance().snoozed_till > millis) {
             Log.d(TAG, "Alerts are snoozed. " + ((getInstance().snoozed_till - millis) / 1000) + " seconds left");
             return;
         }
-
         snooze(millis + 40000);
 
         boolean low_alert = getInstance().prefs.getBoolean("libre2_low_alert_enabled", false);
@@ -59,9 +57,9 @@ public class Alerter {
                     no_data_alert = false;
             }
             if (libre2_values.size() == 2) {
-                if (low_alert && (libre2_values.get(0).getValue(use_calibrations) > libre2_values.get(1).getValue(use_calibrations)))
+                if (low_alert && (libre2_values.get(0).getValue(use_calibrations) >= libre2_values.get(1).getValue(use_calibrations)))
                     low_alert = false;
-                if (high_alert && (libre2_values.get(0).getValue(use_calibrations) < libre2_values.get(1).getValue(use_calibrations)))
+                if (high_alert && (libre2_values.get(0).getValue(use_calibrations) <= libre2_values.get(1).getValue(use_calibrations)))
                     high_alert = false;
             }
 
@@ -71,39 +69,46 @@ public class Alerter {
         }
     }
 
-    private static void alert(int resource) {
+    private static void alert(int resource_id) {
+        Context context = Diasync.getContext();
+        Resources resources = context.getResources();
+        alert(new Uri.Builder()
+                .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
+                .authority(resources.getResourcePackageName(resource_id))
+                .appendPath(resources.getResourceTypeName(resource_id))
+                .appendPath(resources.getResourceEntryName(resource_id))
+                .build());
+    }
+
+    private static void alert(Uri uri) {
         Context context = Diasync.getContext();
         AudioManager manager = getInstance().manager;
-        final int stream_type = AudioManager.STREAM_MUSIC;
+        MediaPlayer mediaPlayer = new MediaPlayer();
+
+        final int stream_type = AudioManager.STREAM_ALARM;
         final int cur_volume = manager.getStreamVolume(stream_type);
         final int max_volume = manager.getStreamMaxVolume(stream_type);
 
         try {
-            TypedValue value = new TypedValue();
-            context.getResources().getValue(resource, value, true);
-            Log.d(TAG, "Ding-ding-ding: " + value.string.toString());
-            try {
-                manager.setStreamVolume(stream_type, max_volume, 0);
-                MediaPlayer player = MediaPlayer.create(context, resource);
-                player.setLooping(false);
-                player.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build());
-                player.setOnCompletionListener(mp -> new Thread(() -> {
-                    try {
-                        Thread.sleep(200);
-                    } catch (InterruptedException e) {
-                        Log.e(TAG, "Wasn't able to Thread.sleep");
-                    }
-                    mp.release();
-                    manager.setStreamVolume(stream_type, cur_volume, 0);
-                }).start());
-                player.start();
-            } catch (Exception e) {
-                Log.e(TAG, "Wasn't able to play sound: " + e);
-                e.printStackTrace();
-            }
-        } catch (Resources.NotFoundException e) {
-            Log.e(TAG, "Resource not found");
+            mediaPlayer.setDataSource(context, uri);
+        } catch (Exception e) {
+            Log.e(TAG, "Exception caught on prepare: " + e);
+            return;
         }
+
+        manager.setStreamVolume(stream_type, max_volume, 0);
+        mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setLegacyStreamType(stream_type).build());
+        mediaPlayer.setOnPreparedListener(MediaPlayer::start);
+        mediaPlayer.setOnCompletionListener(mp -> new Thread(() -> {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                Log.e(TAG, "Wasn't able to Thread.sleep");
+            }
+            mp.release();
+            manager.setStreamVolume(stream_type, cur_volume, 0);
+        }).start());
+        mediaPlayer.prepareAsync();
     }
 
     public static void snooze(long till) {
@@ -121,7 +126,7 @@ public class Alerter {
     public static void resume() {
         getInstance().snoozed_till = 0;
         SharedPreferences.Editor editor = getInstance().prefs.edit();
-        editor.putString("alarm_snoozed_till", String.valueOf(0));
+        editor.putString("alarm_snoozed_till", "0");
         editor.apply();
     }
 

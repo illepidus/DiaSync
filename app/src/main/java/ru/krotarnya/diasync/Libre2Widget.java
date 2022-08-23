@@ -136,8 +136,7 @@ public class Libre2Widget extends AppWidgetProvider {
             String on_click = prefs.getString("libre2_widget_on_click", "settings");
             Log.d(TAG, "Widget clicked. Action = " + on_click);
             WidgetUpdateService.pleaseUpdate(context);
-            Alerter.checkAlerts();
-
+            Alerter.check();
             switch (on_click) {
                 case "update":
                     break;
