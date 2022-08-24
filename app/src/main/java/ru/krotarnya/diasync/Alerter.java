@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
@@ -14,7 +13,6 @@ import androidx.preference.PreferenceManager;
 public class Alerter {
     private static Alerter instance;
     private static final String TAG = "Alerter";
-    private final AudioManager manager = (AudioManager)Diasync.getContext().getSystemService(Context.AUDIO_SERVICE);
     private final SharedPreferences prefs;
     private long snoozed_till;
 
@@ -63,10 +61,15 @@ public class Alerter {
                     high_alert = false;
             }
 
-            if (low_alert) alert(R.raw.alarm_low);
-            else if (high_alert) alert(R.raw.alarm_high);
-            else if (no_data_alert) alert(R.raw.alarm_no_data);
+            if (low_alert) alert(R.raw.alert_low);
+            else if (high_alert) alert(R.raw.alert_high);
+            else if (no_data_alert) alert(R.raw.alert_no_data);
         }
+    }
+
+    public static void alert() {
+        //TODO: Remove this test function
+        alert(R.raw.alert);
     }
 
     private static void alert(int resource_id) {
@@ -82,12 +85,7 @@ public class Alerter {
 
     private static void alert(Uri uri) {
         Context context = Diasync.getContext();
-        AudioManager manager = getInstance().manager;
         MediaPlayer mediaPlayer = new MediaPlayer();
-
-        final int stream_type = AudioManager.STREAM_ALARM;
-        final int cur_volume = manager.getStreamVolume(stream_type);
-        final int max_volume = manager.getStreamMaxVolume(stream_type);
 
         try {
             mediaPlayer.setDataSource(context, uri);
@@ -96,8 +94,7 @@ public class Alerter {
             return;
         }
 
-        manager.setStreamVolume(stream_type, max_volume, 0);
-        mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setLegacyStreamType(stream_type).build());
+        mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build());
         mediaPlayer.setOnPreparedListener(MediaPlayer::start);
         mediaPlayer.setOnCompletionListener(mp -> new Thread(() -> {
             try {
@@ -106,7 +103,6 @@ public class Alerter {
                 Log.e(TAG, "Wasn't able to Thread.sleep");
             }
             mp.release();
-            manager.setStreamVolume(stream_type, cur_volume, 0);
         }).start());
         mediaPlayer.prepareAsync();
     }
