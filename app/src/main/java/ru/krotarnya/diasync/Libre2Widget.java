@@ -17,6 +17,7 @@ import java.util.Objects;
 public class Libre2Widget extends AppWidgetProvider {
     private static final String TAG = "Libre2Widget";
     private static final String WIDGET_CLICKED_TAG = "ru.krotarnya.diasync.WIDGET_CLICKED";
+    public static final String WIDGET_ALERTS_ICON_CLICKED_TAG = "ru.krotarnya.diasync.WIDGET_ALERTS_ICON_CLICKED";
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                     int appWidgetId) {
@@ -110,6 +111,7 @@ public class Libre2Widget extends AppWidgetProvider {
         }
 
         views.setOnClickPendingIntent(R.id.libre2_widget_layout, getPendingSelfIntent(context, WIDGET_CLICKED_TAG));
+        views.setOnClickPendingIntent(R.id.libre2_widget_alerts_icon, getPendingSelfIntent(context, WIDGET_ALERTS_ICON_CLICKED_TAG));
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
@@ -153,6 +155,13 @@ public class Libre2Widget extends AppWidgetProvider {
                     context.startActivity(xdripIntent);
                     break;
             }
+        }
+        if (Objects.equals(action, WIDGET_ALERTS_ICON_CLICKED_TAG)) {
+            Intent alarms_intent = new Intent(Intent.ACTION_VIEW);
+            alarms_intent.setClassName(context.getPackageName(), DiasyncSettings.class.getName());
+            alarms_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            alarms_intent.putExtra("fragment", DiasyncSettings.ALERTS_FRAGMENT);
+            context.startActivity(alarms_intent);
         }
     }
 

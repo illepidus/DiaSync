@@ -25,6 +25,12 @@ import java.util.Objects;
 public class DiasyncSettings extends AppCompatActivity implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
     private static final String TAG = "DiasyncSettings";
     private static final String TITLE_TAG = "DiasyncSettingsTitle";
+
+    public static final String ROOT_FRAGMENT = "RootFragment";
+    public static final String DISPLAY_FRAGMENT = "DisplayFragment";
+    public static final String ALERTS_FRAGMENT = "AlertsFragment";
+    public static final String CONNECTIVITY_FRAGMENT = "ConnectivityFragment";
+
     private static DiasyncSettings instance;
 
     @Override
@@ -35,9 +41,9 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.settings, new RootFragment())
-                    .commit();
+                .beginTransaction()
+                .replace(R.id.settings, new RootFragment())
+                .commit();
         }
         else {
             setTitle(savedInstanceState.getCharSequence(TITLE_TAG));
@@ -57,6 +63,34 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
         ActionBar action_bar = getSupportActionBar();
         if ((action_bar != null) && (getSupportFragmentManager().getBackStackEntryCount() > 0)) {
             action_bar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        Intent intent = getIntent();
+        if (intent.hasExtra("fragment")) {
+            String fragment = intent.getStringExtra("fragment");
+
+            PreferenceFragmentCompat preference_fragment = null;
+
+            switch(fragment) {
+                case ROOT_FRAGMENT:
+                    preference_fragment = new RootFragment();
+                    break;
+                case ALERTS_FRAGMENT:
+                    preference_fragment = new AlertsFragment();
+                    break;
+                case CONNECTIVITY_FRAGMENT:
+                    preference_fragment = new ConnectivityFragment();
+                    break;
+                case DISPLAY_FRAGMENT:
+                    preference_fragment = new DisplayFragment();
+                    break;
+                default:
+                    preference_fragment = new RootFragment();
+            }
+            getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.settings, preference_fragment)
+                .commit();
         }
     }
 
