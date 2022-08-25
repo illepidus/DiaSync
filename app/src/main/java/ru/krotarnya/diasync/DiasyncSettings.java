@@ -81,7 +81,6 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
                 case DISPLAY_FRAGMENT:
                     preference_fragment = new DisplayFragment();
                     break;
-                case ROOT_FRAGMENT:
                 default:
                     preference_fragment = new RootFragment();
             }
