@@ -69,12 +69,9 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
         if (intent.hasExtra("fragment")) {
             String fragment = intent.getStringExtra("fragment");
 
-            PreferenceFragmentCompat preference_fragment = null;
+            PreferenceFragmentCompat preference_fragment;
 
             switch(fragment) {
-                case ROOT_FRAGMENT:
-                    preference_fragment = new RootFragment();
-                    break;
                 case ALERTS_FRAGMENT:
                     preference_fragment = new AlertsFragment();
                     break;
@@ -84,6 +81,7 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
                 case DISPLAY_FRAGMENT:
                     preference_fragment = new DisplayFragment();
                     break;
+                case ROOT_FRAGMENT:
                 default:
                     preference_fragment = new RootFragment();
             }
