@@ -33,6 +33,10 @@
             app:key="libre2_widget_use_calibration"
             app:title="Use xDrip calibrations" />
         <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:key="libre2_widget_alerts_icon"
+            app:title="Display alerts icon" />
+        <SwitchPreferenceCompat
             app:allowDividerBelow="true"
             app:defaultValue="true"
             app:key="libre2_widget_graph_enabled"
@@ -52,7 +56,7 @@
             app:key="libre2_widget_graph_range_lines"
             app:title="Display range lines" />
         <SwitchPreferenceCompat
-            app:defaultValue="false"
+            app:defaultValue="true"
             app:dependency="libre2_widget_graph_enabled"
             app:key="libre2_widget_graph_range_zones"
             app:title="Display range zones" />
