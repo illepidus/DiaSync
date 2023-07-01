@@ -6,15 +6,22 @@ import androidx.annotation.NonNull;
 
 public class XDripValue {
     public final XDripCalibration calibration;
-    public long timestamp;
-    public double value;
-    public String arrow;
+    public final long timestamp;
+    public final double value;
+    public final String arrow;
+
+    public XDripValue(XDripCalibration calibration, long timestamp, double value, String arrow) {
+        this.calibration = calibration;
+        this.timestamp = timestamp;
+        this.value = value;
+        this.arrow = arrow;
+    }
 
     XDripValue(Bundle bundle) {
+        calibration = new XDripCalibration(bundle);
         timestamp = bundle.getLong("xdrip_timestamp", 0);
         value = bundle.getDouble("xdrip_value", 0);
         arrow = bundle.getString("xdrip_arrow", "none");
-        calibration = new XDripCalibration(bundle);
     }
 
     @NonNull

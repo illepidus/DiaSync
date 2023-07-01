@@ -167,16 +167,26 @@ public class DiasyncDB extends SQLiteOpenHelper {
         try {
             if (cursor.moveToFirst()) {
                 do {
-                    Libre2Value value = new Libre2Value();
-                    value.timestamp = cursor.getLong(cursor.getColumnIndexOrThrow("timestamp"));
-                    value.serial = cursor.getString(cursor.getColumnIndexOrThrow("serial"));
-                    value.value = cursor.getDouble(cursor.getColumnIndexOrThrow("value"));
-                    value.xDripCalibration.timestamp = cursor.getLong(cursor.getColumnIndexOrThrow("calibration_timestamp"));
-                    value.xDripCalibration.slope = cursor.getDouble(cursor.getColumnIndexOrThrow("calibration_slope"));
-                    value.xDripCalibration.intercept = cursor.getDouble(cursor.getColumnIndexOrThrow("calibration_intercept"));
-                    value.xDripvalue.timestamp = cursor.getLong(cursor.getColumnIndexOrThrow("xdrip_timestamp"));
-                    value.xDripvalue.value = cursor.getDouble(cursor.getColumnIndexOrThrow("xdrip_value"));
-                    value.xDripvalue.arrow = cursor.getString(cursor.getColumnIndexOrThrow("xdrip_arrow"));
+                    XDripCalibration xDripCalibration = new XDripCalibration(
+                            cursor.getLong(cursor.getColumnIndexOrThrow("calibration_timestamp")),
+                            cursor.getDouble(cursor.getColumnIndexOrThrow("calibration_slope")),
+                            cursor.getDouble(cursor.getColumnIndexOrThrow("calibration_intercept"))
+                    );
+
+                    XDripValue xDripValue = new XDripValue(
+                            xDripCalibration,
+                            cursor.getLong(cursor.getColumnIndexOrThrow("xdrip_timestamp")),
+                            cursor.getDouble(cursor.getColumnIndexOrThrow("xdrip_value")),
+                            cursor.getString(cursor.getColumnIndexOrThrow("xdrip_arrow")));
+
+                    Libre2Value value = new Libre2Value(
+                            xDripValue,
+                            xDripCalibration,
+                            cursor.getLong(cursor.getColumnIndexOrThrow("timestamp")),
+                            cursor.getString(cursor.getColumnIndexOrThrow("serial")),
+                            cursor.getDouble(cursor.getColumnIndexOrThrow("value"))
+                    );
+
                     values.add(value);
                 } while(cursor.moveToNext());
             }

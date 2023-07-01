@@ -5,9 +5,15 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 
 public class XDripCalibration {
-    public long timestamp;
-    public double slope;
-    public double intercept;
+    public final long timestamp;
+    public final double slope;
+    public final double intercept;
+
+    public XDripCalibration(long timestamp, double slope, double intercept) {
+        this.timestamp = timestamp;
+        this.slope = slope;
+        this.intercept = intercept;
+    }
 
     XDripCalibration(Bundle bundle) {
         timestamp = bundle.getLong("xdrip_calibration_timestamp", 0);

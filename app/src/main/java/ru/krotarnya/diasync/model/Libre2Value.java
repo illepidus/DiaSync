@@ -9,9 +9,17 @@ import ru.krotarnya.diasync.Glucose;
 public class Libre2Value {
     public final XDripValue xDripvalue;
     public final XDripCalibration xDripCalibration;
-    public long timestamp;
-    public String serial;
-    public double value;
+    public final long timestamp;
+    public final String serial;
+    public final double value;
+
+    public Libre2Value(XDripValue xDripvalue, XDripCalibration xDripCalibration, long timestamp, String serial, double value) {
+        this.xDripvalue = xDripvalue;
+        this.xDripCalibration = xDripCalibration;
+        this.timestamp = timestamp;
+        this.serial = serial;
+        this.value = value;
+    }
 
     public Libre2Value(Bundle bundle) {
         timestamp = bundle.getLong("libre2_timestamp", 0);
@@ -21,9 +29,6 @@ public class Libre2Value {
         xDripCalibration = new XDripCalibration(bundle);
     }
 
-    public Libre2Value() {
-        this(new Bundle());
-    }
 
     public double getValue(boolean use_calibration) {
         return use_calibration ? value * xDripCalibration.slope + xDripCalibration.intercept : value;
