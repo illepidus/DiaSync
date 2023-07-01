@@ -34,11 +34,13 @@ public class Libre2ValueList {
             }
         }
         if (sum <= 0 || count <= 0) return TrendArrow.NONE;
-        Log.d(TAG, "Delta = " + (last_value - sum/count) + "; TREND = " + TrendArrow.getTrend(last_value - sum/count));
-        return TrendArrow.getTrend(last_value - sum/count);
+        Log.d(TAG, "Delta = " + (last_value - sum/count) + "; TREND = " + TrendArrow.of(last_value - sum/count));
+        return TrendArrow.of(last_value - sum/count);
     }
 
-    public String trendArrowSymbol(boolean use_calibration) { return trendArrow(use_calibration).getSymbol(); }
+    public String trendArrowSymbol(boolean use_calibration) {
+        return trendArrow(use_calibration).getSymbol();
+    }
 
     public Libre2Value maxValue(boolean use_calibration) {
         return Collections.max(values, new Libre2ValueComp(use_calibration));

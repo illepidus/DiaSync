@@ -2,7 +2,6 @@ package ru.krotarnya.diasync;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Objects;
 
 public enum TrendArrow {
     NONE("\u0020", null),
@@ -26,11 +25,10 @@ public enum TrendArrow {
         return this.symbol;
     }
 
-    public static TrendArrow getTrend(double value) {
+    public static TrendArrow of(double value) {
         return Arrays.stream(TrendArrow.values())
-                .filter(Objects::nonNull)
                 .filter(a -> a.threshold != null && value > a.threshold)
-                .min(Comparator.comparingDouble(trendArrow -> trendArrow.threshold))
+                .max(Comparator.comparingDouble(trendArrow -> trendArrow.threshold))
                 .orElse(DOUBLE_DOWN);
     }
 }

@@ -12,6 +12,7 @@ import java.util.Locale;
 
 public class Glucose implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "Glucose";
+    private static final double MG_DL_TO_MMOL_L = 0.05556;
     private static Glucose instance;
 
     private final int error_text_color;
@@ -64,7 +65,7 @@ public class Glucose implements SharedPreferences.OnSharedPreferenceChangeListen
     }
 
     static double mgdlToMmol(double v) {
-        return v * Constants.MG_DL_TO_MMOL_L;
+        return v * MG_DL_TO_MMOL_L;
     }
     static double mgdlToMmol(String v) {
         return mgdlToMmol(parse(v));
