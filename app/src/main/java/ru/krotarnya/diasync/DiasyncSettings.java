@@ -11,6 +11,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SeekBarPreference;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -126,7 +127,8 @@ public class DiasyncSettings
         return instance;
     }
 
-    public static class RootFragment extends PreferenceFragmentCompat {
+    @SuppressLint("BatteryLife")
+    private static class RootFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String key) {
             setPreferencesFromResource(R.xml.settings_root, key);
@@ -157,7 +159,7 @@ public class DiasyncSettings
         }
     }
 
-    public static class DisplayFragment extends PreferenceFragmentCompat {
+    private static class DisplayFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String key) {
             setPreferencesFromResource(R.xml.settings_display, key);
@@ -246,14 +248,14 @@ public class DiasyncSettings
         }
     }
 
-    public static class ConnectivityFragment extends PreferenceFragmentCompat {
+    private static class ConnectivityFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String key) {
             setPreferencesFromResource(R.xml.settings_connectivity, key);
         }
     }
 
-    public static class AlertsFragment extends PreferenceFragmentCompat {
+    private static class AlertsFragment extends PreferenceFragmentCompat {
         private SeekBarPreference alerts_snooze;
         private Preference alerts_resume;
 
