@@ -1,4 +1,4 @@
-package ru.krotarnya.diasync;
+package ru.krotarnya.diasync.model;
 
 import android.os.Bundle;
 

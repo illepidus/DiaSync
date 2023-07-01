@@ -14,6 +14,8 @@ import androidx.preference.PreferenceManager;
 
 import java.util.Objects;
 
+import ru.krotarnya.diasync.model.Libre2Value;
+
 public class Libre2Widget extends AppWidgetProvider {
     private static final String TAG = "Libre2Widget";
     private static final String WIDGET_CLICKED_TAG = "ru.krotarnya.diasync.WIDGET_CLICKED";

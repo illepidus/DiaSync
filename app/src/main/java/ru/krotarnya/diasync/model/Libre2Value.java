@@ -1,30 +1,32 @@
-package ru.krotarnya.diasync;
+package ru.krotarnya.diasync.model;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
+import ru.krotarnya.diasync.Glucose;
+
 public class Libre2Value {
-    public final XDripValue xdrip_value;
-    public final XDripCalibration xdrip_calibration;
+    public final XDripValue xDripvalue;
+    public final XDripCalibration xDripCalibration;
     public long timestamp;
     public String serial;
     public double value;
 
-    Libre2Value(Bundle bundle) {
+    public Libre2Value(Bundle bundle) {
         timestamp = bundle.getLong("libre2_timestamp", 0);
         serial = bundle.getString("libre2_serial", "");
         value = bundle.getDouble("libre2_value", 0);
-        xdrip_value = new XDripValue(bundle);
-        xdrip_calibration = new XDripCalibration(bundle);
+        xDripvalue = new XDripValue(bundle);
+        xDripCalibration = new XDripCalibration(bundle);
     }
 
-    Libre2Value() {
+    public Libre2Value() {
         this(new Bundle());
     }
 
     public double getValue(boolean use_calibration) {
-        return use_calibration ? value * xdrip_calibration.slope + xdrip_calibration.intercept : value;
+        return use_calibration ? value * xDripCalibration.slope + xDripCalibration.intercept : value;
     }
 
     public double getMmolValue(boolean use_calibration) {
@@ -45,6 +47,6 @@ public class Libre2Value {
         return  "libre2_timestamp: " + timestamp + "\n" +
                 "libre2_serial: " + serial + "\n" +
                 "libre2_value:" + value + "\n" +
-                xdrip_value.toString();
+                xDripvalue.toString();
     }
 }

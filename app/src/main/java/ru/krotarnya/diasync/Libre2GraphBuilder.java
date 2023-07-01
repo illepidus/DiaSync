@@ -9,6 +9,8 @@ import android.graphics.Paint;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import ru.krotarnya.diasync.model.Libre2Value;
+
 public class Libre2GraphBuilder {
     protected static final String TAG = "Libre2GraphBuilder";
 

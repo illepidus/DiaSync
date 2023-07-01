@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import ru.krotarnya.diasync.model.Libre2Value;
+
 public class Libre2ValueList {
     private static final String TAG = "Libre2ValueList";
     private final List<Libre2Value> values;
@@ -18,7 +20,9 @@ public class Libre2ValueList {
         return values.size();
     }
 
-    public Libre2Value get(int i) { return values.get(i); }
+    public Libre2Value get(int i) {
+        return values.get(i);
+    }
 
     public TrendArrow trendArrow(boolean use_calibration) {
         Libre2Value lastValue = maxTimestamp();
@@ -54,7 +58,7 @@ public class Libre2ValueList {
         return Collections.max(values, new Libre2TimestampComp());
     }
 
-    static class Libre2ValueComp implements Comparator<Libre2Value> {
+    private static class Libre2ValueComp implements Comparator<Libre2Value> {
         final boolean use_calibration;
 
         public Libre2ValueComp(boolean use_calibration){
@@ -67,7 +71,7 @@ public class Libre2ValueList {
         }
     }
 
-    static class Libre2TimestampComp implements Comparator<Libre2Value> {
+    private static class Libre2TimestampComp implements Comparator<Libre2Value> {
         @Override
         public int compare(Libre2Value v1, Libre2Value v2) {
             return Long.compare(v1.timestamp, v2.timestamp);

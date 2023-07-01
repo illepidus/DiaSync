@@ -3,10 +3,6 @@ package ru.krotarnya.diasync;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.MediaPlayer;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -21,6 +17,8 @@ import com.google.gson.GsonBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import ru.krotarnya.diasync.model.Libre2Value;
 
 public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
     private static final String TAG = "DiaBroadcastReceiver";

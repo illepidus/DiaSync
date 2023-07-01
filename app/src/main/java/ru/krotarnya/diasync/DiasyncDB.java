@@ -11,6 +11,10 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.krotarnya.diasync.model.Libre2Value;
+import ru.krotarnya.diasync.model.XDripCalibration;
+import ru.krotarnya.diasync.model.XDripValue;
+
 public class DiasyncDB extends SQLiteOpenHelper {
     private static final String TAG = "DiasyncDB";
     private static DiasyncDB instance;
@@ -116,7 +120,7 @@ public class DiasyncDB extends SQLiteOpenHelper {
 
     public void addLibre2Value(Libre2Value value) {
         SQLiteDatabase db = getWritableDatabase();
-        addXDripValue(value.xdrip_value);
+        addXDripValue(value.xDripvalue);
 
         Log.d(TAG, "Inserting Libre2Value");
         db.beginTransaction();
@@ -125,8 +129,8 @@ public class DiasyncDB extends SQLiteOpenHelper {
             values.put("timestamp", value.timestamp);
             values.put("value", value.value);
             values.put("serial", value.serial);
-            values.put("xdrip_value", value.xdrip_value.timestamp);
-            values.put("xdrip_calibration", value.xdrip_calibration.timestamp);
+            values.put("xdrip_value", value.xDripvalue.timestamp);
+            values.put("xdrip_calibration", value.xDripCalibration.timestamp);
             long res = db.insertOrThrow("libre2_values", null, values);
             if (res >= 0) db.setTransactionSuccessful();
         } catch (Exception e) {
@@ -167,12 +171,12 @@ public class DiasyncDB extends SQLiteOpenHelper {
                     value.timestamp = cursor.getLong(cursor.getColumnIndexOrThrow("timestamp"));
                     value.serial = cursor.getString(cursor.getColumnIndexOrThrow("serial"));
                     value.value = cursor.getDouble(cursor.getColumnIndexOrThrow("value"));
-                    value.xdrip_calibration.timestamp = cursor.getLong(cursor.getColumnIndexOrThrow("calibration_timestamp"));
-                    value.xdrip_calibration.slope = cursor.getDouble(cursor.getColumnIndexOrThrow("calibration_slope"));
-                    value.xdrip_calibration.intercept = cursor.getDouble(cursor.getColumnIndexOrThrow("calibration_intercept"));
-                    value.xdrip_value.timestamp = cursor.getLong(cursor.getColumnIndexOrThrow("xdrip_timestamp"));
-                    value.xdrip_value.value = cursor.getDouble(cursor.getColumnIndexOrThrow("xdrip_value"));
-                    value.xdrip_value.arrow = cursor.getString(cursor.getColumnIndexOrThrow("xdrip_arrow"));
+                    value.xDripCalibration.timestamp = cursor.getLong(cursor.getColumnIndexOrThrow("calibration_timestamp"));
+                    value.xDripCalibration.slope = cursor.getDouble(cursor.getColumnIndexOrThrow("calibration_slope"));
+                    value.xDripCalibration.intercept = cursor.getDouble(cursor.getColumnIndexOrThrow("calibration_intercept"));
+                    value.xDripvalue.timestamp = cursor.getLong(cursor.getColumnIndexOrThrow("xdrip_timestamp"));
+                    value.xDripvalue.value = cursor.getDouble(cursor.getColumnIndexOrThrow("xdrip_value"));
+                    value.xDripvalue.arrow = cursor.getString(cursor.getColumnIndexOrThrow("xdrip_arrow"));
                     values.add(value);
                 } while(cursor.moveToNext());
             }
