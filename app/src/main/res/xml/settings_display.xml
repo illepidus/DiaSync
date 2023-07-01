@@ -30,7 +30,7 @@
             app:useSimpleSummaryProvider="true" />
         <SwitchPreferenceCompat
             app:defaultValue="true"
-            app:key="libre2_widget_use_calibration"
+            app:key="use_calibrations"
             app:title="Use xDrip calibrations" />
         <SwitchPreferenceCompat
             app:defaultValue="true"
