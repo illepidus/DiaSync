@@ -94,7 +94,7 @@ public class BundleTypeAdapterFactory implements TypeAdapterFactory {
                         Bundle subBundle = toBundle(objectValues);
                         bundle.putParcelable(key, subBundle);
                     } else {
-                        throw new IOException("Unparcelable key, value: " + key + ", "+ value);
+                        throw new IOException("Not parcelable key, value: " + key + ", "+ value);
                     }
                 }
                 return bundle;

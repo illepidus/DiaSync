@@ -28,8 +28,6 @@ public class DiasyncSettings
 {
     private static final String TAG = "DiasyncSettings";
     private static final String TITLE_TAG = "DiasyncSettingsTitle";
-
-    public static final String ROOT_FRAGMENT = "RootFragment";
     public static final String DISPLAY_FRAGMENT = "DisplayFragment";
     public static final String ALERTS_FRAGMENT = "AlertsFragment";
     public static final String CONNECTIVITY_FRAGMENT = "ConnectivityFragment";
