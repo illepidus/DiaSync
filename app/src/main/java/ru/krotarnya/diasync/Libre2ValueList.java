@@ -20,9 +20,9 @@ public class Libre2ValueList {
 
     public Libre2Value get(int i) { return values.get(i); }
 
-    public DiasyncConstants.TREND_ARROW_VALUES trendArrow(boolean use_calibration) {
+    public TrendArrow trendArrow(boolean use_calibration) {
         Libre2Value lastValue = maxTimestamp();
-        if (lastValue == null || lastValue.getValue(use_calibration) == 0) return DiasyncConstants.TREND_ARROW_VALUES.NONE;
+        if (lastValue == null || lastValue.getValue(use_calibration) == 0) return TrendArrow.NONE;
         double last_value = lastValue.getValue(use_calibration);
         long last_timestamp = lastValue.timestamp;
         double sum = 0;
@@ -33,15 +33,12 @@ public class Libre2ValueList {
                 count++;
             }
         }
-        if (sum <= 0 || count <= 0) return DiasyncConstants.TREND_ARROW_VALUES.NOT_COMPUTABLE;
-        Log.d(TAG, "Delta = " + (last_value - sum/count) + "; TREND = " + DiasyncConstants.TREND_ARROW_VALUES.getTrend(last_value - sum/count));
-        return DiasyncConstants.TREND_ARROW_VALUES.getTrend(last_value - sum/count);
+        if (sum <= 0 || count <= 0) return TrendArrow.NONE;
+        Log.d(TAG, "Delta = " + (last_value - sum/count) + "; TREND = " + TrendArrow.getTrend(last_value - sum/count));
+        return TrendArrow.getTrend(last_value - sum/count);
     }
 
-    public String trendArrowName(boolean use_calibration) {
-        return trendArrow(use_calibration).trendName();
-    }
-    public String trendArrowSymbol(boolean use_calibration) { return trendArrow(use_calibration).arrowSymbol(); }
+    public String trendArrowSymbol(boolean use_calibration) { return trendArrow(use_calibration).getSymbol(); }
 
     public Libre2Value maxValue(boolean use_calibration) {
         return Collections.max(values, new Libre2ValueComp(use_calibration));
@@ -49,10 +46,6 @@ public class Libre2ValueList {
 
     public Libre2Value minValue(boolean use_calibration) {
         return Collections.min(values, new Libre2ValueComp(use_calibration));
-    }
-
-    public Libre2Value minTimestamp() {
-        return Collections.min(values, new Libre2TimestampComp());
     }
 
     public Libre2Value maxTimestamp() {

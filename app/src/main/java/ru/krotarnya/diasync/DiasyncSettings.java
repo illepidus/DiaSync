@@ -22,7 +22,10 @@ import android.text.InputType;
 import android.util.Log;
 import java.util.Objects;
 
-public class DiasyncSettings extends AppCompatActivity implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
+public class DiasyncSettings
+        extends AppCompatActivity
+        implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback
+{
     private static final String TAG = "DiasyncSettings";
     private static final String TITLE_TAG = "DiasyncSettingsTitle";
 
@@ -130,8 +133,7 @@ public class DiasyncSettings extends AppCompatActivity implements PreferenceFrag
         public void onCreatePreferences(Bundle savedInstanceState, String key) {
             setPreferencesFromResource(R.xml.settings_root, key);
             Preference clear_data = findPreference("clear_data");
-            if (clear_data != null)
-            clear_data.setOnPreferenceClickListener(preference -> {
+            if (clear_data != null) clear_data.setOnPreferenceClickListener(preference -> {
                 Log.d(TAG, "Asked for clear data and force close");
                 Diasync.clearDataForceClose();
                 return true;

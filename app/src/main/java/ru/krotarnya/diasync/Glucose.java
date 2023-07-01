@@ -64,7 +64,7 @@ public class Glucose implements SharedPreferences.OnSharedPreferenceChangeListen
     }
 
     static double mgdlToMmol(double v) {
-        return v * DiasyncConstants.MG_DL_TO_MMOL_L;
+        return v * Constants.MG_DL_TO_MMOL_L;
     }
     static double mgdlToMmol(String v) {
         return mgdlToMmol(parse(v));
