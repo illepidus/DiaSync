@@ -15,6 +15,7 @@ import androidx.preference.PreferenceManager;
 import java.util.Objects;
 
 import ru.krotarnya.diasync.model.Libre2Value;
+import ru.krotarnya.diasync.model.Libre2ValueList;
 
 public class Libre2Widget extends AppWidgetProvider {
     private static final String TAG = "Libre2Widget";
@@ -50,7 +51,7 @@ public class Libre2Widget extends AppWidgetProvider {
             views.setImageViewResource(R.id.libre2_widget_graph, android.R.color.transparent);
         }
         else {
-            Libre2Value libre2_last_value = libre2_values.maxTimestamp();
+            Libre2Value libre2_last_value = libre2_values.maxByTimestamp();
             long ago = (t2 - libre2_last_value.timestamp);
 
             switch (glucose_units) {
@@ -66,7 +67,7 @@ public class Libre2Widget extends AppWidgetProvider {
             }
 
             views.setInt(R.id.libre2_widget_glucose, "setPaintFlags", Paint.ANTI_ALIAS_FLAG);
-            views.setTextViewText(R.id.libre2_widget_trend, libre2_values.trendArrowSymbol(true));
+            views.setTextViewText(R.id.libre2_widget_trend, libre2_values.getTrendArrow(true).getSymbol());
             if (ago < - 60000) {
                 //DATA FROM FAR FUTURE
                 Log.w(TAG, "Received data from far future. Don't know how to display it");
@@ -97,8 +98,8 @@ public class Libre2Widget extends AppWidgetProvider {
                             .setHeight(height)
                             .setXMin(t1 - 60000)
                             .setXMax(t2 + 60000)
-                            .setYMin(Double.min((libre2_values.minValue(use_calibration).getValue(use_calibration)), Glucose.low()) - 18)
-                            .setYMax(Double.max((libre2_values.maxValue(use_calibration).getValue(use_calibration)), Glucose.high()) + 18)
+                            .setYMin(Double.min((libre2_values.minByValue(use_calibration).getValue(use_calibration)), Glucose.low()) - 18)
+                            .setYMax(Double.max((libre2_values.maxByValue(use_calibration).getValue(use_calibration)), Glucose.high()) + 18)
                             .setRangeLines(graph_range_lines)
                             .setRangeZones(graph_range_zones)
                             .setUseCalibration(use_calibration)

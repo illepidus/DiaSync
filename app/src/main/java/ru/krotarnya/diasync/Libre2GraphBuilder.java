@@ -10,6 +10,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import ru.krotarnya.diasync.model.Libre2Value;
+import ru.krotarnya.diasync.model.Libre2ValueList;
 
 public class Libre2GraphBuilder {
     protected static final String TAG = "Libre2GraphBuilder";

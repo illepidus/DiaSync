@@ -15,7 +15,7 @@ public class XDripCalibration {
         this.intercept = intercept;
     }
 
-    XDripCalibration(Bundle bundle) {
+    public XDripCalibration(Bundle bundle) {
         timestamp = bundle.getLong("xdrip_calibration_timestamp", 0);
         slope = bundle.getDouble("xdrip_calibration_slope", 1);
         intercept = bundle.getDouble("xdrip_calibration_intercept", 0);

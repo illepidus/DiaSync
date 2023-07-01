@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.util.Log;
 import androidx.preference.PreferenceManager;
 
+import ru.krotarnya.diasync.model.Libre2ValueList;
+
 public class Alerter {
     private static Alerter instance;
     private static final String TAG = "Alerter";

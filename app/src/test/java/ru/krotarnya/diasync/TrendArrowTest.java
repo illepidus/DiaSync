@@ -2,8 +2,9 @@ package ru.krotarnya.diasync;
 
 import junit.framework.TestCase;
 
-public class TrendArrowTest extends TestCase {
+import ru.krotarnya.diasync.model.TrendArrow;
 
+public class TrendArrowTest extends TestCase {
     public void testOf() {
         assertEquals(TrendArrow.DOUBLE_DOWN, TrendArrow.of(-500.0));
         assertEquals(TrendArrow.SINGLE_DOWN, TrendArrow.of(-10));

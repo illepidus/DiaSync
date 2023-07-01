@@ -8,17 +8,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ru.krotarnya.diasync.model.Libre2Value;
+import ru.krotarnya.diasync.model.Libre2ValueList;
 import ru.krotarnya.diasync.model.XDripCalibration;
 import ru.krotarnya.diasync.model.XDripValue;
 
 public class DiasyncDB extends SQLiteOpenHelper {
     private static final String TAG = "DiasyncDB";
     private static DiasyncDB instance;
-
     private static final String DATABASE_NAME = "diasync";
     private static final int DATABASE_VERSION = 11;
 
@@ -146,7 +143,7 @@ public class DiasyncDB extends SQLiteOpenHelper {
     }
 
     public Libre2ValueList getLibre2Values(long from, long till, long limit) {
-        List<Libre2Value> values = new ArrayList<>();
+        Libre2ValueList values = new Libre2ValueList();
 
         String LIBRE2_SELECT_QUERY =
                 "SELECT lv.timestamp, lv.serial, lv.value, " +
@@ -199,6 +196,6 @@ public class DiasyncDB extends SQLiteOpenHelper {
             }
         }
 
-        return new Libre2ValueList(values);
+        return values;
     }
 }
