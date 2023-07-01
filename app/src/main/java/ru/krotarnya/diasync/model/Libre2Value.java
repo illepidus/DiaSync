@@ -29,20 +29,20 @@ public class Libre2Value {
         xDripCalibration = new XDripCalibration(bundle);
     }
 
-    public double getValue(boolean useCalibration) {
-        return useCalibration ? value * xDripCalibration.slope + xDripCalibration.intercept : value;
+    public double getValue() {
+        return Glucose.useCalibrations() ? value * xDripCalibration.slope + xDripCalibration.intercept : value;
     }
 
-    public double getMmolValue(boolean useCalibration) {
-        return Glucose.mgdlToMmol(getValue(useCalibration));
+    public double getMmolValue() {
+        return Glucose.mgdlToMmol(getValue());
     }
 
-    public boolean isLow(boolean useCalibrations) {
-        return (getValue(useCalibrations) < Glucose.low());
+    public boolean isLow() {
+        return (getValue() <= Glucose.low());
     }
 
-    public boolean isHigh(boolean useCalibrations) {
-        return (getValue(useCalibrations) > Glucose.high());
+    public boolean isHigh() {
+        return (getValue() >= Glucose.high());
     }
 
     @NonNull

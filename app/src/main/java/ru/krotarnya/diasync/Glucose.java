@@ -27,8 +27,9 @@ public class Glucose implements SharedPreferences.OnSharedPreferenceChangeListen
     private final int high_text_color;
     private final int high_graph_color;
     private final int high_graph_zone_color;
-    private double low;
-    private double high;
+    private volatile double low;
+    private volatile double high;
+    private volatile boolean useCalibrations;
 
     private final DecimalFormat mmol_format;
     private final DecimalFormat mgdl_format;
@@ -54,6 +55,7 @@ public class Glucose implements SharedPreferences.OnSharedPreferenceChangeListen
         high_graph_zone_color = ContextCompat.getColor(context, R.color.glucose_high_graph_zone);
         low = Double.parseDouble(prefs.getString("glucose_low", "70"));
         high = Double.parseDouble(prefs.getString("glucose_high", "180"));
+        useCalibrations = prefs.getBoolean("use_calibrations", true);
 
         prefs.registerOnSharedPreferenceChangeListener(this);
     }
@@ -83,10 +85,6 @@ public class Glucose implements SharedPreferences.OnSharedPreferenceChangeListen
 
     public static int errorTextColor() {
         return getInstance().error_text_color;
-    }
-
-    public static int errorGraphColor() {
-        return getInstance().error_graph_color;
     }
 
     public static int lowTextColor() {
@@ -141,7 +139,7 @@ public class Glucose implements SharedPreferences.OnSharedPreferenceChangeListen
     }
 
     public static int bloodGraphColor(double v) {
-        if (v <= 0) return errorGraphColor();
+        if (v <= 0) return getInstance().error_graph_color;
         if (v < low()) return lowGraphColor();
         if (v < high()) return normalGraphColor();
         return highGraphColor();
@@ -165,15 +163,25 @@ public class Glucose implements SharedPreferences.OnSharedPreferenceChangeListen
         return getInstance().mgdl_format.format(v);
     }
 
+    public static boolean useCalibrations() {
+        return getInstance().useCalibrations;
+    }
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences p, String key) {
-        if (key.equals("glucose_low")) {
-            low = Double.parseDouble(p.getString("glucose_low", "70"));
-            Log.v(TAG, "glucose_low = " + low);
-        }
-        if (key.equals("glucose_high")) {
-            high = Double.parseDouble(p.getString("glucose_high", "180"));
-            Log.v(TAG, "glucose_high = " + high);
+        switch (key) {
+            case "glucose_low":
+                low = Double.parseDouble(p.getString("glucose_low", "70"));
+                Log.v(TAG, "glucose_low = " + low);
+                break;
+            case "glucose_high":
+                high = Double.parseDouble(p.getString("glucose_high", "180"));
+                Log.v(TAG, "glucose_high = " + high);
+                break;
+            case "use":
+                useCalibrations = p.getBoolean("use_calibrations", true);
+                Log.v(TAG, "use_calibrations = " + useCalibrations);
+                break;
         }
     }
 }

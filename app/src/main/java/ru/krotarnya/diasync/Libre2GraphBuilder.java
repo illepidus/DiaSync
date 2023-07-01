@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -22,10 +21,8 @@ public class Libre2GraphBuilder {
     protected long x_max = 0;
     protected double y_min = 0;
     protected double y_max = 0;
-    protected boolean use_calibration = true;
     protected boolean range_lines = false;
     protected boolean range_zones = false;
-    protected boolean border = false;
     protected Libre2ValueList data;
 
     public Libre2GraphBuilder(Context c) {
@@ -83,16 +80,6 @@ public class Libre2GraphBuilder {
         return this;
     }
 
-    public Libre2GraphBuilder setBorder(boolean v) {
-        border = v;
-        return this;
-    }
-
-    public Libre2GraphBuilder setUseCalibration(boolean v) {
-        use_calibration = v;
-        return this;
-    }
-
     protected float px(long x) {
         return (float) width * (x - x_min) / (x_max - x_min);
     }
@@ -107,14 +94,6 @@ public class Libre2GraphBuilder {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
-        if (border) {
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth((float) height / 75);
-            paint.setColor(Color.GREEN);
-            paint.setStrokeWidth(1);
-            canvas.drawRect(0, 0, width, height, paint);
-        }
 
         if (range_zones) {
             paint.setStyle(Paint.Style.FILL);
@@ -144,8 +123,8 @@ public class Libre2GraphBuilder {
         if (r > (float) height / 50) r = (float) height / 50;
         for (int i = 0; i < data.size(); i++) {
             Libre2Value v = data.get(i);
-                paint.setColor(Glucose.bloodGraphColor(v.getValue(use_calibration)));
-                canvas.drawCircle(px(v.timestamp), py(v.getValue(use_calibration)), r, paint);
+                paint.setColor(Glucose.bloodGraphColor(v.getValue()));
+                canvas.drawCircle(px(v.timestamp), py(v.getValue()), r, paint);
         }
 
         return bitmap;

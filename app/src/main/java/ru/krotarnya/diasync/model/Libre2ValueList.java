@@ -13,29 +13,29 @@ public class Libre2ValueList extends ArrayList<Libre2Value> {
         super();
     }
 
-    public TrendArrow getTrendArrow(boolean useCalibration) {
+    public TrendArrow getTrendArrow() {
         return Optional.ofNullable(maxByTimestamp())
                 .flatMap(max -> {
                     OptionalDouble avg = this.stream()
                             .filter(v -> v.timestamp >= max.timestamp - TREND_WINDOW_MILLIS
                                     && v.timestamp < max.timestamp)
-                            .mapToDouble(v -> v.getValue(useCalibration))
+                            .mapToDouble(Libre2Value::getValue)
                             .average();
 
                     //Stupid Java 11 without OptionalDouble.stream()
                     return Optional.ofNullable(avg.isPresent()
-                            ? TrendArrow.of(max.getValue(useCalibration) - avg.getAsDouble())
+                            ? TrendArrow.of(max.getValue() - avg.getAsDouble())
                             : null);
                 })
                 .orElse(TrendArrow.NONE);
     }
 
-    public Libre2Value maxByValue(boolean useCalibration) {
-        return Collections.max(this, Comparator.comparingDouble(v -> v.getValue(useCalibration)));
+    public Libre2Value maxByValue() {
+        return Collections.max(this, Comparator.comparingDouble(Libre2Value::getValue));
     }
 
-    public Libre2Value minByValue(boolean useCalibration) {
-        return Collections.min(this, Comparator.comparingDouble(v -> v.getValue(useCalibration)));
+    public Libre2Value minByValue() {
+        return Collections.min(this, Comparator.comparingDouble(Libre2Value::getValue));
     }
 
     public Libre2Value maxByTimestamp() {

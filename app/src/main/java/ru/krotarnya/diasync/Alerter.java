@@ -43,23 +43,22 @@ public class Alerter {
         boolean low_alert = getInstance().prefs.getBoolean("libre2_low_alert_enabled", false);
         boolean high_alert = getInstance().prefs.getBoolean("libre2_high_alert_enabled", false);
         boolean no_data_alert = getInstance().prefs.getBoolean("libre2_no_data_alert_enabled", false);
-        boolean use_calibrations = getInstance().prefs.getBoolean("libre2_widget_use_calibration", true);
 
         if (low_alert || high_alert || no_data_alert) {
             Log.d(TAG, "Alerts enabled");
             Libre2ValueList libre2_values = DiasyncDB.getInstance(Diasync.getContext()).getLibre2Values(0, Long.MAX_VALUE, 2);
             if (libre2_values.size() > 0) {
-                if (low_alert && (!libre2_values.get(0).isLow(use_calibrations)))
+                if (low_alert && (!libre2_values.get(0).isLow()))
                     low_alert = false;
-                if (high_alert && (!libre2_values.get(0).isHigh(use_calibrations)))
+                if (high_alert && (!libre2_values.get(0).isHigh()))
                     high_alert = false;
                 if (no_data_alert && (millis - libre2_values.get(0).timestamp < 300000))
                     no_data_alert = false;
             }
             if (libre2_values.size() == 2) {
-                if (low_alert && (libre2_values.get(0).getValue(use_calibrations) >= libre2_values.get(1).getValue(use_calibrations)))
+                if (low_alert && (libre2_values.get(0).getValue() >= libre2_values.get(1).getValue()))
                     low_alert = false;
-                if (high_alert && (libre2_values.get(0).getValue(use_calibrations) <= libre2_values.get(1).getValue(use_calibrations)))
+                if (high_alert && (libre2_values.get(0).getValue() <= libre2_values.get(1).getValue()))
                     high_alert = false;
             }
 
@@ -67,11 +66,6 @@ public class Alerter {
             else if (high_alert) alert(R.raw.alert_high);
             else if (no_data_alert) alert(R.raw.alert_no_data);
         }
-    }
-
-    public static void alert() {
-        //TODO: Remove this test function
-        alert(R.raw.alert);
     }
 
     private static void alert(int resource_id) {

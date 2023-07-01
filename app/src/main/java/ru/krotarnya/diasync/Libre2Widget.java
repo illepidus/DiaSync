@@ -28,7 +28,6 @@ public class Libre2Widget extends AppWidgetProvider {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String glucose_units = prefs.getString("glucose_units", "mmol");
-        boolean use_calibration = prefs.getBoolean("libre2_widget_use_calibration", true);
         boolean graph_enabled = prefs.getBoolean("libre2_widget_graph_enabled", true);
         boolean graph_range_lines = prefs.getBoolean("libre2_widget_graph_range_lines", false);
         boolean graph_range_zones = prefs.getBoolean("libre2_widget_graph_range_zones", true);
@@ -56,10 +55,10 @@ public class Libre2Widget extends AppWidgetProvider {
 
             switch (glucose_units) {
                 case "mmol":
-                        views.setTextViewText(R.id.libre2_widget_glucose, Glucose.stringMmol(libre2_last_value.getMmolValue(use_calibration)));
+                        views.setTextViewText(R.id.libre2_widget_glucose, Glucose.stringMmol(libre2_last_value.getMmolValue()));
                     break;
                 case "mgdl":
-                        views.setTextViewText(R.id.libre2_widget_glucose, Glucose.stringMgdl(libre2_last_value.getValue(use_calibration)));
+                        views.setTextViewText(R.id.libre2_widget_glucose, Glucose.stringMgdl(libre2_last_value.getValue()));
                     break;
                 default:
                     Log.wtf(TAG, "Unknown glucose units");
@@ -67,7 +66,7 @@ public class Libre2Widget extends AppWidgetProvider {
             }
 
             views.setInt(R.id.libre2_widget_glucose, "setPaintFlags", Paint.ANTI_ALIAS_FLAG);
-            views.setTextViewText(R.id.libre2_widget_trend, libre2_values.getTrendArrow(true).getSymbol());
+            views.setTextViewText(R.id.libre2_widget_trend, libre2_values.getTrendArrow().getSymbol());
             if (ago < - 60000) {
                 //DATA FROM FAR FUTURE
                 Log.w(TAG, "Received data from far future. Don't know how to display it");
@@ -98,11 +97,10 @@ public class Libre2Widget extends AppWidgetProvider {
                             .setHeight(height)
                             .setXMin(t1 - 60000)
                             .setXMax(t2 + 60000)
-                            .setYMin(Double.min((libre2_values.minByValue(use_calibration).getValue(use_calibration)), Glucose.low()) - 18)
-                            .setYMax(Double.max((libre2_values.maxByValue(use_calibration).getValue(use_calibration)), Glucose.high()) + 18)
+                            .setYMin(Double.min((libre2_values.minByValue().getValue()), Glucose.low()) - 18)
+                            .setYMax(Double.max((libre2_values.maxByValue().getValue()), Glucose.high()) + 18)
                             .setRangeLines(graph_range_lines)
                             .setRangeZones(graph_range_zones)
-                            .setUseCalibration(use_calibration)
                             .setData(libre2_values)
                             .build());
                     } catch (Exception e) {
@@ -116,7 +114,7 @@ public class Libre2Widget extends AppWidgetProvider {
             else {
                 views.setImageViewResource(R.id.libre2_widget_graph, android.R.color.transparent);
             }
-            views.setTextColor(R.id.libre2_widget_glucose, Glucose.bloodTextColor(libre2_last_value.getValue(use_calibration)));
+            views.setTextColor(R.id.libre2_widget_glucose, Glucose.bloodTextColor(libre2_last_value.getValue()));
         }
 
         views.setOnClickPendingIntent(R.id.libre2_widget_layout, getPendingSelfIntent(context, WIDGET_CLICKED_TAG));
