@@ -45,6 +45,7 @@
         <item>10800000</item>
         <item>14400000</item>
         <item>28800000</item>
+        <item>36000000</item>
         <item>43200000</item>
         <item>86400000</item>
     </string-array>
@@ -59,6 +60,7 @@
         <item>3 hours</item>
         <item>4 hours</item>
         <item>8 hours</item>
+        <item>10 hours</item>
         <item>12 hours</item>
         <item>1 day</item>
     </string-array>
