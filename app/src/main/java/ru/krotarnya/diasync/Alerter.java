@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.util.Log;
 import androidx.preference.PreferenceManager;
 
+import java.time.Instant;
+
 import ru.krotarnya.diasync.model.Libre2ValueList;
 
 public class Alerter {
@@ -101,6 +103,10 @@ public class Alerter {
             mp.release();
         }).start());
         mediaPlayer.prepareAsync();
+    }
+
+    public static void snooze(Instant till) {
+        snooze(till.getEpochSecond() * 1000);
     }
 
     public static void snooze(long till) {

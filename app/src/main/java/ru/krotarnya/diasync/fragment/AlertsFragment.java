@@ -1,73 +1,97 @@
 package ru.krotarnya.diasync.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SeekBarPreference;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import ru.krotarnya.diasync.Alerter;
 import ru.krotarnya.diasync.Diasync;
 import ru.krotarnya.diasync.R;
+import ru.krotarnya.diasync.model.SnoozeInterval;
 
 public class AlertsFragment extends PreferenceFragmentCompat {
     private static final String TAG = "AlertsFragment";
-    private SeekBarPreference alerts_snooze;
-    private Preference alerts_resume;
+    private static final Duration UPDATE_INTERVAL = Duration.ofMillis(300);
+    private final Handler eventHandler = new Handler();
+    private final Runnable updateRunnable = new Runnable() {
+        @Override
+        public void run() {
+            updateFragment();
+            eventHandler.postDelayed(updateRunnable, UPDATE_INTERVAL.toMillis());
+        }
+    };
+
+    private SeekBarPreference snoozePref;
+    private Preference resumePref;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String key) {
         setPreferencesFromResource(R.xml.settings_alerts, key);
-        alerts_snooze = findPreference("alerts_snooze");
-        alerts_resume = findPreference("alerts_resume");
-        update();
+        snoozePref = findPreference("alerts_snooze");
+        resumePref = findPreference("alerts_resume");
 
-        String[] alerts_snooze_values = getResources().getStringArray(R.array.alerts_snooze_values);
-        String[] alerts_snooze_entries = getResources().getStringArray(R.array.alerts_snooze_entries);
-        if (alerts_snooze_values.length == alerts_snooze_entries.length) {
-            int size = alerts_snooze_values.length;
-            alerts_snooze.setMax(size - 1);
-            alerts_snooze.setSummary(alerts_snooze_entries[alerts_snooze.getValue()]);
+        if ((snoozePref == null) || (resumePref == null))
+            return;
 
-            alerts_snooze.setOnPreferenceClickListener(preference -> {
-                Log.d(TAG, "Snoozing alerts");
-                try {
-                    Alerter.snooze(System.currentTimeMillis() + Long.parseLong(alerts_snooze_values[alerts_snooze.getValue()]));
-                } catch (Exception e) {
-                    Log.e(TAG, "Failed to snooze");
-                }
-                update();
-                return true;
-            });
+        snoozePref.setMax(SnoozeInterval.getTotalCount() - 1);
+        snoozePref.setSummary(SnoozeInterval
+                .getByOrderOrDefault(snoozePref.getValue())
+                .getDisplayedText());
 
-
-            alerts_snooze.setOnPreferenceChangeListener((preference, newValue) -> {
-                try {
-                    alerts_snooze.setSummary(alerts_snooze_entries[(int) newValue]);
-                } catch (Exception e) {
-                    Log.e(TAG, "Failed to set snooze period for alerts_snooze_values[" + newValue + "]");
-                }
-                return true;
-            });
-        }
-
-        alerts_resume.setOnPreferenceClickListener(preference -> {
-            Log.d(TAG, "Resuming alerts");
-            Alerter.resume();
-            update();
+        snoozePref.setOnPreferenceClickListener(preference -> {
+            Log.d(TAG, "Snoozing alerts");
+            try {
+                Alerter.snooze(Instant.now().plus(SnoozeInterval
+                        .getByOrderOrDefault(snoozePref.getValue())
+                        .getDuration()));
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to snooze");
+                return false;
+            }
             return true;
         });
+
+        snoozePref.setOnPreferenceChangeListener((preference, newValue) -> {
+            try {
+                snoozePref.setSummary(SnoozeInterval
+                        .getByOrderOrDefault((int) newValue)
+                        .getDisplayedText());
+            } catch (Exception e) {
+                Log.wtf(TAG, "Failed to set snooze period", e);
+                return false;
+            }
+            return true;
+        });
+
+        resumePref.setOnPreferenceClickListener(preference -> {
+            Log.d(TAG, "Resuming alerts");
+            Alerter.resume();
+            updateFragment();
+            return true;
+        });
+
+        updateFragment();
+        eventHandler.postDelayed(updateRunnable, UPDATE_INTERVAL.toMillis());
     }
 
-    public void update() {
+    public void updateFragment() {
         if (Alerter.isSnoozedExternally()) {
-            alerts_snooze.setVisible(false);
-            alerts_resume.setVisible(true);
-            alerts_resume.setSummary("Snoozed till " + Diasync.timeFormat(Alerter.snoozedTill()));
+            snoozePref.setVisible(false);
+            resumePref.setVisible(true);
+            resumePref.setSummary("["
+                    + Diasync.durationFormat(Alerter.snoozedTill() - System.currentTimeMillis())
+                    + "] Snoozed till "
+                    + Diasync.timeFormat(Alerter.snoozedTill()));
         } else {
-            alerts_snooze.setVisible(true);
-            alerts_resume.setVisible(false);
+            snoozePref.setVisible(true);
+            resumePref.setVisible(false);
         }
     }
 }
