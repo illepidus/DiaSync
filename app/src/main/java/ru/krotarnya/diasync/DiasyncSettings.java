@@ -128,7 +128,7 @@ public class DiasyncSettings
     }
 
     @SuppressLint("BatteryLife")
-    private static class RootFragment extends PreferenceFragmentCompat {
+    public static class RootFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String key) {
             setPreferencesFromResource(R.xml.settings_root, key);
@@ -159,7 +159,7 @@ public class DiasyncSettings
         }
     }
 
-    private static class DisplayFragment extends PreferenceFragmentCompat {
+    public static class DisplayFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String key) {
             setPreferencesFromResource(R.xml.settings_display, key);
@@ -248,14 +248,14 @@ public class DiasyncSettings
         }
     }
 
-    private static class ConnectivityFragment extends PreferenceFragmentCompat {
+    public static class ConnectivityFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String key) {
             setPreferencesFromResource(R.xml.settings_connectivity, key);
         }
     }
 
-    private static class AlertsFragment extends PreferenceFragmentCompat {
+    public static class AlertsFragment extends PreferenceFragmentCompat {
         private SeekBarPreference alerts_snooze;
         private Preference alerts_resume;
 
