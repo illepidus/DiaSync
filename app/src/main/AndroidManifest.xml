@@ -18,7 +18,7 @@
         tools:targetApi="31">
 
         <service
-            android:name="ru.krotarnya.diasync.WidgetUpdateService"
+            android:name="ru.krotarnya.diasync.service.WidgetUpdateService"
             android:enabled="true"
             android:exported="true" />
 
@@ -35,7 +35,7 @@
         </receiver>
 
         <activity
-            android:name="ru.krotarnya.diasync.DiasyncSettings"
+            android:name="ru.krotarnya.diasync.SettingsActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

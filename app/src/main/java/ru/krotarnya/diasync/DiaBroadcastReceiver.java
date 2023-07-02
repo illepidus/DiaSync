@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ru.krotarnya.diasync.model.Libre2Value;
+import ru.krotarnya.diasync.service.WidgetUpdateService;
 
 public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
     private static final String TAG = "DiaBroadcastReceiver";

@@ -16,6 +16,7 @@ import java.util.Objects;
 
 import ru.krotarnya.diasync.model.Libre2Value;
 import ru.krotarnya.diasync.model.Libre2ValueList;
+import ru.krotarnya.diasync.service.WidgetUpdateService;
 
 public class Libre2Widget extends AppWidgetProvider {
     private static final String TAG = "Libre2Widget";
@@ -151,7 +152,7 @@ public class Libre2Widget extends AppWidgetProvider {
                     break;
                 case "settings":
                     Intent settingsIntent = new Intent(Intent.ACTION_VIEW);
-                    settingsIntent.setClassName(context.getPackageName(), DiasyncSettings.class.getName());
+                    settingsIntent.setClassName(context.getPackageName(), SettingsActivity.class.getName());
                     settingsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(settingsIntent);
                     break;
@@ -165,9 +166,9 @@ public class Libre2Widget extends AppWidgetProvider {
         }
         if (Objects.equals(action, WIDGET_ALERTS_ICON_CLICKED_TAG)) {
             Intent alarms_intent = new Intent(Intent.ACTION_VIEW);
-            alarms_intent.setClassName(context.getPackageName(), DiasyncSettings.class.getName());
+            alarms_intent.setClassName(context.getPackageName(), SettingsActivity.class.getName());
             alarms_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            alarms_intent.putExtra("fragment", DiasyncSettings.ALERTS_FRAGMENT);
+            alarms_intent.putExtra("fragment", SettingsActivity.ALERTS_FRAGMENT);
             context.startActivity(alarms_intent);
         }
     }

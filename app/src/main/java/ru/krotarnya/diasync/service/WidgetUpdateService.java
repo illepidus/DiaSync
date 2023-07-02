@@ -1,4 +1,4 @@
-package ru.krotarnya.diasync;
+package ru.krotarnya.diasync.service;
 
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
@@ -10,6 +10,8 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
+
+import ru.krotarnya.diasync.Libre2Widget;
 
 public class WidgetUpdateService extends Service {
     private static final String TAG = "WidgetUpdateService";
