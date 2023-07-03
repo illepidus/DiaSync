@@ -41,9 +41,9 @@ public class Diasync extends Application {
 
     @SuppressLint("DefaultLocale")
     public static String durationFormat(long duration) {
-        final long hr = TimeUnit.MILLISECONDS.toHours(duration);
-        final long min = TimeUnit.MILLISECONDS.toMinutes(duration) % 60;
-        final long sec = TimeUnit.MILLISECONDS.toSeconds(duration) % 60;
+        long hr = TimeUnit.MILLISECONDS.toHours(duration);
+        long min = TimeUnit.MILLISECONDS.toMinutes(duration) % 60;
+        long sec = TimeUnit.MILLISECONDS.toSeconds(duration) % 60;
         return String.format("%02d:%02d:%02d", hr, min, sec);
     }
 }
