@@ -86,7 +86,7 @@ public class AlertsFragment extends PreferenceFragmentCompat {
             snoozePref.setVisible(false);
             resumePref.setVisible(true);
             resumePref.setSummary("["
-                    + Diasync.durationFormat(Duration.between(Alerter.snoozedTill(), Instant.now()))
+                    + Diasync.durationFormat(Duration.between(Instant.now(), Alerter.snoozedTill()))
                     + "] Snoozed till "
                     + Diasync.timeFormat(Alerter.snoozedTill()));
         } else {

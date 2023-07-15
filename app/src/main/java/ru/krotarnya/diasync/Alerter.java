@@ -20,7 +20,7 @@ import ru.krotarnya.diasync.model.Libre2ValueList;
 public class Alerter {
     private static volatile Alerter instance;
     private static final String TAG = "Alerter";
-    private static final Duration SILENCE_INTERVAL = Duration.ofSeconds(50);
+    private static final Duration SILENCE_INTERVAL = Duration.ofSeconds(55);
     private static final Duration NO_DATA_INTERVAL = Duration.ofMinutes(5);
     private static final Duration CHECK_INTERVAL = Duration.ofMinutes(1);
 
@@ -77,7 +77,7 @@ public class Alerter {
                     lowAlert = false;
                 if (highAlert && (!libre2_values.get(0).isHigh()))
                     highAlert = false;
-                if (noDataAlert && (Duration.between(now, Instant.ofEpochMilli(libre2_values.get(0).timestamp)).minus(NO_DATA_INTERVAL).isNegative()))
+                if (noDataAlert && (Duration.between(Instant.ofEpochMilli(libre2_values.get(0).timestamp).plus(NO_DATA_INTERVAL), now).isNegative()))
                     noDataAlert = false;
             }
             if (libre2_values.size() == 2) {
