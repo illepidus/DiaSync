@@ -14,7 +14,7 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import ru.krotarnya.diasync.Diasync;
 import ru.krotarnya.diasync.R;
-import ru.krotarnya.diasync.SettingsActivity;
+import ru.krotarnya.diasync.activity.SettingsActivity;
 
 @SuppressLint("BatteryLife")
 public class RootFragment extends PreferenceFragmentCompat {

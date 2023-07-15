@@ -1,4 +1,4 @@
-package ru.krotarnya.diasync;
+package ru.krotarnya.diasync.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import java.util.Objects;
 
+import ru.krotarnya.diasync.R;
 import ru.krotarnya.diasync.fragment.AlertsFragment;
 import ru.krotarnya.diasync.fragment.ConnectivityFragment;
 import ru.krotarnya.diasync.fragment.DisplayFragment;
@@ -28,7 +29,6 @@ public class SettingsActivity
     public static final String DISPLAY_FRAGMENT = "DisplayFragment";
     public static final String ALERTS_FRAGMENT = "AlertsFragment";
     public static final String CONNECTIVITY_FRAGMENT = "ConnectivityFragment";
-
     private static SettingsActivity instance;
 
     @Override

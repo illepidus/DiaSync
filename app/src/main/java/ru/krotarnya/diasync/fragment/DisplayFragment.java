@@ -15,7 +15,7 @@ import java.util.Objects;
 
 import ru.krotarnya.diasync.Glucose;
 import ru.krotarnya.diasync.R;
-import ru.krotarnya.diasync.SettingsActivity;
+import ru.krotarnya.diasync.activity.SettingsActivity;
 
 public class DisplayFragment extends PreferenceFragmentCompat {
     private static final String TAG = "DisplayFragment";

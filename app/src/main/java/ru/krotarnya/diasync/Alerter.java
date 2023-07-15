@@ -10,67 +10,90 @@ import android.net.Uri;
 import android.util.Log;
 import androidx.preference.PreferenceManager;
 
+import java.time.Duration;
 import java.time.Instant;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import ru.krotarnya.diasync.model.Libre2ValueList;
 
 public class Alerter {
-    private static Alerter instance;
+    private static volatile Alerter instance;
     private static final String TAG = "Alerter";
+    private static final Duration SILENCE_INTERVAL = Duration.ofSeconds(50);
+    private static final Duration NO_DATA_INTERVAL = Duration.ofMinutes(5);
+    private static final Duration CHECK_INTERVAL = Duration.ofMinutes(1);
+
     private final SharedPreferences prefs;
-    private long snoozed_till;
+    private Instant snoozedTill;
+    private Instant externalSnoozedTill;
 
     public Alerter() {
         prefs = PreferenceManager.getDefaultSharedPreferences(Diasync.getContext());
         Log.d(TAG, "Constructor called in context");
-        snoozed_till = Long.parseLong(prefs.getString("alarm_snoozed_till", String.valueOf(System.currentTimeMillis())));
+        snoozedTill = Instant.ofEpochMilli(Long.parseLong(prefs.getString("alarm_snoozed_till", String.valueOf(System.currentTimeMillis()))));
+        externalSnoozedTill = Instant.ofEpochMilli(Long.parseLong(prefs.getString("alarm_external_snoozed_till", String.valueOf(System.currentTimeMillis()))));
+        new Timer().schedule(new TimerTask() {
+            public void run() {
+                check();
+            }
+        }, CHECK_INTERVAL.toMillis(), CHECK_INTERVAL.toMillis());
     }
 
-    public static synchronized Alerter getInstance() {
-        if (instance == null) {
-            instance = new Alerter();
+    public static Alerter getInstance() {
+        Alerter localInstance = instance;
+        if (localInstance == null) {
+            synchronized (Alerter.class) {
+                localInstance = instance;
+                if (localInstance == null) {
+                    localInstance = new Alerter();
+                    instance = localInstance;
+                }
+            }
         }
-        return instance;
+        return localInstance;
     }
 
-    public static void check() {
+    public static synchronized void check() {
         Log.d(TAG, "Checking...");
-        long millis = System.currentTimeMillis();
-        if (getInstance().snoozed_till > millis) {
-            Log.d(TAG, "Alerts are snoozed. " + ((getInstance().snoozed_till - millis) / 1000) + " seconds left");
+        Instant now = Instant.now();
+        if (getInstance().snoozedTill.isAfter(now)) {
+            Log.d(TAG, "Alerts are snoozed. "
+                    + (getInstance().snoozedTill.getEpochSecond() - now.getEpochSecond())
+                    + " seconds left");
             return;
         }
-        snooze(millis + 40000);
+        snooze(now.plus(SILENCE_INTERVAL));
 
-        boolean low_alert = getInstance().prefs.getBoolean("libre2_low_alert_enabled", false);
-        boolean high_alert = getInstance().prefs.getBoolean("libre2_high_alert_enabled", false);
-        boolean no_data_alert = getInstance().prefs.getBoolean("libre2_no_data_alert_enabled", false);
+        boolean lowAlert = getInstance().prefs.getBoolean("libre2_low_alert_enabled", false);
+        boolean highAlert = getInstance().prefs.getBoolean("libre2_high_alert_enabled", false);
+        boolean noDataAlert = getInstance().prefs.getBoolean("libre2_no_data_alert_enabled", false);
 
-        if (low_alert || high_alert || no_data_alert) {
+        if (lowAlert || highAlert || noDataAlert) {
             Log.d(TAG, "Alerts enabled");
             Libre2ValueList libre2_values = DiasyncDB.getInstance(Diasync.getContext()).getLibre2Values(0, Long.MAX_VALUE, 2);
             if (libre2_values.size() > 0) {
-                if (low_alert && (!libre2_values.get(0).isLow()))
-                    low_alert = false;
-                if (high_alert && (!libre2_values.get(0).isHigh()))
-                    high_alert = false;
-                if (no_data_alert && (millis - libre2_values.get(0).timestamp < 300000))
-                    no_data_alert = false;
+                if (lowAlert && (!libre2_values.get(0).isLow()))
+                    lowAlert = false;
+                if (highAlert && (!libre2_values.get(0).isHigh()))
+                    highAlert = false;
+                if (noDataAlert && (Duration.between(now, Instant.ofEpochMilli(libre2_values.get(0).timestamp)).minus(NO_DATA_INTERVAL).isNegative()))
+                    noDataAlert = false;
             }
             if (libre2_values.size() == 2) {
-                if (low_alert && (libre2_values.get(0).getValue() >= libre2_values.get(1).getValue()))
-                    low_alert = false;
-                if (high_alert && (libre2_values.get(0).getValue() <= libre2_values.get(1).getValue()))
-                    high_alert = false;
+                if (lowAlert && (libre2_values.get(0).getValue() >= libre2_values.get(1).getValue()))
+                    lowAlert = false;
+                if (highAlert && (libre2_values.get(0).getValue() <= libre2_values.get(1).getValue()))
+                    highAlert = false;
             }
 
-            if (low_alert) alert(R.raw.alert_low);
-            else if (high_alert) alert(R.raw.alert_high);
-            else if (no_data_alert) alert(R.raw.alert_no_data);
+            if (lowAlert) alert(R.raw.alert_low);
+            else if (highAlert) alert(R.raw.alert_high);
+            else if (noDataAlert) alert(R.raw.alert_no_data);
         }
     }
 
-    private static void alert(int resource_id) {
+    private static synchronized void alert(int resource_id) {
         Context context = Diasync.getContext();
         Resources resources = context.getResources();
         alert(new Uri.Builder()
@@ -81,7 +104,7 @@ public class Alerter {
                 .build());
     }
 
-    private static void alert(Uri uri) {
+    private static synchronized void alert(Uri uri) {
         Context context = Diasync.getContext();
         MediaPlayer mediaPlayer = new MediaPlayer();
 
@@ -92,7 +115,10 @@ public class Alerter {
             return;
         }
 
-        mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build());
+        mediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build());
         mediaPlayer.setOnPreparedListener(MediaPlayer::start);
         mediaPlayer.setOnCompletionListener(mp -> new Thread(() -> {
             try {
@@ -105,34 +131,41 @@ public class Alerter {
         mediaPlayer.prepareAsync();
     }
 
-    public static void snooze(Instant till) {
-        snooze(till.getEpochSecond() * 1000);
+    public static synchronized void externalSnooze(Instant till) {
+        getInstance().externalSnoozedTill = till;
+        SharedPreferences.Editor editor = getInstance().prefs.edit();
+        editor.putString("alarm_external_snoozed_till", String.valueOf(till.toEpochMilli()));
+        editor.apply();
+        snooze(till);
     }
 
-    public static void snooze(long till) {
-        if (till < getInstance().snoozed_till) {
+    public static synchronized void snooze(Instant till) {
+        if (till.isBefore(getInstance().snoozedTill)) {
             Log.d(TAG, "Already snoozed");
             return;
         }
-        Log.d(TAG, "Snoozing till " + Diasync.dateTimeFormat(till));
-        getInstance().snoozed_till = till;
+        Log.d(TAG, "Snoozing till " + till);
+        getInstance().snoozedTill = till;
         SharedPreferences.Editor editor = getInstance().prefs.edit();
-        editor.putString("alarm_snoozed_till", String.valueOf(till));
+        editor.putString("alarm_snoozed_till", String.valueOf(till.toEpochMilli()));
         editor.apply();
     }
 
-    public static void resume() {
-        getInstance().snoozed_till = 0;
+
+    public static synchronized void resume() {
+        getInstance().snoozedTill = Instant.EPOCH;
         SharedPreferences.Editor editor = getInstance().prefs.edit();
         editor.putString("alarm_snoozed_till", "0");
         editor.apply();
     }
 
-    public static boolean isSnoozedExternally() {
-        return (getInstance().snoozed_till > System.currentTimeMillis() + 40000);
+    public static synchronized boolean isSnoozedExternally() {
+        Alerter instance = getInstance();
+        return instance.snoozedTill.isAfter(Instant.now())
+                && instance.externalSnoozedTill.equals(instance.snoozedTill);
     }
 
-    public static long snoozedTill() {
-        return getInstance().snoozed_till;
+    public static synchronized Instant snoozedTill() {
+        return getInstance().snoozedTill;
     }
 }

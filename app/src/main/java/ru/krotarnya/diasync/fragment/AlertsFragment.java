@@ -48,7 +48,7 @@ public class AlertsFragment extends PreferenceFragmentCompat {
         snoozePref.setOnPreferenceClickListener(preference -> {
             Log.d(TAG, "Snoozing alerts");
             try {
-                Alerter.snooze(Instant.now().plus(SnoozeInterval
+                Alerter.externalSnooze(Instant.now().plus(SnoozeInterval
                         .getByOrderOrDefault(snoozePref.getValue())
                         .getDuration()));
             } catch (Exception e) {
@@ -86,7 +86,7 @@ public class AlertsFragment extends PreferenceFragmentCompat {
             snoozePref.setVisible(false);
             resumePref.setVisible(true);
             resumePref.setSummary("["
-                    + Diasync.durationFormat(Alerter.snoozedTill() - System.currentTimeMillis())
+                    + Diasync.durationFormat(Duration.between(Alerter.snoozedTill(), Instant.now()))
                     + "] Snoozed till "
                     + Diasync.timeFormat(Alerter.snoozedTill()));
         } else {

@@ -14,6 +14,7 @@ import androidx.preference.PreferenceManager;
 
 import java.util.Objects;
 
+import ru.krotarnya.diasync.activity.SettingsActivity;
 import ru.krotarnya.diasync.model.Libre2Value;
 import ru.krotarnya.diasync.model.Libre2ValueList;
 import ru.krotarnya.diasync.service.WidgetUpdateService;
@@ -35,10 +36,9 @@ public class Libre2Widget extends AppWidgetProvider {
         boolean alerts_icon = prefs.getBoolean("libre2_widget_alerts_icon", true);
         long graph_period = Long.parseLong(prefs.getString("libre2_widget_graph_period", "1800000"));
 
-        if (alerts_icon)
-            views.setImageViewResource(R.id.libre2_widget_alerts_icon, R.drawable.ic_bell_gear);
-        else
-            views.setImageViewResource(R.id.libre2_widget_alerts_icon, android.R.color.transparent);
+        views.setImageViewResource(R.id.libre2_widget_alerts_icon, alerts_icon
+                ? R.drawable.ic_bell_gear
+                : android.R.color.transparent);
 
         long t2 = System.currentTimeMillis(), t1 = t2 - graph_period;
         DiasyncDB diasync_db = DiasyncDB.getInstance(context);
