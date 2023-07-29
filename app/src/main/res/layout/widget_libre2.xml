@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Theme.DiaSync.Libre2Widget"
@@ -20,19 +21,37 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="4"
-            android:gravity="start">
+            android:layout_height="30dp">
 
             <ImageView
                 android:id="@+id/libre2_widget_alerts_icon"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:layout_marginTop="3dp"
-                android:layout_marginStart="3dp"
-                android:contentDescription="Alerts icon"
-                android:src="@drawable/ic_bell_gear" />
+                android:padding="5dp"
+                android:cropToPadding="true"
+                android:contentDescription="@string/libre2_widget_alerts_icon_description"
+                android:src="@drawable/ic_bell_gear"
+                tools:ignore="NestedWeights" />
 
+            <ImageView
+                android:id="@+id/libre2_widget_pip_icon"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:cropToPadding="true"
+                android:contentDescription="@string/libre2_widget_pip_icon_description"
+                android:src="@drawable/ic_pip"
+                tools:ignore="NestedWeights" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:gravity="start">
         </LinearLayout>
 
         <TextView

@@ -7,4 +7,8 @@
     <style name="Theme.DiaSync.Libre2Widget" parent="@android:style/Theme.DeviceDefault">
 
     </style>
+
+    <style name="Theme.DiaSync.Libre2Pip" parent="@android:style/Theme.DeviceDefault">
+
+    </style>
 </resources>

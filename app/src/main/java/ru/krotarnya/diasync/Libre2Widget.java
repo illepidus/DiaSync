@@ -14,6 +14,7 @@ import androidx.preference.PreferenceManager;
 
 import java.util.Objects;
 
+import ru.krotarnya.diasync.activity.PipActivity;
 import ru.krotarnya.diasync.activity.SettingsActivity;
 import ru.krotarnya.diasync.model.Libre2Value;
 import ru.krotarnya.diasync.model.Libre2ValueList;
@@ -23,8 +24,10 @@ public class Libre2Widget extends AppWidgetProvider {
     private static final String TAG = "Libre2Widget";
     private static final String WIDGET_CLICKED_TAG = "ru.krotarnya.diasync.WIDGET_CLICKED";
     public static final String WIDGET_ALERTS_ICON_CLICKED_TAG = "ru.krotarnya.diasync.WIDGET_ALERTS_ICON_CLICKED";
+    public static final String WIDGET_PIP_ICON_CLICKED_TAG = "ru.krotarnya.diasync.WIDGET_PIP_ICON_CLICKED";
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+
+    private static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                     int appWidgetId) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_libre2);
 
@@ -34,10 +37,15 @@ public class Libre2Widget extends AppWidgetProvider {
         boolean graph_range_lines = prefs.getBoolean("libre2_widget_graph_range_lines", false);
         boolean graph_range_zones = prefs.getBoolean("libre2_widget_graph_range_zones", true);
         boolean alerts_icon = prefs.getBoolean("libre2_widget_alerts_icon", true);
+        boolean pip_icon = prefs.getBoolean("libre2_widget_pip_icon", true);
         long graph_period = Long.parseLong(prefs.getString("libre2_widget_graph_period", "1800000"));
 
         views.setImageViewResource(R.id.libre2_widget_alerts_icon, alerts_icon
                 ? R.drawable.ic_bell_gear
+                : android.R.color.transparent);
+
+        views.setImageViewResource(R.id.libre2_widget_pip_icon, pip_icon
+                ? R.drawable.ic_pip
                 : android.R.color.transparent);
 
         long t2 = System.currentTimeMillis(), t1 = t2 - graph_period;
@@ -120,6 +128,7 @@ public class Libre2Widget extends AppWidgetProvider {
 
         views.setOnClickPendingIntent(R.id.libre2_widget_layout, getPendingSelfIntent(context, WIDGET_CLICKED_TAG));
         views.setOnClickPendingIntent(R.id.libre2_widget_alerts_icon, getPendingSelfIntent(context, WIDGET_ALERTS_ICON_CLICKED_TAG));
+        views.setOnClickPendingIntent(R.id.libre2_widget_pip_icon, getPendingSelfIntent(context, WIDGET_PIP_ICON_CLICKED_TAG));
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
@@ -165,11 +174,18 @@ public class Libre2Widget extends AppWidgetProvider {
             }
         }
         if (Objects.equals(action, WIDGET_ALERTS_ICON_CLICKED_TAG)) {
-            Intent alarms_intent = new Intent(Intent.ACTION_VIEW);
-            alarms_intent.setClassName(context.getPackageName(), SettingsActivity.class.getName());
-            alarms_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            alarms_intent.putExtra("fragment", SettingsActivity.ALERTS_FRAGMENT);
-            context.startActivity(alarms_intent);
+            Intent alarmIntent = new Intent(Intent.ACTION_VIEW);
+            alarmIntent.setClassName(context.getPackageName(), SettingsActivity.class.getName());
+            alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
+            alarmIntent.putExtra("fragment", SettingsActivity.ALERTS_FRAGMENT);
+            context.startActivity(alarmIntent);
+        }
+
+        if (Objects.equals(action, WIDGET_PIP_ICON_CLICKED_TAG)) {
+            Intent pipIntent = new Intent(Intent.ACTION_VIEW);
+            pipIntent.setClassName(context.getPackageName(), PipActivity.class.getName());
+            pipIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
+            context.startActivity(pipIntent);
         }
     }
 

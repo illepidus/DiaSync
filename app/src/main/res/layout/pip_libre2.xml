@@ -1,0 +1,56 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.DiaSync.Libre2Pip"
+    android:orientation="vertical"
+    android:id="@+id/libre2_pip_layout"
+    android:background="@color/pip_background">
+
+    <ImageView
+        android:id="@+id/libre2_pip_graph"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/libre2_pip_graph_description"
+        android:scaleType="centerInside" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            android:gravity="start">
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/libre2_pip_glucose"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="10"
+            android:autoSizeTextType="uniform"
+            android:contentDescription="@string/libre2_pip_description"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:gravity="start"
+            android:text="@string/libre2_pip_glucose_text"
+            android:textColor="@color/glucose_normal_text"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/libre2_pip_trend"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="10"
+            android:autoSizeTextType="uniform"
+            android:contentDescription="@string/libre2_pip_description"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:gravity="start"
+            android:text="@string/libre2_pip_trend_text"
+            android:textColor="@color/glucose_normal_text"
+            android:textStyle="normal" />
+    </LinearLayout>
+</FrameLayout>

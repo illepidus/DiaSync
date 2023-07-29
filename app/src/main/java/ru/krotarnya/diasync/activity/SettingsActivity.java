@@ -20,16 +20,15 @@ import ru.krotarnya.diasync.fragment.ConnectivityFragment;
 import ru.krotarnya.diasync.fragment.DisplayFragment;
 import ru.krotarnya.diasync.fragment.RootFragment;
 
-public class SettingsActivity
-        extends AppCompatActivity
-        implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback
-{
+public class SettingsActivity extends AppCompatActivity
+        implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
     private static final String TAG = "SettingsActivity";
     private static final String TITLE_TAG = "DiasyncSettingsTitle";
     public static final String DISPLAY_FRAGMENT = "DisplayFragment";
     public static final String ALERTS_FRAGMENT = "AlertsFragment";
     public static final String CONNECTIVITY_FRAGMENT = "ConnectivityFragment";
     private static SettingsActivity instance;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +38,10 @@ public class SettingsActivity
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.settings, new RootFragment())
-                .commit();
-        }
-        else {
+                    .beginTransaction()
+                    .replace(R.id.settings, new RootFragment())
+                    .commit();
+        } else {
             setTitle(savedInstanceState.getCharSequence(TITLE_TAG));
         }
 
@@ -52,8 +50,7 @@ public class SettingsActivity
             if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
                 setTitle(R.string.settings_title);
                 if (action_bar != null) action_bar.setDisplayHomeAsUpEnabled(false);
-            }
-            else {
+            } else {
                 if (action_bar != null) action_bar.setDisplayHomeAsUpEnabled(true);
             }
         });
@@ -69,7 +66,7 @@ public class SettingsActivity
 
             PreferenceFragmentCompat preference_fragment;
 
-            switch(fragment) {
+            switch (fragment) {
                 case ALERTS_FRAGMENT:
                     preference_fragment = new AlertsFragment();
                     break;
@@ -83,9 +80,9 @@ public class SettingsActivity
                     preference_fragment = new RootFragment();
             }
             getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.settings, preference_fragment)
-                .commit();
+                    .beginTransaction()
+                    .replace(R.id.settings, preference_fragment)
+                    .commit();
         }
     }
 
@@ -104,11 +101,15 @@ public class SettingsActivity
     }
 
     @Override
-    public boolean onPreferenceStartFragment(@NonNull PreferenceFragmentCompat caller, @NonNull Preference pref) {
+    public boolean onPreferenceStartFragment(
+            @NonNull PreferenceFragmentCompat caller,
+            @NonNull Preference pref) {
         Log.d(TAG, "onPreferenceStartFragment callback");
         final Bundle args = pref.getExtras();
 
-        final Fragment fragment = getSupportFragmentManager().getFragmentFactory().instantiate(getClassLoader(), Objects.requireNonNull(pref.getFragment()));
+        Fragment fragment = getSupportFragmentManager()
+                .getFragmentFactory()
+                .instantiate(getClassLoader(), Objects.requireNonNull(pref.getFragment()));
         fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.settings, fragment)
@@ -119,7 +120,7 @@ public class SettingsActivity
         return true;
     }
 
-    public static Context getContext(){
+    public static Context getContext() {
         return instance;
     }
 }

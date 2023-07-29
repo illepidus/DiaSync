@@ -5,5 +5,11 @@
     <string name="libre2_widget_timer_text">--------</string>
     <string name="libre2_widget_description">Libre2 current value display</string>
     <string name="libre2_widget_graph_description">Libre2 graph</string>
+    <string name="libre2_widget_alerts_icon_description">Alerts icon</string>
+    <string name="libre2_widget_pip_icon_description">Pip icon</string>
+    <string name="libre2_pip_glucose_text">----</string>
+    <string name="libre2_pip_trend_text">-</string>
+    <string name="libre2_pip_description">Libre2 current value display</string>
+    <string name="libre2_pip_graph_description">Libre2 graph</string>
     <string name="settings_title">Diasync</string>
 </resources>

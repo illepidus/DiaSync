@@ -3,6 +3,13 @@
     app:key="settings_root">
 
     <Preference
+        app:key="pip_activity"
+        app:icon="@drawable/ic_pip"
+        app:title="Picture-in-picture"
+        app:allowDividerAbove="true"
+        app:useSimpleSummaryProvider="true" />
+
+    <Preference
         app:fragment="ru.krotarnya.diasync.fragment.DisplayFragment"
         app:icon="@drawable/ic_display_settings"
         app:title="Display"

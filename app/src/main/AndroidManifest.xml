@@ -43,6 +43,12 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="ru.krotarnya.diasync.activity.PipActivity"
+            android:supportsPictureInPicture="true"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation">
+        </activity>
+
         <receiver
             android:name="ru.krotarnya.diasync.DiaBroadcastReceiver"
             android:exported="true"

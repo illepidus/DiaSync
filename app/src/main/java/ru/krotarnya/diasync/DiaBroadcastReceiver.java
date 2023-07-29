@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.preference.PreferenceManager;
 
 import com.android.volley.Request;
@@ -18,6 +19,7 @@ import com.google.gson.GsonBuilder;
 import java.util.HashMap;
 import java.util.Map;
 
+import ru.krotarnya.diasync.activity.PipActivity;
 import ru.krotarnya.diasync.model.Libre2Value;
 import ru.krotarnya.diasync.service.WidgetUpdateService;
 
@@ -59,6 +61,10 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
             Log.d(TAG, "Received: \n" + libre2_value);
             Alerter.check();
             WidgetUpdateService.pleaseUpdate(context);
+
+            Intent updatePipIntent = new Intent(PipActivity.UPDATE_ACTION);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(updatePipIntent);
+
             return;
         }
 

@@ -13,7 +13,6 @@ import ru.krotarnya.diasync.model.Libre2ValueList;
 
 public class Libre2GraphBuilder {
     protected static final String TAG = "Libre2GraphBuilder";
-
     private final Context context;
     protected int width = 100;
     protected int height = 100;
@@ -25,8 +24,8 @@ public class Libre2GraphBuilder {
     protected boolean range_zones = false;
     protected Libre2ValueList data;
 
-    public Libre2GraphBuilder(Context c) {
-        context = c;
+    public Libre2GraphBuilder(Context context) {
+        this.context = context;
     }
 
     public int convertDpToPixel(float dp){
