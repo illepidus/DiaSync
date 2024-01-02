@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
 import java.util.Locale;
+import java.util.Optional;
 
 public class Glucose implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "Glucose";
@@ -169,7 +170,7 @@ public class Glucose implements SharedPreferences.OnSharedPreferenceChangeListen
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences p, String key) {
-        switch (key) {
+        switch (Optional.ofNullable(key).orElse("")) {
             case "glucose_low":
                 low = Double.parseDouble(p.getString("glucose_low", "70"));
                 Log.v(TAG, "glucose_low = " + low);

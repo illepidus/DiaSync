@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "DiaSync"
-include ':app'
+include ':mobile'
 include ':wear'

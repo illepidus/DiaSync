@@ -13,6 +13,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import ru.krotarnya.diasync.R;
 import ru.krotarnya.diasync.fragment.AlertsFragment;
@@ -62,8 +63,7 @@ public class SettingsActivity extends AppCompatActivity
 
         Intent intent = getIntent();
         if (intent.hasExtra("fragment")) {
-            String fragment = intent.getStringExtra("fragment");
-
+            String fragment = Optional.ofNullable(intent.getStringExtra("fragment")).orElse("");
             PreferenceFragmentCompat preference_fragment;
 
             switch (fragment) {
@@ -79,6 +79,7 @@ public class SettingsActivity extends AppCompatActivity
                 default:
                     preference_fragment = new RootFragment();
             }
+
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.settings, preference_fragment)

@@ -11,6 +11,8 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
 
+import java.util.Optional;
+
 import ru.krotarnya.diasync.Libre2Widget;
 
 public class WidgetUpdateService extends Service {
@@ -20,12 +22,13 @@ public class WidgetUpdateService extends Service {
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().compareTo(Intent.ACTION_TIME_TICK) == 0) {
+            String action = Optional.ofNullable(intent.getAction()).orElse("");
+            if (action.compareTo(Intent.ACTION_TIME_TICK) == 0) {
                 updateWidgets();
-            } else if (intent.getAction().compareTo(Intent.ACTION_SCREEN_ON) == 0) {
+            } else if (action.compareTo(Intent.ACTION_SCREEN_ON) == 0) {
                 enableClockTicks();
                 updateWidgets();
-            } else if (intent.getAction().compareTo(Intent.ACTION_SCREEN_OFF) == 0) {
+            } else if (action.compareTo(Intent.ACTION_SCREEN_OFF) == 0) {
                 disableClockTicks();
             }
         }

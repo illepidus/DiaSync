@@ -4,14 +4,14 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public enum TrendArrow {
-    NONE("\u0020", null),
-    DOUBLE_DOWN("\u21CA", null),
-    SINGLE_DOWN("\u2193", -13.5),
-    DOWN_45("\u2198", -7.0),
-    FLAT("\u2192", -3.0),
-    UP_45("\u2197", 3.0),
-    SINGLE_UP("\u2191", 7.0),
-    DOUBLE_UP("\u21C8", 13.5);
+    NONE(" ", null),
+    DOUBLE_DOWN("⇊", null),
+    SINGLE_DOWN("↓", -13.5),
+    DOWN_45("↘", -7.0),
+    FLAT("→", -3.0),
+    UP_45("↗", 3.0),
+    SINGLE_UP("↑", 7.0),
+    DOUBLE_UP("⇈", 13.5);
 
     private final String symbol;
     private final Double threshold;

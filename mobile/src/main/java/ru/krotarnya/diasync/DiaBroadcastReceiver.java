@@ -18,6 +18,7 @@ import com.google.gson.GsonBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import ru.krotarnya.diasync.activity.PipActivity;
 import ru.krotarnya.diasync.model.Libre2Value;
@@ -25,6 +26,7 @@ import ru.krotarnya.diasync.service.WidgetUpdateService;
 
 public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
     private static final String TAG = "DiaBroadcastReceiver";
+    private static final String LIBRE2_BG_INTENT_ACTION = "com.eveningoutpost.dexdrip.diasync.libre2_bg";
     private String  webhook_address;
     private String  webhook_token;
     private Context broadcast_context;
@@ -43,14 +45,15 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
         webhook_token = prefs.getString("webhook_token", "undefined");
 
         Log.d (TAG, "Received broadcast intent [" + action + "] in context [" + context + "]");
-        if (action.equals("com.eveningoutpost.dexdrip.diasync.libre2_bg")) {
+        if (action.equals(LIBRE2_BG_INTENT_ACTION)) {
             if (!bundle.containsKey("source") || !bundle.containsKey("libre2_value")) {
                 Log.e(TAG, "Received faulty libre2_bg intent");
                 return;
             }
             if (webhook_enabled) {
-                if (bundle.getString("source").equals("master") || (webhook_enabled_follower && bundle.getString("source").equals("follower"))) {
-                    webhookUpdate(bundle, "libre2_bg");
+                String source = Optional.ofNullable(bundle.getString("source")).orElse("");
+                if (source.equals("master") || (webhook_enabled_follower && source.equals("follower"))) {
+                    webhookUpdate(bundle);
                 }
             }
 
@@ -71,14 +74,14 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
         Log.e(TAG,"Received unknown intent");
     }
 
-    private void webhookUpdate(Bundle bundle, String type) {
+    private void webhookUpdate(Bundle bundle) {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapterFactory(new BundleTypeAdapterFactory());
         Gson gson = builder.create();
-        webhookUpdate(gson.toJson(bundle), type);
+        webhookUpdate(gson.toJson(bundle));
     }
 
-    private void webhookUpdate(String update, String type) {
+    private void webhookUpdate(String update) {
         RequestQueue request_queue = Volley.newRequestQueue(broadcast_context);
         Log.d(TAG, "Updating [" + webhook_address + "]...");
         StringRequest string_request = new StringRequest(Request.Method.POST, webhook_address, response -> Log.d(TAG, "Response: " + response), error -> Log.e(TAG, error.toString())) {
@@ -87,7 +90,7 @@ public class DiaBroadcastReceiver extends android.content.BroadcastReceiver {
                 Map<String,String> params = new HashMap<>();
                 params.put("token",  webhook_token);
                 params.put("update", update);
-                params.put("type",   type);
+                params.put("type", "libre2_bg");
                 return params;
             }
         };
