@@ -1,4 +1,4 @@
-package ru.krotarnya.diasync.complication
+package ru.krotarnya.diasync.service
 
 import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
