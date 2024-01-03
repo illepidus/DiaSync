@@ -113,14 +113,11 @@ public class PipActivity extends AppCompatActivity {
             Libre2Value libre2_last_value = libre2_values.maxByTimestamp();
 
             switch (glucose_units) {
-                case "mmol":
-                    glucose.setText(Glucose.stringMmol(libre2_last_value.getMmolValue()));
-                    break;
-                case "mgdl":
-                    glucose.setText(Glucose.stringMgdl(libre2_last_value.getMmolValue()));
-                    break;
-                default:
-                    glucose.setText("----");
+                case "mmol" ->
+                        glucose.setText(Glucose.stringMmol(libre2_last_value.getMmolValue()));
+                case "mgdl" ->
+                        glucose.setText(Glucose.stringMgdl(libre2_last_value.getMmolValue()));
+                default -> glucose.setText("----");
             }
 
             glucose.setPaintFlags(Paint.ANTI_ALIAS_FLAG);
