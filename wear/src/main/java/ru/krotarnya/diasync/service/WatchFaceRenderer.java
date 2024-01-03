@@ -14,7 +14,6 @@ import androidx.wear.watchface.WatchState;
 import androidx.wear.watchface.style.CurrentUserStyleRepository;
 
 import java.time.ZonedDateTime;
-import java.util.function.Consumer;
 
 import kotlin.coroutines.Continuation;
 
