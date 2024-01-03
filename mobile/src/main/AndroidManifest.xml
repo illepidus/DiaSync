@@ -19,7 +19,7 @@
         <service
             android:name="ru.krotarnya.diasync.service.WidgetUpdateService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
 
         <receiver
             android:name="ru.krotarnya.diasync.Libre2Widget"
