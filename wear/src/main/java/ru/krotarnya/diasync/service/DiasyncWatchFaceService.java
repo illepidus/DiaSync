@@ -1,6 +1,5 @@
 package ru.krotarnya.diasync.service;
 
-import android.util.Log;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.NonNull;
@@ -19,6 +18,7 @@ import com.google.android.gms.wearable.Wearable;
 import java.util.Optional;
 
 import kotlin.coroutines.Continuation;
+import ru.krotarnya.diasync.WatchFaceRenderer;
 
 public class DiasyncWatchFaceService
         extends WatchFaceService

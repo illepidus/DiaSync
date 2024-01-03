@@ -1,4 +1,4 @@
-package ru.krotarnya.diasync.service;
+package ru.krotarnya.diasync;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
