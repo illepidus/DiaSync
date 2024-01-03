@@ -8,31 +8,25 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.wear.watchface.ComplicationSlotsManager;
 import androidx.wear.watchface.Renderer;
-import androidx.wear.watchface.WatchFace;
 import androidx.wear.watchface.WatchFaceType;
 import androidx.wear.watchface.WatchState;
 import androidx.wear.watchface.style.CurrentUserStyleRepository;
 
-import com.google.android.gms.wearable.MessageClient;
-import com.google.android.gms.wearable.MessageEvent;
-
 import java.time.ZonedDateTime;
+import java.util.function.Consumer;
 
 import kotlin.coroutines.Continuation;
 
-public class WatchFaceRenderer
-        extends Renderer.CanvasRenderer2<Renderer.SharedAssets>
-        implements MessageClient.OnMessageReceivedListener {
+public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedAssets> {
     private static final int UPDATE_INTERVAL = 1000;
+    private static final String TAG = "WatchFaceRenderer";
     private final Paint paint;
+    private String text = "No data";
     public WatchFaceRenderer(
             SurfaceHolder surfaceHolder,
             WatchState watchState,
-            ComplicationSlotsManager complicationSlotsManager,
-            CurrentUserStyleRepository currentUserStyleRepository,
-            Continuation<? super WatchFace> continuation)
+            CurrentUserStyleRepository currentUserStyleRepository)
     {
         super(
                 surfaceHolder,
@@ -43,6 +37,8 @@ public class WatchFaceRenderer
                 false);
         paint = new Paint();
         paint.setColor(Color.WHITE);
+        paint.setTextSize(24);
+        paint.setTextAlign(Paint.Align.CENTER);
     }
 
     @Nullable
@@ -57,10 +53,10 @@ public class WatchFaceRenderer
             @NonNull Canvas canvas,
             @NonNull Rect rect,
             @NonNull ZonedDateTime zonedDateTime,
-            @NonNull Renderer.SharedAssets diasyncAssets)
+            @NonNull Renderer.SharedAssets sharedAssets)
     {
         canvas.drawColor(Color.BLACK);
-        canvas.drawCircle(rect.centerX(), rect.centerY(), (float) (Math.min(rect.width() / 2f, rect.height() / 2f) * Math.random()), paint);
+        canvas.drawText(text, rect.centerX(), rect.centerY(), paint);
     }
 
     @Override
@@ -73,8 +69,7 @@ public class WatchFaceRenderer
 
     }
 
-    @Override
-    public void onMessageReceived(@NonNull MessageEvent messageEvent) {
-
+    public void setText(String text) {
+        this.text = text;
     }
 }

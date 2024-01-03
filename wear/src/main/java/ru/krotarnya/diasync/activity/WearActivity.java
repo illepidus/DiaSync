@@ -11,7 +11,10 @@ import com.google.android.gms.wearable.Wearable;
 
 import ru.krotarnya.diasync.R;
 
-public class WearActivity extends ComponentActivity implements MessageClient.OnMessageReceivedListener {
+public class WearActivity
+        extends ComponentActivity
+        implements MessageClient.OnMessageReceivedListener
+{
     TextView text;
 
     @Override
@@ -24,8 +27,7 @@ public class WearActivity extends ComponentActivity implements MessageClient.OnM
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
-        String income = new String(messageEvent.getData());
-        text.setText(income);
+        text.setText(new String(messageEvent.getData()));
     }
 
     @Override
