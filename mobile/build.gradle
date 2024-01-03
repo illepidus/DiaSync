@@ -28,6 +28,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    namespace 'ru.krotarnya.diasync'
 }
 
 dependencies {
