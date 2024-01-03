@@ -6,14 +6,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.wear.watchface.ComplicationSlotsManager;
 import androidx.wear.watchface.WatchFace;
-import androidx.wear.watchface.WatchFaceService;
 import androidx.wear.watchface.WatchFaceType;
 import androidx.wear.watchface.WatchState;
 import androidx.wear.watchface.style.CurrentUserStyleRepository;
 
 import kotlin.coroutines.Continuation;
 
-public class MainWatchFaceService extends WatchFaceService {
+public class WatchFaceService extends androidx.wear.watchface.WatchFaceService {
     @Nullable
     @Override
     protected WatchFace createWatchFace(
@@ -24,7 +23,7 @@ public class MainWatchFaceService extends WatchFaceService {
             @NonNull Continuation<? super WatchFace> continuation)
     {
         return new WatchFace(WatchFaceType.DIGITAL,
-                new MainWatchFaceRenderer(
+                new WatchFaceRenderer(
                 surfaceHolder,
                 watchState,
                 complicationSlotsManager,

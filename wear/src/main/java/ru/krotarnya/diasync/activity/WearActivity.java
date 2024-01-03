@@ -1,4 +1,4 @@
-package ru.krotarnya.diasync.presentation;
+package ru.krotarnya.diasync.activity;
 
 import android.os.Bundle;
 import android.widget.TextView;
@@ -11,7 +11,7 @@ import com.google.android.gms.wearable.Wearable;
 
 import ru.krotarnya.diasync.R;
 
-public class MainActivity extends ComponentActivity implements MessageClient.OnMessageReceivedListener {
+public class WearActivity extends ComponentActivity implements MessageClient.OnMessageReceivedListener {
     TextView text;
 
     @Override
