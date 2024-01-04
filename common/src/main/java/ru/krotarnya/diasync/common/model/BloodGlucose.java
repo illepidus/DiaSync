@@ -6,7 +6,6 @@ import java.util.Objects;
 
 import ru.krotarnya.diasync.common.util.BloodUtils;
 
-@SuppressWarnings("ClassCanBeRecord")
 public final class BloodGlucose implements Comparable<BloodGlucose> {
     private final double mgdl;
 
@@ -57,10 +56,6 @@ public final class BloodGlucose implements Comparable<BloodGlucose> {
 
     public boolean gt(BloodGlucose other) {
         return (compareTo(other) > 0);
-    }
-
-    public boolean eq(BloodGlucose other) {
-        return (compareTo(other) == 0);
     }
 
     public boolean lt(BloodGlucose other) {

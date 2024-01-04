@@ -171,18 +171,18 @@ public class Glucose implements SharedPreferences.OnSharedPreferenceChangeListen
     @Override
     public void onSharedPreferenceChanged(SharedPreferences p, String key) {
         switch (Optional.ofNullable(key).orElse("")) {
-            case "glucose_low" -> {
+            case "glucose_low":
                 low = Double.parseDouble(p.getString("glucose_low", "70"));
                 Log.v(TAG, "glucose_low = " + low);
-            }
-            case "glucose_high" -> {
+                break;
+            case "glucose_high":
                 high = Double.parseDouble(p.getString("glucose_high", "180"));
                 Log.v(TAG, "glucose_high = " + high);
-            }
-            case "use_calibrations" -> {
+                break;
+            case "use_calibrations":
                 useCalibrations = p.getBoolean("use_calibrations", true);
                 Log.v(TAG, "use_calibrations = " + useCalibrations);
-            }
+                break;
         }
     }
 }

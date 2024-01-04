@@ -3,16 +3,15 @@ package ru.krotarnya.diasync.common.model;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
-@SuppressWarnings("ClassCanBeRecord")
+import ru.krotarnya.diasync.common.util.CompressionUtils;
+
 public final class BloodChart {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
             .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
@@ -44,16 +43,16 @@ public final class BloodChart {
 
     public byte[] serialize() {
         try {
-            return OBJECT_MAPPER.writeValueAsBytes(this);
-        } catch (JsonProcessingException e) {
+            return CompressionUtils.compress(OBJECT_MAPPER.writeValueAsBytes(this));
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static BloodChart deserialize(byte[] json) {
+    public static BloodChart deserialize(byte[] compressedJson) {
         try {
-            return OBJECT_MAPPER.readValue(json, BloodChart.class);
-        } catch (IOException e) {
+            return OBJECT_MAPPER.readValue(CompressionUtils.decompress(compressedJson), BloodChart.class);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -131,6 +130,10 @@ public final class BloodChart {
             return to;
         }
 
+        public Colors colors() {
+            return colors;
+        }
+
         @Override
         public boolean equals(Object obj) {
             if (obj == this) return true;
@@ -140,26 +143,25 @@ public final class BloodChart {
                     Objects.equals(this.low, that.low) &&
                     Objects.equals(this.high, that.high) &&
                     Objects.equals(this.from, that.from) &&
-                    Objects.equals(this.to, that.to);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(unit, low, high, from, to);
+                    Objects.equals(this.to, that.to) &&
+                    Objects.equals(this.colors, that.colors);
         }
 
         @Override
         public String toString() {
-            return "Params[" +
-                    "unit=" + unit + ", " +
-                    "low=" + low + ", " +
-                    "high=" + high + ", " +
-                    "from=" + from + ", " +
-                    "to=" + to + ']';
+            return "Params{" +
+                    "unit=" + unit +
+                    ", low=" + low +
+                    ", high=" + high +
+                    ", from=" + from +
+                    ", to=" + to +
+                    ", colors=" + colors +
+                    '}';
         }
 
-        public Colors colors() {
-            return colors;
+        @Override
+        public int hashCode() {
+            return Objects.hash(unit, low, high, from, to, colors);
         }
     }
 
