@@ -85,7 +85,7 @@ public class WearUpdateService extends Service {
                 Instant.ofEpochMilli(t1),
                 Instant.ofEpochMilli(t2));
 
-        return new BloodChart(points, params).serialize();
+        return new BloodChart(points, libre2Values.getTrendArrow(), params).serialize();
     }
 
     public static void pleaseUpdate(Context context) {

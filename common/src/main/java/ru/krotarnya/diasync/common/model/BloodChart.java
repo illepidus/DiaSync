@@ -12,19 +12,71 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressWarnings("ClassCanBeRecord")
 public final class BloodChart {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
             .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
             .registerModule(new JavaTimeModule());
     private final List<BloodPoint> points;
+    private final TrendArrow trendArrow;
     private final Params params;
 
     public BloodChart(
             @JsonProperty("points") List<BloodPoint> points,
-            @JsonProperty("params") Params params)
-    {
+            @JsonProperty("trend") TrendArrow trendArrow,
+            @JsonProperty("params") Params params) {
         this.points = points;
+        this.trendArrow = trendArrow;
         this.params = params;
+    }
+
+    public List<BloodPoint> points() {
+        return points;
+    }
+
+    public Params params() {
+        return params;
+    }
+
+    public TrendArrow trendArrow() {
+        return trendArrow;
+    }
+
+    public byte[] serialize() {
+        try {
+            return OBJECT_MAPPER.writeValueAsBytes(this);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static BloodChart deserialize(byte[] json) {
+        try {
+            return OBJECT_MAPPER.readValue(json, BloodChart.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (BloodChart) obj;
+        return Objects.equals(this.points, that.points) &&
+                Objects.equals(this.params, that.params);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(points, params);
+    }
+
+    @Override
+    public String toString() {
+        return "BloodChart[" +
+                "points=" + points + ", " +
+                "params=" + params + ']';
     }
 
     public static final class Params {
@@ -39,8 +91,7 @@ public final class BloodChart {
                 @JsonProperty("low") BloodGlucose low,
                 @JsonProperty("high") BloodGlucose high,
                 @JsonProperty("from") Instant from,
-                @JsonProperty("to") Instant to)
-        {
+                @JsonProperty("to") Instant to) {
             this.unit = unit;
             this.low = low;
             this.high = high;
@@ -95,51 +146,5 @@ public final class BloodChart {
                     "to=" + to + ']';
         }
 
-        }
-
-    public byte[] serialize() {
-        try {
-            return OBJECT_MAPPER.writeValueAsBytes(this);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
     }
-
-    public static BloodChart deserialize(byte[] json) {
-        try {
-            return OBJECT_MAPPER.readValue(json, BloodChart.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public List<BloodPoint> points() {
-        return points;
-    }
-
-    public Params params() {
-        return params;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (BloodChart) obj;
-        return Objects.equals(this.points, that.points) &&
-                Objects.equals(this.params, that.params);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(points, params);
-    }
-
-    @Override
-    public String toString() {
-        return "BloodChart[" +
-                "points=" + points + ", " +
-                "params=" + params + ']';
-    }
-
 }

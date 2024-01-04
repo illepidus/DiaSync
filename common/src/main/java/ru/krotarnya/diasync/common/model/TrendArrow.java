@@ -1,4 +1,4 @@
-package ru.krotarnya.diasync.model;
+package ru.krotarnya.diasync.common.model;
 
 import java.util.Arrays;
 import java.util.Comparator;

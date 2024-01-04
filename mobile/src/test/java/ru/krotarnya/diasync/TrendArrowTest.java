@@ -2,7 +2,7 @@ package ru.krotarnya.diasync;
 
 import junit.framework.TestCase;
 
-import ru.krotarnya.diasync.model.TrendArrow;
+import ru.krotarnya.diasync.common.model.TrendArrow;
 
 public class TrendArrowTest extends TestCase {
     public void testOf() {

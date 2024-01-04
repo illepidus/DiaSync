@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import ru.krotarnya.diasync.common.util.BloodUtils;
 
+@SuppressWarnings("ClassCanBeRecord")
 public final class BloodGlucose {
     private final double mgdl;
 

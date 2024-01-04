@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 import java.util.Objects;
 
+@SuppressWarnings("ClassCanBeRecord")
 public final class BloodPoint {
     private final Instant time;
     private final BloodGlucose glucose;

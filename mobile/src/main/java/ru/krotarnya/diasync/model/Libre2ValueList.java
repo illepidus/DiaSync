@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.Optional;
 import java.util.OptionalDouble;
 
+import ru.krotarnya.diasync.common.model.TrendArrow;
+
 public class Libre2ValueList extends ArrayList<Libre2Value> {
     private static final long TREND_WINDOW_MILLIS = 600_000;
 
