@@ -21,6 +21,11 @@
             android:enabled="true"
             android:exported="false" />
 
+        <service
+            android:name="ru.krotarnya.diasync.service.WearUpdateService"
+            android:enabled="true"
+            android:exported="false" />
+
         <receiver
             android:name="ru.krotarnya.diasync.Libre2Widget"
             android:exported="false">

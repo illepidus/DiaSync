@@ -38,7 +38,9 @@ public class WidgetUpdateService extends Service {
     }
 
     @Override
-    public IBinder onBind(Intent intent) { throw new UnsupportedOperationException("Not yet implemented"); }
+    public IBinder onBind(Intent intent) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 
     @Override
     public void onCreate() {

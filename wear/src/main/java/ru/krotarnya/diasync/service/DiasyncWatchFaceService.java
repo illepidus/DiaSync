@@ -1,5 +1,6 @@
 package ru.krotarnya.diasync.service;
 
+import android.util.Log;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 import kotlin.coroutines.Continuation;
 import ru.krotarnya.diasync.WatchFaceRenderer;
+import ru.krotarnya.diasync.common.model.BloodChart;
 
 public class DiasyncWatchFaceService
         extends WatchFaceService
@@ -61,6 +63,7 @@ public class DiasyncWatchFaceService
     @Override
     public void onMessageReceived(@NonNull MessageEvent messageEvent) {
         Optional.ofNullable(watchFaceRenderer)
-                .ifPresent(r -> r.setText(new String(messageEvent.getData())));
+                .filter(ignored -> messageEvent.getPath().equals("/blood_chart"))
+                .ifPresent(r -> r.setChart(BloodChart.deserialize(messageEvent.getData())));
     }
 }

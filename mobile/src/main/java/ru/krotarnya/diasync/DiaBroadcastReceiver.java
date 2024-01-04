@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -15,10 +14,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.tasks.Tasks;
-import com.google.android.gms.wearable.CapabilityClient;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.Wearable;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -28,13 +23,12 @@ import java.util.Optional;
 
 import ru.krotarnya.diasync.activity.PipActivity;
 import ru.krotarnya.diasync.model.Libre2Value;
+import ru.krotarnya.diasync.service.WearUpdateService;
 import ru.krotarnya.diasync.service.WidgetUpdateService;
 
 public class DiaBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "DiaBroadcastReceiver";
     private static final String LIBRE2_BG_INTENT_ACTION = "com.eveningoutpost.dexdrip.diasync.libre2_bg";
-    private static final String BLOOD_GLUCOSE_CAPABILITY = "blood_glucose";
-    public static final String BLOOD_GLUCOSE_PATH = "/blood_glucose";
     private String  webhook_address;
     private String  webhook_token;
     private Context broadcast_context;
@@ -72,41 +66,15 @@ public class DiaBroadcastReceiver extends BroadcastReceiver {
             Log.d(TAG, "Received: \n" + libre2_value);
             Alerter.check();
             WidgetUpdateService.pleaseUpdate(context);
+            WearUpdateService.pleaseUpdate(context);
 
             Intent updatePipIntent = new Intent(PipActivity.UPDATE_ACTION);
             LocalBroadcastManager.getInstance(context).sendBroadcast(updatePipIntent);
-
-            resendToWear(libre2_value);
 
             return;
         }
 
         Log.e(TAG,"Received unknown intent");
-    }
-
-    private void resendToWear(Libre2Value libre2Value) {
-        Log.d(TAG, "resending...");
-        AsyncTask.execute(() -> {
-            try {
-                Tasks.await(Wearable
-                                .getCapabilityClient(broadcast_context)
-                                .getCapability(
-                                        BLOOD_GLUCOSE_CAPABILITY,
-                                        CapabilityClient.FILTER_REACHABLE))
-                        .getNodes()
-                        .stream()
-                        .filter(Node::isNearby)
-                        .forEach(node -> Wearable
-                                .getMessageClient(broadcast_context)
-                                .sendMessage(
-                                        node.getId(),
-                                        BLOOD_GLUCOSE_PATH,
-                                        String.valueOf(libre2Value.getMmolValue()).getBytes()));
-            }
-            catch (Exception e) {
-                Log.e(TAG, "Something went wrong sending data to wear", e);
-            }
-        });
     }
 
     private void webhookUpdate(Bundle bundle) {
