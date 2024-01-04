@@ -83,7 +83,12 @@ public class WearUpdateService extends Service {
                 BloodGlucose.consMgdl(Glucose.low()),
                 BloodGlucose.consMgdl(Glucose.high()),
                 Instant.ofEpochMilli(t1),
-                Instant.ofEpochMilli(t2));
+                Instant.ofEpochMilli(t2),
+                new BloodChart.Colors(
+                    Glucose.lowGraphColor(),
+                    Glucose.normalGraphColor(),
+                    Glucose.highGraphColor()
+                ));
 
         return new BloodChart(points, libre2Values.getTrendArrow(), params).serialize();
     }

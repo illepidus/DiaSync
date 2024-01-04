@@ -62,6 +62,7 @@ public class DiasyncWatchFaceService
 
     @Override
     public void onMessageReceived(@NonNull MessageEvent messageEvent) {
+        Log.d(TAG, new String(messageEvent.getData()));
         Optional.ofNullable(watchFaceRenderer)
                 .filter(ignored -> messageEvent.getPath().equals("/blood_chart"))
                 .ifPresent(r -> r.setChart(BloodChart.deserialize(messageEvent.getData())));

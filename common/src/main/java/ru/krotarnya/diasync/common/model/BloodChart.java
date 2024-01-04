@@ -58,6 +58,15 @@ public final class BloodChart {
         }
     }
 
+    public int getColor(BloodGlucose bloodGlucose) {
+        if (bloodGlucose.lt(params().low()))
+            return params().colors().low();
+        else if (bloodGlucose.gt(params().high()))
+            return params().colors().high();
+
+        return params().colors().normal();
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
@@ -85,18 +94,21 @@ public final class BloodChart {
         private final BloodGlucose high;
         private final Instant from;
         private final Instant to;
+        private final Colors colors;
 
         public Params(
                 @JsonProperty("unit") BloodGlucoseUnit unit,
                 @JsonProperty("low") BloodGlucose low,
                 @JsonProperty("high") BloodGlucose high,
                 @JsonProperty("from") Instant from,
-                @JsonProperty("to") Instant to) {
+                @JsonProperty("to") Instant to,
+                @JsonProperty("colors") Colors colors) {
             this.unit = unit;
             this.low = low;
             this.high = high;
             this.from = from;
             this.to = to;
+            this.colors = colors;
         }
 
         public BloodGlucoseUnit unit() {
@@ -146,5 +158,59 @@ public final class BloodChart {
                     "to=" + to + ']';
         }
 
+        public Colors colors() {
+            return colors;
+        }
+    }
+
+    public static final class Colors {
+        private final int low;
+        private final int normal;
+        private final int high;
+
+        public Colors(
+                @JsonProperty("low") int low,
+                @JsonProperty("normal") int normal,
+                @JsonProperty("high") int high)
+        {
+            this.low = low;
+            this.normal = normal;
+            this.high = high;
+        }
+
+        public int high() {
+            return high;
+        }
+
+        public int normal() {
+            return normal;
+        }
+
+        public int low() {
+            return low;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj == null || obj.getClass() != this.getClass()) return false;
+            var that = (Colors) obj;
+            return Objects.equals(this.low, that.low) &&
+                    Objects.equals(this.normal, that.normal) &&
+                    Objects.equals(this.high, that.high);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(low, normal, high);
+        }
+
+        @Override
+        public String toString() {
+            return "Colors[" +
+                    "high=" + low + ", " +
+                    "normal=" + normal + ", " +
+                    "low=" + high + ']';
+        }
     }
 }
