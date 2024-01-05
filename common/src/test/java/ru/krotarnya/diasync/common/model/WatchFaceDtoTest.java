@@ -8,23 +8,23 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class BloodChartTest extends TestCase {
+public class WatchFaceDtoTest extends TestCase {
     private static final Random RANDOM = new Random(0);
-    private static final BloodChart.Params DEFAULT_PARAMS = new BloodChart.Params(
+    private static final WatchFaceDto.Params DEFAULT_PARAMS = new WatchFaceDto.Params(
             BloodGlucoseUnit.MMOL,
             BloodGlucose.consMmol(3.9),
             BloodGlucose.consMmol(10.0),
             Instant.EPOCH,
             Instant.now(),
-            new BloodChart.Colors(0, 0,0));
+            new WatchFaceDto.Colors(0, 0,0, 0, 0, 0));
 
-    public void testSerializeDeserialize() {
+    public void testSerializeDeserialize() throws Exception {
         List<BloodPoint> points = Stream.generate(this::getRandomBloodPoint)
                 .limit(60)
                 .collect(Collectors.toList());
 
-        BloodChart source = new BloodChart(points, TrendArrow.NONE, DEFAULT_PARAMS);
-        BloodChart result = BloodChart.deserialize(source.serialize());
+        WatchFaceDto source = new WatchFaceDto(points, TrendArrow.NONE, DEFAULT_PARAMS);
+        WatchFaceDto result = WatchFaceDto.deserialize(source.serialize());
 
         assertEquals(source, result);
     }

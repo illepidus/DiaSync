@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 import ru.krotarnya.diasync.DiasyncDB;
 import ru.krotarnya.diasync.Glucose;
-import ru.krotarnya.diasync.common.model.BloodChart;
+import ru.krotarnya.diasync.common.model.WatchFaceDto;
 import ru.krotarnya.diasync.common.model.BloodGlucose;
 import ru.krotarnya.diasync.common.model.BloodGlucoseUnit;
 import ru.krotarnya.diasync.common.model.BloodPoint;
@@ -78,19 +78,21 @@ public class WearUpdateService extends Service {
                         Instant.ofEpochMilli(v.timestamp),
                         BloodGlucose.consMgdl(v.getValue())))
                 .collect(Collectors.toList());
-        BloodChart.Params params = new BloodChart.Params(
+        WatchFaceDto.Params params = new WatchFaceDto.Params(
                 unit,
                 BloodGlucose.consMgdl(Glucose.low()),
                 BloodGlucose.consMgdl(Glucose.high()),
                 Instant.ofEpochMilli(t1),
                 Instant.ofEpochMilli(t2),
-                new BloodChart.Colors(
-                    Glucose.lowGraphColor(),
-                    Glucose.normalGraphColor(),
-                    Glucose.highGraphColor()
-                ));
+                new WatchFaceDto.Colors(
+                        Glucose.lowGraphColor(),
+                        Glucose.normalGraphColor(),
+                        Glucose.highGraphColor(),
+                        Glucose.lowTextColor(),
+                        Glucose.normalTextColor(),
+                        Glucose.highTextColor()));
 
-        return new BloodChart(points, libre2Values.getTrendArrow(), params).serialize();
+        return new WatchFaceDto(points, libre2Values.getTrendArrow(), params).serialize();
     }
 
     public static void pleaseUpdate(Context context) {

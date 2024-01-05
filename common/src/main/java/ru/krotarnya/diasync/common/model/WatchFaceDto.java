@@ -12,7 +12,7 @@ import java.util.Objects;
 
 import ru.krotarnya.diasync.common.util.CompressionUtils;
 
-public final class BloodChart {
+public final class WatchFaceDto {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
             .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
             .registerModule(new JavaTimeModule());
@@ -20,7 +20,7 @@ public final class BloodChart {
     private final TrendArrow trendArrow;
     private final Params params;
 
-    public BloodChart(
+    public WatchFaceDto(
             @JsonProperty("points") List<BloodPoint> points,
             @JsonProperty("trend") TrendArrow trendArrow,
             @JsonProperty("params") Params params) {
@@ -49,12 +49,8 @@ public final class BloodChart {
         }
     }
 
-    public static BloodChart deserialize(byte[] compressedJson) {
-        try {
-            return OBJECT_MAPPER.readValue(CompressionUtils.decompress(compressedJson), BloodChart.class);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public static WatchFaceDto deserialize(byte[] compressedJson) throws Exception {
+        return OBJECT_MAPPER.readValue(CompressionUtils.decompress(compressedJson), WatchFaceDto.class);
     }
 
     public int getColor(BloodGlucose bloodGlucose) {
@@ -66,11 +62,20 @@ public final class BloodChart {
         return params().colors().normal();
     }
 
+    public int getTextColor(BloodGlucose bloodGlucose) {
+        if (bloodGlucose.lt(params().low()))
+            return params().colors().textLow();
+        else if (bloodGlucose.gt(params().high()))
+            return params().colors().textHigh();
+
+        return params().colors().textNormal();
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (BloodChart) obj;
+        var that = (WatchFaceDto) obj;
         return Objects.equals(this.points, that.points) &&
                 Objects.equals(this.params, that.params);
     }
@@ -82,9 +87,11 @@ public final class BloodChart {
 
     @Override
     public String toString() {
-        return "BloodChart[" +
-                "points=" + points + ", " +
-                "params=" + params + ']';
+        return "WatchFaceDto{" +
+                "points=" + points +
+                ", trendArrow=" + trendArrow +
+                ", params=" + params +
+                '}';
     }
 
     public static final class Params {
@@ -169,15 +176,24 @@ public final class BloodChart {
         private final int low;
         private final int normal;
         private final int high;
+        private final int textLow;
+        private final int textNormal;
+        private final int textHigh;
 
         public Colors(
                 @JsonProperty("low") int low,
                 @JsonProperty("normal") int normal,
-                @JsonProperty("high") int high)
+                @JsonProperty("high") int high,
+                @JsonProperty("textLow") int textLow,
+                @JsonProperty("textNormal") int textNormal,
+                @JsonProperty("textHigh") int textHigh)
         {
             this.low = low;
             this.normal = normal;
             this.high = high;
+            this.textLow = textLow;
+            this.textNormal = textNormal;
+            this.textHigh = textHigh;
         }
 
         public int high() {
@@ -192,6 +208,18 @@ public final class BloodChart {
             return low;
         }
 
+        public int textLow() {
+            return textLow;
+        }
+
+        public int textNormal() {
+            return textNormal;
+        }
+
+        public int textHigh() {
+            return textHigh;
+        }
+
         @Override
         public boolean equals(Object obj) {
             if (obj == this) return true;
@@ -199,20 +227,27 @@ public final class BloodChart {
             var that = (Colors) obj;
             return Objects.equals(this.low, that.low) &&
                     Objects.equals(this.normal, that.normal) &&
-                    Objects.equals(this.high, that.high);
+                    Objects.equals(this.high, that.high) &&
+                    Objects.equals(this.textLow, that.textLow) &&
+                    Objects.equals(this.textNormal, that.textNormal) &&
+                    Objects.equals(this.textHigh, that.textHigh);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(low, normal, high);
+            return Objects.hash(low, normal, high, textLow, textNormal, textHigh);
         }
 
         @Override
         public String toString() {
-            return "Colors[" +
-                    "high=" + low + ", " +
-                    "normal=" + normal + ", " +
-                    "low=" + high + ']';
+            return "Colors{" +
+                    "low=" + low +
+                    ", normal=" + normal +
+                    ", high=" + high +
+                    ", textLow=" + textLow +
+                    ", textNormal=" + textNormal +
+                    ", textHigh=" + textHigh +
+                    '}';
         }
     }
 }

@@ -26,12 +26,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import kotlin.coroutines.Continuation;
-import ru.krotarnya.diasync.common.model.BloodChart;
+import ru.krotarnya.diasync.common.model.WatchFaceDto;
 import ru.krotarnya.diasync.common.model.BloodGlucose;
 import ru.krotarnya.diasync.common.model.BloodPoint;
 
 public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedAssets> {
-    private static final int UPDATE_INTERVAL = 1000;
+    private static final Duration UPDATE_INTERVAL = Duration.ofSeconds(1);
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy");
     private static final Duration AGO_WARNING_THRESHOLD = Duration.ofSeconds(90);
@@ -39,7 +39,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
     private static final int FOREGROUND_COLOR = Color.WHITE;
     private static final int ERROR_COLOR = Color.RED;
     @Nullable
-    private BloodChart chart;
+    private WatchFaceDto chart;
 
     public WatchFaceRenderer(
             SurfaceHolder surfaceHolder,
@@ -51,7 +51,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
                 currentUserStyleRepository,
                 watchState,
                 WatchFaceType.DIGITAL,
-                UPDATE_INTERVAL,
+                UPDATE_INTERVAL.toMillis(),
                 false);
     }
 
@@ -123,7 +123,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
             Canvas canvas,
             Rect rect,
             Rect graphRect,
-            BloodChart chart,
+            WatchFaceDto chart,
             Function<Instant, Integer> toX)
     {
         //to be implemented
@@ -132,19 +132,19 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
     private void renderChartData(
             Canvas canvas,
             Rect rect,
-            BloodChart chart,
+            WatchFaceDto chart,
             Function<BloodPoint, Point> toPoint)
     {
         Paint paint = new Paint();
         float r = rect.width() * 20f / Duration.between(chart.params().from(), chart.params().to()).getSeconds();
         chart.points().forEach(p -> {
             Point point = toPoint.apply(p);
-            paint.setColor(chart.getColor(p.glucose()));
+            paint.setColor(getDataColor(p.glucose()));
             canvas.drawCircle(point.x, point.y, r, paint);
         });
     }
 
-    private void renderBloodGlucose(Canvas canvas, BloodChart chart, Rect rect, Rect graphRect) {
+    private void renderBloodGlucose(Canvas canvas, WatchFaceDto chart, Rect rect, Rect graphRect) {
         Paint paint = new Paint();
         Optional<BloodPoint> lastPoint = chart.points().stream()
                 .max(Comparator.comparing(BloodPoint::time));
@@ -167,7 +167,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
         paint.setStrokeWidth(strokeWidth);
         canvas.drawText(text, textX, textY - (paint.descent() + paint.ascent()) / 2, paint);
 
-        paint.setColor(getColor(lastPoint.map(BloodPoint::glucose).orElse(null)));
+        paint.setColor(getTextColor(lastPoint.map(BloodPoint::glucose).orElse(null)));
         paint.setStyle(Paint.Style.FILL);
         canvas.drawText(text, textX, textY - (paint.descent() + paint.ascent()) / 2, paint);
     }
@@ -175,7 +175,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
     private void renderThresholdLines(
             Canvas canvas,
             Rect rect,
-            BloodChart chart,
+            WatchFaceDto chart,
             Integer x1,
             Integer x2,
             Function<BloodGlucose, Integer> toY)
@@ -236,9 +236,15 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
                 paint);
     }
 
-    private int getColor(@Nullable BloodGlucose bloodGlucose) {
+    private int getDataColor(@Nullable BloodGlucose bloodGlucose) {
         return Optional.ofNullable(bloodGlucose)
                 .flatMap(bg -> Optional.ofNullable(chart).map(chart -> chart.getColor(bg)))
+                .orElse(ERROR_COLOR);
+    }
+
+    private int getTextColor(@Nullable BloodGlucose bloodGlucose) {
+        return Optional.ofNullable(bloodGlucose)
+                .flatMap(bg -> Optional.ofNullable(chart).map(chart -> chart.getTextColor(bg)))
                 .orElse(ERROR_COLOR);
     }
 
@@ -252,7 +258,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
 
     }
 
-    public void setChart(@Nullable BloodChart chart) {
+    public void setChart(@Nullable WatchFaceDto chart) {
         this.chart = chart;
     }
 }
