@@ -1,6 +1,4 @@
 # DiaSync
-```
-An interface between xDrip and my stuff.
-Mostly done for learning android basics purposes.
-Under early development.
-```
+This is xDrip companion maid mostly for Libre2 realtime (1-per-minute) bg readings display support
+* Android widget
+* Wear watchface
