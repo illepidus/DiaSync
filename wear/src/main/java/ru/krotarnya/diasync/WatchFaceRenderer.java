@@ -111,22 +111,10 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
                     toX.apply(p.time()),
                     toY.apply(p.glucose()));
 
-            renderTimeLines(canvas, rect, graphRect, chart, toX);
             renderThresholdLines(canvas, rect, chart, graphRect.left, graphRect.right, toY);
             renderChartData(canvas, rect, chart, toPoint);
             renderBloodGlucose(canvas, chart, rect, graphRect);
         });
-    }
-
-    @SuppressWarnings("unused")
-    private void renderTimeLines(
-            Canvas canvas,
-            Rect rect,
-            Rect graphRect,
-            WatchFaceDto chart,
-            Function<Instant, Integer> toX)
-    {
-        //to be implemented
     }
 
     private void renderChartData(

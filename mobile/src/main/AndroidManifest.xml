@@ -9,11 +9,11 @@
 
     <application
         android:name="ru.krotarnya.diasync.Diasync"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.DiaSync"
+        android:supportsRtl="false"
         tools:targetApi="31">
 
         <service
