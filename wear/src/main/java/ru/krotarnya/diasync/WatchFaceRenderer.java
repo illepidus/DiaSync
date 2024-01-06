@@ -85,8 +85,8 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
 
             Function<Instant, Integer> toX = instant -> {
                 long t = instant.toEpochMilli();
-                long minT = chart.params().from().toEpochMilli();
-                long maxT = chart.params().to().toEpochMilli();
+                long maxT = Instant.now().toEpochMilli();
+                long minT = maxT - chart.params().timeWindow().toMillis();
                 int minX = graphRect.left;
                 int maxX = graphRect.right;
                 return Math.toIntExact(minX + (maxX - minX) * (t - minT) / (maxT - minT));
@@ -136,7 +136,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
             Function<BloodPoint, Point> toPoint)
     {
         Paint paint = new Paint();
-        float r = rect.width() * 20f / Duration.between(chart.params().from(), chart.params().to()).getSeconds();
+        float r = rect.width() * 20f / chart.params().timeWindow().getSeconds();
         chart.points().forEach(p -> {
             Point point = toPoint.apply(p);
             paint.setColor(getDataColor(p.glucose()));

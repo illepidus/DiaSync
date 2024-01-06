@@ -2,6 +2,7 @@ package ru.krotarnya.diasync.common.model;
 
 import junit.framework.TestCase;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Random;
@@ -14,13 +15,12 @@ public class WatchFaceDtoTest extends TestCase {
             BloodGlucoseUnit.MMOL,
             BloodGlucose.consMmol(3.9),
             BloodGlucose.consMmol(10.0),
-            Instant.EPOCH,
-            Instant.now(),
+            Duration.ofMinutes(60),
             new WatchFaceDto.Colors(0, 0,0, 0, 0, 0));
 
     public void testSerializeDeserialize() throws Exception {
         List<BloodPoint> points = Stream.generate(this::getRandomBloodPoint)
-                .limit(60)
+                .limit(DEFAULT_PARAMS.timeWindow().getSeconds() / 60)
                 .collect(Collectors.toList());
 
         WatchFaceDto source = new WatchFaceDto(points, TrendArrow.NONE, DEFAULT_PARAMS);

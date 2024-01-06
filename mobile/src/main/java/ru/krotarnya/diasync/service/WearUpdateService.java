@@ -16,6 +16,7 @@ import com.google.android.gms.wearable.CapabilityClient;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -82,8 +83,7 @@ public class WearUpdateService extends Service {
                 unit,
                 BloodGlucose.consMgdl(Glucose.low()),
                 BloodGlucose.consMgdl(Glucose.high()),
-                Instant.ofEpochMilli(t1),
-                Instant.ofEpochMilli(t2),
+                Duration.ofMillis(graph_period),
                 new WatchFaceDto.Colors(
                         Glucose.lowGraphColor(),
                         Glucose.normalGraphColor(),

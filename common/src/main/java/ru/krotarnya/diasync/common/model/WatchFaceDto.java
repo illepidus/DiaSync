@@ -3,10 +3,11 @@ package ru.krotarnya.diasync.common.model;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import java.time.Instant;
+import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,8 +45,8 @@ public final class WatchFaceDto {
     public byte[] serialize() {
         try {
             return CompressionUtils.compress(OBJECT_MAPPER.writeValueAsBytes(this));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Was not able to serialize watchface dto", e);
         }
     }
 
@@ -98,22 +99,19 @@ public final class WatchFaceDto {
         private final BloodGlucoseUnit unit;
         private final BloodGlucose low;
         private final BloodGlucose high;
-        private final Instant from;
-        private final Instant to;
+        private final Duration timeWindow;
         private final Colors colors;
 
         public Params(
                 @JsonProperty("unit") BloodGlucoseUnit unit,
                 @JsonProperty("low") BloodGlucose low,
                 @JsonProperty("high") BloodGlucose high,
-                @JsonProperty("from") Instant from,
-                @JsonProperty("to") Instant to,
+                @JsonProperty("timeWindow") Duration timeWindow,
                 @JsonProperty("colors") Colors colors) {
             this.unit = unit;
             this.low = low;
             this.high = high;
-            this.from = from;
-            this.to = to;
+            this.timeWindow = timeWindow;
             this.colors = colors;
         }
 
@@ -129,12 +127,8 @@ public final class WatchFaceDto {
             return high;
         }
 
-        public Instant from() {
-            return from;
-        }
-
-        public Instant to() {
-            return to;
+        public Duration timeWindow() {
+            return timeWindow;
         }
 
         public Colors colors() {
@@ -149,8 +143,7 @@ public final class WatchFaceDto {
             return Objects.equals(this.unit, that.unit) &&
                     Objects.equals(this.low, that.low) &&
                     Objects.equals(this.high, that.high) &&
-                    Objects.equals(this.from, that.from) &&
-                    Objects.equals(this.to, that.to) &&
+                    Objects.equals(this.timeWindow, that.timeWindow) &&
                     Objects.equals(this.colors, that.colors);
         }
 
@@ -160,15 +153,14 @@ public final class WatchFaceDto {
                     "unit=" + unit +
                     ", low=" + low +
                     ", high=" + high +
-                    ", from=" + from +
-                    ", to=" + to +
+                    ", timeWindow=" + timeWindow +
                     ", colors=" + colors +
                     '}';
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(unit, low, high, from, to, colors);
+            return Objects.hash(unit, low, high, timeWindow, colors);
         }
     }
 
