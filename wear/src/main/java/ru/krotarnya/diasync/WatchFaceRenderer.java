@@ -26,9 +26,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import kotlin.coroutines.Continuation;
+import ru.krotarnya.diasync.common.model.BatteryStatus;
 import ru.krotarnya.diasync.common.model.BloodGlucose;
 import ru.krotarnya.diasync.common.model.BloodPoint;
-import ru.krotarnya.diasync.common.model.WatchFaceDto;
+import ru.krotarnya.diasync.common.model.WatchFaceBloodData;
 import ru.krotarnya.diasync.common.util.DateTimeUtil;
 
 public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedAssets> {
@@ -37,16 +38,24 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("EE dd.MM");
     private static final Duration AGO_WARNING_THRESHOLD = Duration.ofSeconds(90);
     private static final int BACKGROUND_COLOR = Color.BLACK;
-    private static final int FOREGROUND_COLOR = Color.WHITE;
+    private static final int FOREGROUND_PRIMARY_COLOR = Color.WHITE;
+    private static final int FOREGROUND_SECONDARY_COLOR = Color.GRAY;
+    private static final int BATTERY_NORMAL_COLOR = Color.WHITE;
+    private static final int BATTERY_CHARGING_COLOR = Color.GREEN;
+    private static final int BATTERY_CRITICAL_COLOR = Color.RED;
+    private static final int BATTERY_CRITICAL_PERCENT = 15;
     private static final int ERROR_COLOR = Color.RED;
 
     @Nullable
-    private WatchFaceDto watchFaceData;
+    private WatchFaceBloodData bloodData;
+    @Nullable
+    private BatteryStatus watchBatteryStatus;
 
     public WatchFaceRenderer(
-            SurfaceHolder surfaceHolder,
-            WatchState watchState,
-            CurrentUserStyleRepository currentUserStyleRepository)
+            @NonNull SurfaceHolder surfaceHolder,
+            @NonNull WatchState watchState,
+            @NonNull CurrentUserStyleRepository currentUserStyleRepository,
+            @Nullable BatteryStatus watchBatteryStatus)
     {
         super(
                 surfaceHolder,
@@ -55,6 +64,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
                 WatchFaceType.DIGITAL,
                 UPDATE_INTERVAL.toMillis(),
                 false);
+        this.watchBatteryStatus = watchBatteryStatus;
     }
 
     @Nullable
@@ -73,12 +83,34 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
     {
         canvas.drawColor(BACKGROUND_COLOR);
         renderTime(canvas, rect, zonedDateTime);
+        renderWatchBattery(canvas, rect);
         renderNoDataMessage(canvas, rect, zonedDateTime);
         renderChart(canvas, rect, zonedDateTime);
     }
 
+    private void renderWatchBattery(Canvas canvas, Rect rect) {
+        Optional.ofNullable(watchBatteryStatus).ifPresent(batteryStatus -> {
+            Paint paint = new Paint();
+            paint.setFakeBoldText(true);
+            paint.setColor(batteryStatus.isCharging()
+                    ? BATTERY_CHARGING_COLOR
+                    : batteryStatus.chargePercentRounded() <= BATTERY_CRITICAL_PERCENT
+                        ? BATTERY_CRITICAL_COLOR
+                        : BATTERY_NORMAL_COLOR);
+
+            paint.setTextAlign(Paint.Align.LEFT);
+            paint.setTextSize(rect.height() / 15f);
+
+            canvas.drawText(
+                    batteryStatus.chargePercentRounded() + "%",
+                    (int) (rect.width() * 0.1),
+                    rect.height() * 0.28f - (paint.descent() + paint.ascent()) / 2,
+                    paint);
+        });
+    }
+
     private void renderChart(Canvas canvas, Rect rect, ZonedDateTime zonedDateTime) {
-        Optional.ofNullable(watchFaceData).ifPresent(data -> {
+        Optional.ofNullable(bloodData).ifPresent(data -> {
             Rect graphRect = new Rect(
                     (int) (rect.width() * 0.1),
                     (int) (rect.height() * 0.35),
@@ -123,7 +155,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
     private void renderTimeLines(
             Canvas canvas,
             Rect graphRect,
-            WatchFaceDto data,
+            WatchFaceBloodData data,
             ZonedDateTime zonedDateTime,
             Function<Instant, Integer> toX)
     {
@@ -131,12 +163,12 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
         ZonedDateTime from = zonedDateTime.minus(timeWindow);
 
         Paint linePaint = new Paint();
-        linePaint.setColor(Color.GRAY);
+        linePaint.setColor(FOREGROUND_SECONDARY_COLOR);
 
 
         Paint textPaint = new Paint();
         float textSize = graphRect.height() / 10f;
-        textPaint.setColor(Color.GRAY);
+        textPaint.setColor(FOREGROUND_SECONDARY_COLOR);
         textPaint.setTextSize(textSize);
         textPaint.setTextAlign(Paint.Align.CENTER);
 
@@ -166,7 +198,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
     private void renderChartData(
             Canvas canvas,
             Rect graphRect,
-            WatchFaceDto data,
+            WatchFaceBloodData data,
             Function<BloodPoint, Point> toPoint)
     {
         Paint paint = new Paint();
@@ -180,7 +212,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
         });
     }
 
-    private void renderBloodGlucose(Canvas canvas, Rect graphRect, WatchFaceDto data) {
+    private void renderBloodGlucose(Canvas canvas, Rect graphRect, WatchFaceBloodData data) {
         Paint paint = new Paint();
         Optional<BloodPoint> lastPoint = data.points().stream()
                 .max(Comparator.comparing(BloodPoint::time));
@@ -211,7 +243,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
     private void renderThresholdLines(
             Canvas canvas,
             Rect graphRect,
-            WatchFaceDto data,
+            WatchFaceBloodData data,
             Function<BloodGlucose, Integer> toY)
     {
         int x1 = graphRect.left;
@@ -230,7 +262,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
     private void renderTime(Canvas canvas, Rect rect, ZonedDateTime zonedDateTime) {
         Paint paint = new Paint();
         paint.setFakeBoldText(true);
-        paint.setColor(FOREGROUND_COLOR);
+        paint.setColor(FOREGROUND_PRIMARY_COLOR);
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(rect.height() / 5f);
         canvas.drawText(
@@ -253,7 +285,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(rect.height() / 10f);
         paint.setColor(ERROR_COLOR);
-        Optional<Instant> lastPoint = Optional.ofNullable(watchFaceData)
+        Optional<Instant> lastPoint = Optional.ofNullable(bloodData)
                 .stream()
                 .flatMap(c -> c.points().stream())
                 .max(Comparator.comparing(BloodPoint::time))
@@ -275,13 +307,13 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
 
     private int getDataColor(@Nullable BloodGlucose bloodGlucose) {
         return Optional.ofNullable(bloodGlucose)
-                .flatMap(bg -> Optional.ofNullable(watchFaceData).map(data -> data.getColor(bg)))
+                .flatMap(bg -> Optional.ofNullable(bloodData).map(data -> data.getColor(bg)))
                 .orElse(ERROR_COLOR);
     }
 
     private int getTextColor(@Nullable BloodGlucose bloodGlucose) {
         return Optional.ofNullable(bloodGlucose)
-                .flatMap(bg -> Optional.ofNullable(watchFaceData).map(data -> data.getTextColor(bg)))
+                .flatMap(bg -> Optional.ofNullable(bloodData).map(data -> data.getTextColor(bg)))
                 .orElse(ERROR_COLOR);
     }
 
@@ -295,8 +327,13 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
 
     }
 
-    public void setWatchFaceData(@Nullable WatchFaceDto watchFaceData) {
-        this.watchFaceData = watchFaceData;
+    public void setBloodData(@Nullable WatchFaceBloodData bloodData) {
+        this.bloodData = bloodData;
+        invalidate();
+    }
+
+    public void setWatchBatteryStatus(@Nullable BatteryStatus batteryStatus) {
+        this.watchBatteryStatus = batteryStatus;
         invalidate();
     }
 }

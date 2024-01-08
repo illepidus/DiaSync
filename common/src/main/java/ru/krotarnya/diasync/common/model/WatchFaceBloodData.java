@@ -13,7 +13,7 @@ import java.util.List;
 import ru.krotarnya.diasync.common.DefaultObject;
 import ru.krotarnya.diasync.common.util.CompressionUtils;
 
-public final class WatchFaceDto extends DefaultObject {
+public final class WatchFaceBloodData extends DefaultObject {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
             .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
             .registerModule(new JavaTimeModule());
@@ -21,7 +21,7 @@ public final class WatchFaceDto extends DefaultObject {
     private final TrendArrow trendArrow;
     private final Params params;
 
-    public WatchFaceDto(
+    public WatchFaceBloodData(
             @JsonProperty("points") List<BloodPoint> points,
             @JsonProperty("trend") TrendArrow trendArrow,
             @JsonProperty("params") Params params) {
@@ -50,8 +50,8 @@ public final class WatchFaceDto extends DefaultObject {
         }
     }
 
-    public static WatchFaceDto deserialize(byte[] compressedJson) throws Exception {
-        return OBJECT_MAPPER.readValue(CompressionUtils.decompress(compressedJson), WatchFaceDto.class);
+    public static WatchFaceBloodData deserialize(byte[] compressedJson) throws Exception {
+        return OBJECT_MAPPER.readValue(CompressionUtils.decompress(compressedJson), WatchFaceBloodData.class);
     }
 
     public int getColor(BloodGlucose bloodGlucose) {
