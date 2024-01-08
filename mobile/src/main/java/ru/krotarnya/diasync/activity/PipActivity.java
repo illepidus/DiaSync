@@ -97,9 +97,9 @@ public class PipActivity extends AppCompatActivity {
     private void update() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String glucose_units = prefs.getString("glucose_units", "mmol");
-        boolean graph_range_lines = prefs.getBoolean("libre2_widget_graph_range_lines", false);
-        boolean graph_range_zones = prefs.getBoolean("libre2_widget_graph_range_zones", true);
-        long graph_period = Long.parseLong(prefs.getString("libre2_widget_graph_period", "1800000"));
+        boolean graph_range_lines = prefs.getBoolean("widget_graph_range_lines", false);
+        boolean graph_range_zones = prefs.getBoolean("widget_graph_range_zones", true);
+        long graph_period = Long.parseLong(prefs.getString("widget_graph_period", "1800000"));
 
         long t2 = System.currentTimeMillis(), t1 = t2 - graph_period;
         DiasyncDB diasync_db = DiasyncDB.getInstance(this);

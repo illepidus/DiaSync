@@ -38,7 +38,7 @@ public class Libre2Widget extends AppWidgetProvider {
         boolean graph_range_zones = prefs.getBoolean("widget_graph_range_zones", true);
         boolean alerts_icon = prefs.getBoolean("widget_alerts_icon", true);
         boolean pip_icon = prefs.getBoolean("widget_pip_icon", true);
-        long graph_period = Long.parseLong(prefs.getString("libre2_widget_graph_period", "1800000"));
+        long graph_period = Long.parseLong(prefs.getString("widget_graph_period", "1800000"));
 
         views.setImageViewResource(R.id.widget_alerts_icon, alerts_icon
                 ? R.drawable.ic_bell_gear
