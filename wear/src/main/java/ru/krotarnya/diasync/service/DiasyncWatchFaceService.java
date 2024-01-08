@@ -81,7 +81,7 @@ public class DiasyncWatchFaceService
                 .ifPresent(r -> {
                     try {
                         WatchFaceDto chart = WatchFaceDto.deserialize(messageEvent.getData());
-                        watchFaceRenderer.setChart(chart);
+                        watchFaceRenderer.setWatchFaceData(chart);
 
                         List<BloodGlucose> last = chart.points().stream()
                                 .sorted(Comparator.comparing(BloodPoint::time).reversed())

@@ -39,7 +39,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
     private static final int FOREGROUND_COLOR = Color.WHITE;
     private static final int ERROR_COLOR = Color.RED;
     @Nullable
-    private WatchFaceDto chart;
+    private WatchFaceDto watchFaceData;
 
     public WatchFaceRenderer(
             SurfaceHolder surfaceHolder,
@@ -76,7 +76,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
     }
 
     private void renderChart(Canvas canvas, Rect rect) {
-        Optional.ofNullable(chart).ifPresent(chart -> {
+        Optional.ofNullable(watchFaceData).ifPresent(data -> {
             Rect graphRect = new Rect(
                     (int) (rect.width() * 0.1),
                     (int) (rect.height() * 0.35),
@@ -86,20 +86,20 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
             Function<Instant, Integer> toX = instant -> {
                 long t = instant.toEpochMilli();
                 long maxT = Instant.now().toEpochMilli();
-                long minT = maxT - chart.params().timeWindow().toMillis();
+                long minT = maxT - data.params().timeWindow().toMillis();
                 int minX = graphRect.left;
                 int maxX = graphRect.right;
                 return Math.toIntExact(minX + (maxX - minX) * (t - minT) / (maxT - minT));
             };
 
             DoubleSummaryStatistics glucoseStatistics = Stream.concat(
-                            chart.points().stream().map(BloodPoint::glucose),
-                            Stream.of(chart.params().low(), chart.params().high()))
-                    .collect(Collectors.summarizingDouble(g -> chart.params().unit().getValue(g)));
+                            data.points().stream().map(BloodPoint::glucose),
+                            Stream.of(data.params().low(), data.params().high()))
+                    .collect(Collectors.summarizingDouble(g -> data.params().unit().getValue(g)));
 
 
             Function<BloodGlucose, Integer> toY = bg -> {
-                double v = chart.params().unit().getValue(bg);
+                double v = data.params().unit().getValue(bg);
                 double minV = glucoseStatistics.getMin();
                 double maxV = glucoseStatistics.getMax();
                 int minY = graphRect.bottom;
@@ -111,34 +111,34 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
                     toX.apply(p.time()),
                     toY.apply(p.glucose()));
 
-            renderThresholdLines(canvas, rect, chart, graphRect.left, graphRect.right, toY);
-            renderChartData(canvas, rect, chart, toPoint);
-            renderBloodGlucose(canvas, chart, rect, graphRect);
+            renderThresholdLines(canvas, rect, data, graphRect.left, graphRect.right, toY);
+            renderChartData(canvas, rect, data, toPoint);
+            renderBloodGlucose(canvas, data, rect, graphRect);
         });
     }
 
     private void renderChartData(
             Canvas canvas,
             Rect rect,
-            WatchFaceDto chart,
+            WatchFaceDto data,
             Function<BloodPoint, Point> toPoint)
     {
         Paint paint = new Paint();
-        float r = rect.width() * 20f / chart.params().timeWindow().getSeconds();
-        chart.points().forEach(p -> {
+        float r = rect.width() * 20f / data.params().timeWindow().getSeconds();
+        data.points().forEach(p -> {
             Point point = toPoint.apply(p);
             paint.setColor(getDataColor(p.glucose()));
             canvas.drawCircle(point.x, point.y, r, paint);
         });
     }
 
-    private void renderBloodGlucose(Canvas canvas, WatchFaceDto chart, Rect rect, Rect graphRect) {
+    private void renderBloodGlucose(Canvas canvas, WatchFaceDto data, Rect rect, Rect graphRect) {
         Paint paint = new Paint();
-        Optional<BloodPoint> lastPoint = chart.points().stream()
+        Optional<BloodPoint> lastPoint = data.points().stream()
                 .max(Comparator.comparing(BloodPoint::time));
 
         String text = lastPoint.map(BloodPoint::glucose)
-                .map(bg -> chart.params().unit().getString(bg)  + chart.trendArrow().getSymbol())
+                .map(bg -> data.params().unit().getString(bg)  + data.trendArrow().getSymbol())
                 .orElse("???");
 
         float textHeight = rect.height() / 5f;
@@ -163,7 +163,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
     private void renderThresholdLines(
             Canvas canvas,
             Rect rect,
-            WatchFaceDto chart,
+            WatchFaceDto data,
             Integer x1,
             Integer x2,
             Function<BloodGlucose, Integer> toY)
@@ -171,11 +171,11 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
         Paint paint = new Paint();
         paint.setStrokeWidth(rect.height() / 200f);
 
-        paint.setColor(chart.params().colors().low());
-        canvas.drawLine(x1, toY.apply(chart.params().low()), x2, toY.apply(chart.params().low()), paint);
+        paint.setColor(data.params().colors().low());
+        canvas.drawLine(x1, toY.apply(data.params().low()), x2, toY.apply(data.params().low()), paint);
 
-        paint.setColor(chart.params().colors().high());
-        canvas.drawLine(x1, toY.apply(chart.params().high()), x2, toY.apply(chart.params().high()), paint);
+        paint.setColor(data.params().colors().high());
+        canvas.drawLine(x1, toY.apply(data.params().high()), x2, toY.apply(data.params().high()), paint);
     }
 
     private void renderTime(Canvas canvas, Rect rect, ZonedDateTime zonedDateTime) {
@@ -204,7 +204,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(rect.height() / 10f);
         paint.setColor(ERROR_COLOR);
-        Optional<Instant> lastPoint = Optional.ofNullable(chart)
+        Optional<Instant> lastPoint = Optional.ofNullable(watchFaceData)
                 .stream()
                 .flatMap(c -> c.points().stream())
                 .max(Comparator.comparing(BloodPoint::time))
@@ -226,13 +226,13 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
 
     private int getDataColor(@Nullable BloodGlucose bloodGlucose) {
         return Optional.ofNullable(bloodGlucose)
-                .flatMap(bg -> Optional.ofNullable(chart).map(chart -> chart.getColor(bg)))
+                .flatMap(bg -> Optional.ofNullable(watchFaceData).map(data -> data.getColor(bg)))
                 .orElse(ERROR_COLOR);
     }
 
     private int getTextColor(@Nullable BloodGlucose bloodGlucose) {
         return Optional.ofNullable(bloodGlucose)
-                .flatMap(bg -> Optional.ofNullable(chart).map(chart -> chart.getTextColor(bg)))
+                .flatMap(bg -> Optional.ofNullable(watchFaceData).map(data -> data.getTextColor(bg)))
                 .orElse(ERROR_COLOR);
     }
 
@@ -246,7 +246,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
 
     }
 
-    public void setChart(@Nullable WatchFaceDto chart) {
-        this.chart = chart;
+    public void setWatchFaceData(@Nullable WatchFaceDto watchFaceData) {
+        this.watchFaceData = watchFaceData;
     }
 }
