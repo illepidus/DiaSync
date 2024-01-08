@@ -33,7 +33,7 @@ import ru.krotarnya.diasync.common.model.BloodPoint;
 public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedAssets> {
     private static final Duration UPDATE_INTERVAL = Duration.ofSeconds(1);
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("EE dd.MM");
     private static final Duration AGO_WARNING_THRESHOLD = Duration.ofSeconds(90);
     private static final int BACKGROUND_COLOR = Color.BLACK;
     private static final int FOREGROUND_COLOR = Color.WHITE;
