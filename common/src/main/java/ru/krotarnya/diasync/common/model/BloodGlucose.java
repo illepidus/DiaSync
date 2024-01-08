@@ -2,11 +2,10 @@ package ru.krotarnya.diasync.common.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Objects;
-
+import ru.krotarnya.diasync.common.DefaultObject;
 import ru.krotarnya.diasync.common.util.BloodUtils;
 
-public final class BloodGlucose implements Comparable<BloodGlucose> {
+public final class BloodGlucose extends DefaultObject implements Comparable<BloodGlucose> {
     private final double mgdl;
 
     public BloodGlucose(@JsonProperty("mgdl") double mgdl) {
@@ -17,7 +16,6 @@ public final class BloodGlucose implements Comparable<BloodGlucose> {
         return new BloodGlucose(mgdl);
     }
 
-    @SuppressWarnings("unused")
     public static BloodGlucose consMmol(double mmol) {
         return new BloodGlucose(BloodUtils.mmolToMgdl(mmol));
     }
@@ -28,25 +26,6 @@ public final class BloodGlucose implements Comparable<BloodGlucose> {
 
     public double mgdl() {
         return mgdl;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (BloodGlucose) obj;
-        return Double.doubleToLongBits(this.mgdl) == Double.doubleToLongBits(that.mgdl);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(mgdl);
-    }
-
-    @Override
-    public String toString() {
-        return "BloodGlucose[" +
-                "mgdl=" + mgdl + ']';
     }
 
     @Override

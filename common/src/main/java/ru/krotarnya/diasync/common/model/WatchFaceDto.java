@@ -9,11 +9,11 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Objects;
 
+import ru.krotarnya.diasync.common.DefaultObject;
 import ru.krotarnya.diasync.common.util.CompressionUtils;
 
-public final class WatchFaceDto {
+public final class WatchFaceDto extends DefaultObject {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
             .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
             .registerModule(new JavaTimeModule());
@@ -72,30 +72,7 @@ public final class WatchFaceDto {
         return params().colors().textNormal();
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (WatchFaceDto) obj;
-        return Objects.equals(this.points, that.points) &&
-                Objects.equals(this.params, that.params);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(points, params);
-    }
-
-    @Override
-    public String toString() {
-        return "WatchFaceDto{" +
-                "points=" + points +
-                ", trendArrow=" + trendArrow +
-                ", params=" + params +
-                '}';
-    }
-
-    public static final class Params {
+    public static final class Params extends DefaultObject {
         private final BloodGlucoseUnit unit;
         private final BloodGlucose low;
         private final BloodGlucose high;
@@ -107,7 +84,8 @@ public final class WatchFaceDto {
                 @JsonProperty("low") BloodGlucose low,
                 @JsonProperty("high") BloodGlucose high,
                 @JsonProperty("timeWindow") Duration timeWindow,
-                @JsonProperty("colors") Colors colors) {
+                @JsonProperty("colors") Colors colors)
+        {
             this.unit = unit;
             this.low = low;
             this.high = high;
@@ -134,37 +112,9 @@ public final class WatchFaceDto {
         public Colors colors() {
             return colors;
         }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) return true;
-            if (obj == null || obj.getClass() != this.getClass()) return false;
-            var that = (Params) obj;
-            return Objects.equals(this.unit, that.unit) &&
-                    Objects.equals(this.low, that.low) &&
-                    Objects.equals(this.high, that.high) &&
-                    Objects.equals(this.timeWindow, that.timeWindow) &&
-                    Objects.equals(this.colors, that.colors);
-        }
-
-        @Override
-        public String toString() {
-            return "Params{" +
-                    "unit=" + unit +
-                    ", low=" + low +
-                    ", high=" + high +
-                    ", timeWindow=" + timeWindow +
-                    ", colors=" + colors +
-                    '}';
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(unit, low, high, timeWindow, colors);
-        }
     }
 
-    public static final class Colors {
+    public static final class Colors extends DefaultObject {
         private final int low;
         private final int normal;
         private final int high;
@@ -210,36 +160,6 @@ public final class WatchFaceDto {
 
         public int textHigh() {
             return textHigh;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) return true;
-            if (obj == null || obj.getClass() != this.getClass()) return false;
-            var that = (Colors) obj;
-            return Objects.equals(this.low, that.low) &&
-                    Objects.equals(this.normal, that.normal) &&
-                    Objects.equals(this.high, that.high) &&
-                    Objects.equals(this.textLow, that.textLow) &&
-                    Objects.equals(this.textNormal, that.textNormal) &&
-                    Objects.equals(this.textHigh, that.textHigh);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(low, normal, high, textLow, textNormal, textHigh);
-        }
-
-        @Override
-        public String toString() {
-            return "Colors{" +
-                    "low=" + low +
-                    ", normal=" + normal +
-                    ", high=" + high +
-                    ", textLow=" + textLow +
-                    ", textNormal=" + textNormal +
-                    ", textHigh=" + textHigh +
-                    '}';
         }
     }
 }
