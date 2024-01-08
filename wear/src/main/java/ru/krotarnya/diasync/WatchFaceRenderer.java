@@ -26,18 +26,19 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import kotlin.coroutines.Continuation;
-import ru.krotarnya.diasync.common.model.WatchFaceDto;
 import ru.krotarnya.diasync.common.model.BloodGlucose;
 import ru.krotarnya.diasync.common.model.BloodPoint;
+import ru.krotarnya.diasync.common.model.WatchFaceDto;
 
 public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedAssets> {
-    private static final Duration UPDATE_INTERVAL = Duration.ofSeconds(1);
+    private static final Duration UPDATE_INTERVAL = Duration.ofSeconds(60);
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("EE dd.MM");
     private static final Duration AGO_WARNING_THRESHOLD = Duration.ofSeconds(90);
     private static final int BACKGROUND_COLOR = Color.BLACK;
     private static final int FOREGROUND_COLOR = Color.WHITE;
     private static final int ERROR_COLOR = Color.RED;
+
     @Nullable
     private WatchFaceDto watchFaceData;
 
@@ -248,5 +249,6 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
 
     public void setWatchFaceData(@Nullable WatchFaceDto watchFaceData) {
         this.watchFaceData = watchFaceData;
+        invalidate();
     }
 }

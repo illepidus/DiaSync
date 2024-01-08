@@ -1,5 +1,9 @@
 package ru.krotarnya.diasync.service;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
@@ -40,8 +44,19 @@ public class DiasyncWatchFaceService
 
     private static final VibrationEffect HIGH_VIBRATION_EFFECT =
             VibrationEffect.createOneShot(1000, 255);
+
+    private final BroadcastReceiver tickReceiver;
     @Nullable
     private WatchFaceRenderer watchFaceRenderer;
+
+    public DiasyncWatchFaceService() {
+        tickReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Optional.ofNullable(watchFaceRenderer).ifPresent(WatchFaceRenderer::invalidate);
+            }
+        };
+    }
 
     @Nullable
     @Override
@@ -70,7 +85,15 @@ public class DiasyncWatchFaceService
     @Override
     public void onCreate() {
         super.onCreate();
+        registerReceiver(tickReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
         Wearable.getMessageClient(this).addListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(tickReceiver);
+        Wearable.getMessageClient(this).removeListener(this);
     }
 
     @Override

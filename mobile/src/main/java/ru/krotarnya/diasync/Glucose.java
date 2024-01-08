@@ -14,9 +14,9 @@ import java.util.Optional;
 
 public class Glucose implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "Glucose";
-    private static final double MG_DL_TO_MMOL_L = 0.05556;
+    private static final double MMOL_TO_MGDL = 18.0182d;
+    private static final double MGDL_TO_MMOL = 1 / MMOL_TO_MGDL;
     private static Glucose INSTANCE;
-
     private final int error_text_color;
     private final int error_graph_color;
     private final int low_text_color;
@@ -69,7 +69,7 @@ public class Glucose implements SharedPreferences.OnSharedPreferenceChangeListen
     }
 
     public static double mgdlToMmol(double v) {
-        return v * MG_DL_TO_MMOL_L;
+        return v * MGDL_TO_MMOL;
     }
 
     public static double mgdlToMmol(String v) {
@@ -77,7 +77,7 @@ public class Glucose implements SharedPreferences.OnSharedPreferenceChangeListen
     }
 
     public static double mmolToMgdl(double v) {
-        return v * 18;
+        return v * 18.0182d;
     }
 
     public static double mmolToMgdl(String v) {
