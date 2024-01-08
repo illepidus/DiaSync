@@ -40,8 +40,10 @@ public class DiasyncWatchFaceService
 {
     private static final String TAG = "DiasyncWatchFaceService";
     private static final VibrationEffect LOW_VIBRATION_EFFECT =
-            VibrationEffect.createWaveform(new long[]{400, 200, 400}, new int[]{255, 0, 255}, -1);
-
+            VibrationEffect.createWaveform(
+                    new long[]{800, 400, 800},
+                    new  int[]{255, 0, 255},
+                    -1);
     private static final VibrationEffect HIGH_VIBRATION_EFFECT =
             VibrationEffect.createOneShot(1000, 255);
 
