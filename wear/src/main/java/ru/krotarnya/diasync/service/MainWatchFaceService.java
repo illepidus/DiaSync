@@ -34,11 +34,11 @@ import ru.krotarnya.diasync.common.model.BloodGlucose;
 import ru.krotarnya.diasync.common.model.BloodPoint;
 import ru.krotarnya.diasync.common.model.WatchFaceDto;
 
-public class DiasyncWatchFaceService
+public class MainWatchFaceService
         extends WatchFaceService
         implements MessageClient.OnMessageReceivedListener
 {
-    private static final String TAG = "DiasyncWatchFaceService";
+    private static final String TAG = "MainWatchFaceService";
     private static final VibrationEffect LOW_VIBRATION_EFFECT =
             VibrationEffect.createWaveform(
                     new long[]{800, 400, 800},
@@ -51,7 +51,7 @@ public class DiasyncWatchFaceService
     @Nullable
     private WatchFaceRenderer watchFaceRenderer;
 
-    public DiasyncWatchFaceService() {
+    public MainWatchFaceService() {
         tickReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {

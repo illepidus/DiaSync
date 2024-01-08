@@ -3,7 +3,7 @@ package ru.krotarnya.diasync.common.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ru.krotarnya.diasync.common.DefaultObject;
-import ru.krotarnya.diasync.common.util.BloodUtils;
+import ru.krotarnya.diasync.common.util.BloodUtil;
 
 public final class BloodGlucose extends DefaultObject implements Comparable<BloodGlucose> {
     private final double mgdl;
@@ -17,11 +17,11 @@ public final class BloodGlucose extends DefaultObject implements Comparable<Bloo
     }
 
     public static BloodGlucose consMmol(double mmol) {
-        return new BloodGlucose(BloodUtils.mmolToMgdl(mmol));
+        return new BloodGlucose(BloodUtil.mmolToMgdl(mmol));
     }
 
     public double mmol() {
-        return BloodUtils.mgdlToMmol(mgdl);
+        return BloodUtil.mgdlToMmol(mgdl);
     }
 
     public double mgdl() {

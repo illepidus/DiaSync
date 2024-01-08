@@ -29,6 +29,7 @@ import kotlin.coroutines.Continuation;
 import ru.krotarnya.diasync.common.model.BloodGlucose;
 import ru.krotarnya.diasync.common.model.BloodPoint;
 import ru.krotarnya.diasync.common.model.WatchFaceDto;
+import ru.krotarnya.diasync.common.util.DateTimeUtil;
 
 public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedAssets> {
     private static final Duration UPDATE_INTERVAL = Duration.ofSeconds(60);
@@ -72,11 +73,11 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
     {
         canvas.drawColor(BACKGROUND_COLOR);
         renderTime(canvas, rect, zonedDateTime);
-        renderAgoWarning(canvas, rect, zonedDateTime);
-        renderChart(canvas, rect);
+        renderNoDataMessage(canvas, rect, zonedDateTime);
+        renderChart(canvas, rect, zonedDateTime);
     }
 
-    private void renderChart(Canvas canvas, Rect rect) {
+    private void renderChart(Canvas canvas, Rect rect, ZonedDateTime zonedDateTime) {
         Optional.ofNullable(watchFaceData).ifPresent(data -> {
             Rect graphRect = new Rect(
                     (int) (rect.width() * 0.1),
@@ -86,7 +87,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
 
             Function<Instant, Integer> toX = instant -> {
                 long t = instant.toEpochMilli();
-                long maxT = Instant.now().toEpochMilli();
+                long maxT = zonedDateTime.toInstant().toEpochMilli();
                 long minT = maxT - data.params().timeWindow().toMillis();
                 int minX = graphRect.left;
                 int maxX = graphRect.right;
@@ -112,28 +113,74 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
                     toX.apply(p.time()),
                     toY.apply(p.glucose()));
 
-            renderThresholdLines(canvas, rect, data, graphRect.left, graphRect.right, toY);
-            renderChartData(canvas, rect, data, toPoint);
-            renderBloodGlucose(canvas, data, rect, graphRect);
+            renderTimeLines(canvas, graphRect, data, zonedDateTime, toX);
+            renderThresholdLines(canvas, graphRect, data, toY);
+            renderChartData(canvas, graphRect, data, toPoint);
+            renderBloodGlucose(canvas, graphRect, data);
         });
+    }
+
+    private void renderTimeLines(
+            Canvas canvas,
+            Rect graphRect,
+            WatchFaceDto data,
+            ZonedDateTime zonedDateTime,
+            Function<Instant, Integer> toX)
+    {
+        Duration timeWindow = data.params().timeWindow();
+        ZonedDateTime from = zonedDateTime.minus(timeWindow);
+
+        Paint linePaint = new Paint();
+        linePaint.setColor(Color.GRAY);
+
+
+        Paint textPaint = new Paint();
+        float textSize = graphRect.height() / 10f;
+        textPaint.setColor(Color.GRAY);
+        textPaint.setTextSize(textSize);
+        textPaint.setTextAlign(Paint.Align.CENTER);
+
+        int minutesPerLine;
+        if (timeWindow.compareTo(Duration.ofMinutes(60)) > 0) {
+            minutesPerLine = 60;
+        } else if (timeWindow.compareTo(Duration.ofMinutes(30)) > 0) {
+            minutesPerLine = 30;
+        } else {
+            minutesPerLine = 15;
+        }
+
+        for (ZonedDateTime t = DateTimeUtil.toStartOfNMinutes(from, minutesPerLine);
+             t.isBefore(zonedDateTime); t = t.plus(Duration.ofMinutes(minutesPerLine))) {
+            int x = toX.apply(t.toInstant());
+
+            if (x >= graphRect.left && x < graphRect.right) {
+                int y1 = graphRect.bottom;
+                int y2 = graphRect.top;
+                int y3 = (int) (graphRect.bottom + textSize * 1.2);
+                canvas.drawLine(x, y1, x, y2, linePaint);
+                canvas.drawText(t.format(TIME_FORMATTER), x, y3, textPaint);
+            }
+        }
     }
 
     private void renderChartData(
             Canvas canvas,
-            Rect rect,
+            Rect graphRect,
             WatchFaceDto data,
             Function<BloodPoint, Point> toPoint)
     {
         Paint paint = new Paint();
-        float r = rect.width() * 20f / data.params().timeWindow().getSeconds();
+        float r = graphRect.width() * 20f / data.params().timeWindow().getSeconds();
         data.points().forEach(p -> {
             Point point = toPoint.apply(p);
-            paint.setColor(getDataColor(p.glucose()));
-            canvas.drawCircle(point.x, point.y, r, paint);
+            if (point.x >= graphRect.left && point.x <= graphRect.right) {
+                paint.setColor(getDataColor(p.glucose()));
+                canvas.drawCircle(point.x, point.y, r, paint);
+            }
         });
     }
 
-    private void renderBloodGlucose(Canvas canvas, WatchFaceDto data, Rect rect, Rect graphRect) {
+    private void renderBloodGlucose(Canvas canvas, Rect graphRect, WatchFaceDto data) {
         Paint paint = new Paint();
         Optional<BloodPoint> lastPoint = data.points().stream()
                 .max(Comparator.comparing(BloodPoint::time));
@@ -142,7 +189,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
                 .map(bg -> data.params().unit().getString(bg)  + data.trendArrow().getSymbol())
                 .orElse("???");
 
-        float textHeight = rect.height() / 5f;
+        float textHeight = graphRect.height() / 2.5f;
         float strokeWidth = textHeight / 15f;
         float textX = graphRect.left;
         float textY = graphRect.centerY();
@@ -163,14 +210,15 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
 
     private void renderThresholdLines(
             Canvas canvas,
-            Rect rect,
+            Rect graphRect,
             WatchFaceDto data,
-            Integer x1,
-            Integer x2,
             Function<BloodGlucose, Integer> toY)
     {
+        int x1 = graphRect.left;
+        int x2 = graphRect.right;
+
         Paint paint = new Paint();
-        paint.setStrokeWidth(rect.height() / 200f);
+        paint.setStrokeWidth(graphRect.height() / 100f);
 
         paint.setColor(data.params().colors().low());
         canvas.drawLine(x1, toY.apply(data.params().low()), x2, toY.apply(data.params().low()), paint);
@@ -199,7 +247,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
                 paint);
     }
 
-    private void renderAgoWarning(Canvas canvas, Rect rect, ZonedDateTime zonedDateTime) {
+    private void renderNoDataMessage(Canvas canvas, Rect rect, ZonedDateTime zonedDateTime) {
         Paint paint = new Paint();
         paint.setFakeBoldText(true);
         paint.setTextAlign(Paint.Align.CENTER);

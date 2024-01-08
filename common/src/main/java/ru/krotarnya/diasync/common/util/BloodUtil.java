@@ -1,6 +1,6 @@
 package ru.krotarnya.diasync.common.util;
 
-public class BloodUtils {
+public class BloodUtil {
     private static final double MMOL_TO_MGDL = 18.0182d;
     public static final double MGDL_TO_MMOL = 1 / MMOL_TO_MGDL;
 

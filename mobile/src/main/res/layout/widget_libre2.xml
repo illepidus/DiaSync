@@ -8,10 +8,10 @@
     android:background="@color/widget_background" >
 
     <ImageView
-        android:id="@+id/libre2_widget_graph"
+        android:id="@+id/widget_graph"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/libre2_widget_graph_description"
+        android:contentDescription="@string/widget_graph_description"
         android:scaleType="centerInside" />
 
     <LinearLayout
@@ -24,24 +24,24 @@
             android:layout_height="30dp">
 
             <ImageView
-                android:id="@+id/libre2_widget_alerts_icon"
+                android:id="@+id/widget_alerts_icon"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:padding="5dp"
                 android:cropToPadding="true"
-                android:contentDescription="@string/libre2_widget_alerts_icon_description"
+                android:contentDescription="@string/widget_alerts_icon_description"
                 android:src="@drawable/ic_bell_gear"
                 tools:ignore="NestedWeights" />
 
             <ImageView
-                android:id="@+id/libre2_widget_pip_icon"
+                android:id="@+id/widget_pip_icon"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:padding="5dp"
                 android:cropToPadding="true"
-                android:contentDescription="@string/libre2_widget_pip_icon_description"
+                android:contentDescription="@string/widget_pip_icon_description"
                 android:src="@drawable/ic_pip"
                 tools:ignore="NestedWeights" />
 
@@ -55,42 +55,42 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/libre2_widget_glucose"
+            android:id="@+id/widget_glucose"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="10"
             android:autoSizeTextType="uniform"
-            android:contentDescription="@string/libre2_widget_description"
+            android:contentDescription="@string/widget_description"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:gravity="start"
-            android:text="@string/libre2_widget_glucose_text"
+            android:text="@string/widget_glucose_text"
             android:textColor="@color/glucose_normal_text"
             android:textStyle="normal" />
 
         <TextView
-            android:id="@+id/libre2_widget_trend"
+            android:id="@+id/widget_trend"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="10"
             android:autoSizeTextType="uniform"
-            android:contentDescription="@string/libre2_widget_description"
+            android:contentDescription="@string/widget_description"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:gravity="start"
-            android:text="@string/libre2_widget_trend_text"
+            android:text="@string/widget_trend_text"
             android:textColor="@color/glucose_normal_text"
             android:textStyle="normal" />
 
         <TextView
-            android:id="@+id/Libre2_widget_message"
+            android:id="@+id/widget_message"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="4"
             android:autoSizeTextType="uniform"
-            android:contentDescription="@string/libre2_widget_description"
+            android:contentDescription="@string/widget_description"
             android:gravity="center"
-            android:text="@string/libre2_widget_timer_text"
+            android:text="@string/widget_timer_text"
             android:textColor="@color/glucose_normal_text"
             android:textStyle="normal" />
     </LinearLayout>

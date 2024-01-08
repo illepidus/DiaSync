@@ -1,7 +1,7 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     app:key="settings_display">
 
-    <PreferenceCategory app:title="General settings">
+    <PreferenceCategory app:title="Common settings">
         <ListPreference
             app:defaultValue="mmol"
             app:entries="@array/glucose_units_entries"
@@ -20,11 +20,11 @@
             app:title="High value"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
-    <PreferenceCategory app:title="Libre2 widget">
+    <PreferenceCategory app:title="Phone widget">
         <ListPreference
             app:defaultValue="settings"
-            app:entries="@array/libre2_widget_on_click_entries"
-            app:entryValues="@array/libre2_widget_on_click_values"
+            app:entries="@array/widget_on_click_entries"
+            app:entryValues="@array/widget_on_click_values"
             app:key="libre2_widget_on_click"
             app:title="On click action"
             app:useSimpleSummaryProvider="true" />
@@ -34,32 +34,47 @@
             app:title="Use xDrip calibrations" />
         <SwitchPreferenceCompat
             app:defaultValue="true"
-            app:key="libre2_widget_alerts_icon"
+            app:key="widget_alerts_icon"
             app:title="Display alerts icon" />
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:key="widget_pip_icon"
+            app:title="Display PIP icon" />
         <SwitchPreferenceCompat
             app:allowDividerBelow="true"
             app:defaultValue="true"
-            app:key="libre2_widget_graph_enabled"
+            app:key="widget_graph_enabled"
             app:title="Graph enabled" />
         <ListPreference
             app:allowDividerAbove="true"
             app:defaultValue="1800000"
-            app:dependency="libre2_widget_graph_enabled"
-            app:entries="@array/libre2_widget_graph_period_entries"
-            app:entryValues="@array/libre2_widget_graph_period_values"
-            app:key="libre2_widget_graph_period"
+            app:dependency="widget_graph_enabled"
+            app:entries="@array/graph_period_entries"
+            app:entryValues="@array/graph_period_values"
+            app:key="widget_graph_period"
             app:title="Graph period"
             app:useSimpleSummaryProvider="true" />
         <SwitchPreferenceCompat
             app:defaultValue="false"
-            app:dependency="libre2_widget_graph_enabled"
-            app:key="libre2_widget_graph_range_lines"
+            app:dependency="widget_graph_enabled"
+            app:key="widget_graph_range_lines"
             app:title="Display range lines" />
         <SwitchPreferenceCompat
             app:defaultValue="true"
-            app:dependency="libre2_widget_graph_enabled"
-            app:key="libre2_widget_graph_range_zones"
+            app:dependency="widget_graph_enabled"
+            app:key="widget_graph_range_zones"
             app:title="Display range zones" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Watchface">
+        <ListPreference
+            app:allowDividerAbove="true"
+            app:defaultValue="1800000"
+            app:entries="@array/graph_period_entries"
+            app:entryValues="@array/graph_period_values"
+            app:key="watchface_graph_period"
+            app:title="Graph period"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
 </PreferenceScreen>

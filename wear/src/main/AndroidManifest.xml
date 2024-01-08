@@ -15,7 +15,7 @@
         <meta-data android:name="com.google.android.wearable.standalone" android:value="true" />
 
         <service
-            android:name=".service.DiasyncWatchFaceService"
+            android:name=".service.MainWatchFaceService"
             android:label="@string/watchface_label"
             android:permission="android.permission.BIND_WALLPAPER"
             android:exported="true">
