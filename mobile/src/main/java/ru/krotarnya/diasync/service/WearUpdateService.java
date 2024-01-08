@@ -58,14 +58,14 @@ public class WearUpdateService extends Service {
                         .filter(Node::isNearby)
                         .forEach(node -> Wearable
                                 .getMessageClient(this)
-                                .sendMessage(node.getId(), CAPABILITY_PATH, getChartData()));
+                                .sendMessage(node.getId(), CAPABILITY_PATH, getBloodData()));
             } catch (Exception e) {
                 Log.e(TAG, "Something went wrong sending data to wear", e);
             }
         });
     }
 
-    private byte[] getChartData() {
+    private byte[] getBloodData() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         long graph_period = Long.parseLong(prefs.getString("watchface_graph_period", "1800000"));
         long t2 = System.currentTimeMillis(), t1 = t2 - graph_period;

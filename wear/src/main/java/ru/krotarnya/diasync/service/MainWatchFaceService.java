@@ -24,10 +24,13 @@ import com.google.android.gms.wearable.MessageClient;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Wearable;
 
+import java.time.Duration;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 import kotlin.coroutines.Continuation;
@@ -36,6 +39,7 @@ import ru.krotarnya.diasync.common.model.BatteryStatus;
 import ru.krotarnya.diasync.common.model.BloodGlucose;
 import ru.krotarnya.diasync.common.model.BloodPoint;
 import ru.krotarnya.diasync.common.model.WatchFaceBloodData;
+import ru.krotarnya.diasync.common.model.WatchSensorReadings;
 
 public class MainWatchFaceService
         extends WatchFaceService
@@ -50,8 +54,13 @@ public class MainWatchFaceService
     private static final VibrationEffect HIGH_VIBRATION_EFFECT =
             VibrationEffect.createOneShot(1000, 255);
 
+    private static final Duration SENSOR_READINGS_UPDATE_PERIOD = Duration.ofSeconds(5);
+
     private final BroadcastReceiver tickReceiver;
     private final BroadcastReceiver watchBatteryStatusReceiver;
+    private final Timer updateSensorReadingsTimer;
+    @Nullable
+    private WatchSensorReadings sensorReadings;
     @Nullable
     private WatchFaceRenderer watchFaceRenderer;
 
@@ -78,6 +87,12 @@ public class MainWatchFaceService
                 });
             }
         };
+
+        updateSensorReadingsTimer = new Timer();
+    }
+
+    private void updateSensorReadings() {
+        //to be implemented
     }
 
     @Nullable
@@ -117,6 +132,12 @@ public class MainWatchFaceService
         registerReceiver(tickReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
         registerReceiver(watchBatteryStatusReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         Wearable.getMessageClient(this).addListener(this);
+        updateSensorReadingsTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                updateSensorReadings();
+            }
+        }, SENSOR_READINGS_UPDATE_PERIOD.toMillis(), SENSOR_READINGS_UPDATE_PERIOD.toMillis());
     }
 
     @Override
@@ -125,6 +146,7 @@ public class MainWatchFaceService
         unregisterReceiver(tickReceiver);
         unregisterReceiver(watchBatteryStatusReceiver);
         Wearable.getMessageClient(this).removeListener(this);
+        updateSensorReadingsTimer.cancel();
     }
 
     @Override
@@ -152,9 +174,14 @@ public class MainWatchFaceService
                                 && ((last.size() == 1) || last.get(0).gt(last.get(1)));
 
                         if (lowAlert || highAlert) {
-                            VibratorManager vibratorManager = (VibratorManager) getSystemService(VIBRATOR_MANAGER_SERVICE);
-                            Vibrator vibrator = vibratorManager.getDefaultVibrator();
-                            vibrator.vibrate(lowAlert ? LOW_VIBRATION_EFFECT : HIGH_VIBRATION_EFFECT);
+                            Optional.ofNullable((VibratorManager) getSystemService(VIBRATOR_MANAGER_SERVICE))
+                                    .ifPresentOrElse(vm -> {
+                                        Vibrator vibrator = vm.getDefaultVibrator();
+                                        vibrator.vibrate(lowAlert
+                                                ? LOW_VIBRATION_EFFECT
+                                                : HIGH_VIBRATION_EFFECT);
+                                    },
+                                    () -> Log.e(TAG, "Was not able to vibrate"));
                         }
                     } catch (Exception e) {
                         Log.e(TAG, "Was not able to deserialize chart data", e);
