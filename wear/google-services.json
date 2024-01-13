@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "588427849021",
+    "project_id": "diasync",
+    "storage_bucket": "diasync.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:588427849021:android:c541a1af2b55b29bb5a954",
+        "android_client_info": {
+          "package_name": "ru.krotarnya.diasync"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_o8Z5Qo5QQi7Vj-_DJxhhVCH5wZkajLU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
