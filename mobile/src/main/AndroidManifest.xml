@@ -26,6 +26,16 @@
             android:enabled="true"
             android:exported="false" />
 
+        <service
+            android:name="ru.krotarnya.diasync.service.MessagingService"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
         <receiver
             android:name="ru.krotarnya.diasync.Libre2Widget"
             android:exported="false">
