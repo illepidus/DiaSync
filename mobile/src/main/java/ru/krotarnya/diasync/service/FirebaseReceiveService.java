@@ -8,8 +8,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-public class MessagingService extends FirebaseMessagingService {
-    private static final String TAG = "MessagingService";
+public class FirebaseReceiveService extends FirebaseMessagingService {
+    private static final String TAG = "FirebaseReceiveService";
 
     @Override
     public void onCreate() {

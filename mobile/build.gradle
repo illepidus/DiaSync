@@ -33,13 +33,15 @@ android {
 }
 
 dependencies {
-    implementation project(':common')
-    implementation 'com.google.firebase:firebase-messaging:23.4.0'
     wearApp project(':wear')
+    implementation project(':common')
+    implementation 'com.google.firebase:firebase-messaging:23.4.1'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.22.0'
     implementation 'com.google.android.gms:play-services-wearable:18.1.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation "androidx.annotation:annotation:1.7.1"
     implementation 'com.android.volley:volley:1.2.1'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'androidx.preference:preference:1.2.1'

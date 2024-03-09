@@ -27,7 +27,7 @@
             android:exported="false" />
 
         <service
-            android:name="ru.krotarnya.diasync.service.MessagingService"
+            android:name="ru.krotarnya.diasync.service.FirebaseReceiveService"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
