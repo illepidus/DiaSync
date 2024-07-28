@@ -115,7 +115,7 @@ public class DiasyncDB extends SQLiteOpenHelper {
         }
     }
 
-    public void addLibre2Value(Libre2Value value) {
+    public boolean addLibre2Value(Libre2Value value) {
         SQLiteDatabase db = getWritableDatabase();
         addXDripValue(value.xDripvalue);
 
@@ -130,10 +130,13 @@ public class DiasyncDB extends SQLiteOpenHelper {
             values.put("xdrip_calibration", value.xDripCalibration.timestamp);
             long res = db.insertOrThrow("libre2_values", null, values);
             if (res >= 0) db.setTransactionSuccessful();
+            return true;
         } catch (Exception e) {
             Log.d(TAG, "Wasn't able to add Libre2Value to database. Value exits?");
             Log.v(TAG, e.toString());
-        } finally {
+            return false;
+        }
+        finally {
             db.endTransaction();
         }
     }

@@ -60,17 +60,15 @@ public class DiaBroadcastReceiver extends BroadcastReceiver {
             }
 
             Libre2Value libre2_value = new Libre2Value(bundle);
-            DiasyncDB diasync_db = DiasyncDB.getInstance(broadcast_context);
-            diasync_db.addLibre2Value(libre2_value);
-
             Log.d(TAG, "Received: \n" + libre2_value);
-            Alerter.check();
-            WidgetUpdateService.pleaseUpdate(context);
-            WearUpdateService.pleaseUpdate(context);
-
-            Intent updatePipIntent = new Intent(PipActivity.UPDATE_ACTION);
-            LocalBroadcastManager.getInstance(context).sendBroadcast(updatePipIntent);
-
+            DiasyncDB diasync_db = DiasyncDB.getInstance(context);
+            if (diasync_db.addLibre2Value(libre2_value)) {
+                WidgetUpdateService.pleaseUpdate(context);
+                WearUpdateService.pleaseUpdate(context);
+                Alerter.check();
+                Intent updatePipIntent = new Intent(PipActivity.UPDATE_ACTION);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(updatePipIntent);
+            }
             return;
         }
 
