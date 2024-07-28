@@ -37,16 +37,12 @@ public class Libre2Update {
         intent.putExtra("libre2_value", libre2Value);
         intent.putExtra("libre2_timestamp", libre2Timestamp);
         intent.putExtra("xdrip_sync_key", xdripSyncKey);
-        if (xdripCalibrationSlope != null)
-            intent.putExtra("xdrip_calibration_slope", xdripCalibrationSlope);
-        if (xdripCalibrationIntercept != null)
-            intent.putExtra("xdrip_calibration_intercept", xdripCalibrationIntercept);
-        if (xdripCalibrationTimestamp != null)
-            intent.putExtra("xdrip_calibration_timestamp", xdripCalibrationTimestamp);
+        intent.putExtra("xdrip_calibration_slope", xdripCalibrationSlope);
+        intent.putExtra("xdrip_calibration_intercept", xdripCalibrationIntercept);
+        intent.putExtra("xdrip_calibration_timestamp", xdripCalibrationTimestamp);
         intent.putExtra("xdrip_value", xdripValue);
         intent.putExtra("xdrip_timestamp", xdripTimestamp);
         intent.putExtra("xdrip_arrow", xdripArrow);
-
         return new Libre2Value(Objects.requireNonNull(intent.getExtras()));
     }
 }
