@@ -18,6 +18,7 @@ import ru.krotarnya.diasync.activity.PipActivity;
 import ru.krotarnya.diasync.activity.SettingsActivity;
 import ru.krotarnya.diasync.model.Libre2Value;
 import ru.krotarnya.diasync.model.Libre2ValueList;
+import ru.krotarnya.diasync.service.WebUpdateService;
 import ru.krotarnya.diasync.service.WidgetUpdateService;
 
 public class Libre2Widget extends AppWidgetProvider {
@@ -155,6 +156,8 @@ public class Libre2Widget extends AppWidgetProvider {
             String on_click = prefs.getString("libre2_widget_on_click", "settings");
             Log.d(TAG, "Widget clicked. Action = " + on_click);
             WidgetUpdateService.pleaseUpdate(context);
+            context.startService(new Intent(context, WebUpdateService.class));
+
             Alerter.check();
             switch (on_click) {
                 case "update":
