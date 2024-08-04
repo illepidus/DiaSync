@@ -129,8 +129,11 @@ public class DiasyncDB extends SQLiteOpenHelper {
             values.put("xdrip_value", value.xDripvalue.timestamp);
             values.put("xdrip_calibration", value.xDripCalibration.timestamp);
             long res = db.insertOrThrow("libre2_values", null, values);
-            if (res >= 0) db.setTransactionSuccessful();
-            return true;
+            if (res >= 0) {
+                db.setTransactionSuccessful();
+                return true;
+            }
+            return false;
         } catch (Exception e) {
             Log.d(TAG, "Wasn't able to add Libre2Value to database. Value exits?");
             Log.v(TAG, e.toString());
