@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import ru.krotarnya.diasync.Alerter;
 import ru.krotarnya.diasync.Diasync;
@@ -43,14 +44,13 @@ public class WebUpdateService extends Service {
 
     private static final int FOREGROUND_ID = 0x19CA5000;
     private static final String NOTIFICATION_CHANNEL_ID = "DiasyncNotificationChannel";
-
-
     private static final String TAG = "WebUpdateService";
     private final Timer timer = new Timer();
+    private final AtomicBoolean isStarted = new AtomicBoolean(false);
 
     @Override
     public IBinder onBind(Intent intent) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        return null;
     }
 
     @Override
@@ -69,43 +69,19 @@ public class WebUpdateService extends Service {
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-        Log.d(TAG, "Started");
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    Context context = Diasync.getContext();
-                    Libre2Value libre2_value = getLastLibre2Value();
-                    Log.d(TAG, "Received: \n" + libre2_value);
-                    DiasyncDB diasync_db = DiasyncDB.getInstance(context);
-                    if (diasync_db.addLibre2Value(libre2_value)) {
-                        WidgetUpdateService.pleaseUpdate(context);
-                        WearUpdateService.pleaseUpdate(context);
-                        Alerter.check();
-                        Intent updatePipIntent = new Intent(PipActivity.UPDATE_ACTION);
-                        LocalBroadcastManager.getInstance(context).sendBroadcast(updatePipIntent);
-                    }
-                } catch (Exception e) {
-                    Log.w(TAG, "update failed", e);
-                }
-            }
-        }, 0, 10000);
-    }
-
-    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            startForeground(FOREGROUND_ID, buildNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
-        }
-        else {
-            startForeground(FOREGROUND_ID, buildNotification());
+        if (!isStarted.getAndSet(true)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(FOREGROUND_ID, buildForegroundNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
+            } else {
+                startForeground(FOREGROUND_ID, buildForegroundNotification());
+            }
+            timer.scheduleAtFixedRate(new WebUpdateTask(), 0, 10000);
         }
         return START_STICKY;
     }
 
-    private Notification buildNotification() {
+    private Notification buildForegroundNotification() {
         NotificationChannel channel = new NotificationChannel(
                 NOTIFICATION_CHANNEL_ID,
                 NOTIFICATION_CHANNEL_ID,
@@ -118,7 +94,6 @@ public class WebUpdateService extends Service {
         return new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                 .setOngoing(true)
                 .setContentTitle("Diasync")
-                .setContentText("Working...")
                 .build();
     }
 
@@ -139,5 +114,26 @@ public class WebUpdateService extends Service {
         in.close();
 
         return OBJECT_MAPPER.readValue(sb.toString(), Libre2Update.class).toLibre2Value();
+    }
+
+    private class WebUpdateTask extends TimerTask {
+        @Override
+        public void run() {
+            try {
+                Context context = Diasync.getContext();
+                Libre2Value libre2_value = getLastLibre2Value();
+                Log.d(TAG, "Received: \n" + libre2_value);
+                DiasyncDB diasync_db = DiasyncDB.getInstance(context);
+                if (diasync_db.addLibre2Value(libre2_value)) {
+                    WidgetUpdateService.pleaseUpdate(context);
+                    WearUpdateService.pleaseUpdate(context);
+                    Alerter.check();
+                    Intent updatePipIntent = new Intent(PipActivity.UPDATE_ACTION);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(updatePipIntent);
+                }
+            } catch (Exception e) {
+                Log.w(TAG, "update failed", e);
+            }
+        }
     }
 }

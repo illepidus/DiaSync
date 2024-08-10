@@ -11,9 +11,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
-import ru.krotarnya.diasync.service.WebUpdateService;
-import ru.krotarnya.diasync.service.WidgetUpdateService;
-
 public class Diasync extends Application {
     private static Diasync instance;
 
@@ -25,7 +22,6 @@ public class Diasync extends Application {
     public void onCreate() {
         instance = this;
         super.onCreate();
-        getContext().startService(new Intent(getContext(), WebUpdateService.class));
     }
 
     public static void clearDataForceClose() {
