@@ -1,14 +1,20 @@
 package ru.krotarnya.diasync.service;
 
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ServiceInfo;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
 
+import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -34,6 +40,10 @@ public class WebUpdateService extends Service {
             .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
             .setVisibility(PropertyAccessor.CREATOR, JsonAutoDetect.Visibility.NONE)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    private static final int FOREGROUND_ID = 0x19CA5000;
+    private static final String NOTIFICATION_CHANNEL_ID = "DiasyncNotificationChannel";
+
 
     private static final String TAG = "WebUpdateService";
     private final Timer timer = new Timer();
@@ -83,6 +93,35 @@ public class WebUpdateService extends Service {
             }
         }, 0, 10000);
     }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(FOREGROUND_ID, buildNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
+        }
+        else {
+            startForeground(FOREGROUND_ID, buildNotification());
+        }
+        return START_STICKY;
+    }
+
+    private Notification buildNotification() {
+        NotificationChannel channel = new NotificationChannel(
+                NOTIFICATION_CHANNEL_ID,
+                NOTIFICATION_CHANNEL_ID,
+                NotificationManager.IMPORTANCE_HIGH);
+        channel.setDescription("Diasync channel for foreground service notification");
+
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
+
+        return new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+                .setOngoing(true)
+                .setContentTitle("Diasync")
+                .setContentText("Working...")
+                .build();
+    }
+
 
     private Libre2Value getLastLibre2Value() throws Exception {
         StringBuilder sb = new StringBuilder();
