@@ -114,11 +114,11 @@ public class PipActivity extends AppCompatActivity {
 
             switch (glucose_units) {
                 case "mmol":
-                        glucose.setText(Glucose.stringMmol(libre2_last_value.getMmolValue()));
-                        break;
+                    glucose.setText(Glucose.stringMmol(libre2_last_value.getMmolValue()));
+                    break;
                 case "mgdl":
-                        glucose.setText(Glucose.stringMgdl(libre2_last_value.getMmolValue()));
-                        break;
+                    glucose.setText(Glucose.stringMgdl(libre2_last_value.getMmolValue()));
+                    break;
                 default:
                     glucose.setText("----");
                     break;

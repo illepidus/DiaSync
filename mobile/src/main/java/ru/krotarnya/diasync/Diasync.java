@@ -25,13 +25,13 @@ public class Diasync extends Application {
     }
 
     public static void clearDataForceClose() {
-        ((ActivityManager)getContext().getSystemService(ACTIVITY_SERVICE))
+        ((ActivityManager) getContext().getSystemService(ACTIVITY_SERVICE))
                 .clearApplicationUserData();
         Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-        homeIntent.addCategory( Intent.CATEGORY_HOME );
+        homeIntent.addCategory(Intent.CATEGORY_HOME);
         homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         getContext().startActivity(homeIntent);
-   }
+    }
 
     public static String timeFormat(Instant timestamp) {
         return DateFormat.getTimeInstance(DateFormat.MEDIUM).format(timestamp.toEpochMilli());

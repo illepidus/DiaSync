@@ -28,7 +28,7 @@ public class Libre2GraphBuilder {
         this.context = context;
     }
 
-    public int convertDpToPixel(float dp){
+    public int convertDpToPixel(float dp) {
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         return (int) (dp * (metrics.densityDpi / 160f));
@@ -122,8 +122,8 @@ public class Libre2GraphBuilder {
         if (r > (float) height / 50) r = (float) height / 50;
         for (int i = 0; i < data.size(); i++) {
             Libre2Value v = data.get(i);
-                paint.setColor(Glucose.bloodGraphColor(v.getValue()));
-                canvas.drawCircle(px(v.timestamp), py(v.getValue()), r, paint);
+            paint.setColor(Glucose.bloodGraphColor(v.getValue()));
+            canvas.drawCircle(px(v.timestamp), py(v.getValue()), r, paint);
         }
 
         return bitmap;

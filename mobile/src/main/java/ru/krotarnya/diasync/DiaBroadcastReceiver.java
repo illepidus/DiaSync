@@ -29,8 +29,8 @@ import ru.krotarnya.diasync.service.WidgetUpdateService;
 public class DiaBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "DiaBroadcastReceiver";
     private static final String LIBRE2_BG_INTENT_ACTION = "com.eveningoutpost.dexdrip.diasync.libre2_bg";
-    private String  webhook_address;
-    private String  webhook_token;
+    private String webhook_address;
+    private String webhook_token;
     private Context broadcast_context;
 
     @Override
@@ -46,7 +46,7 @@ public class DiaBroadcastReceiver extends BroadcastReceiver {
         webhook_address = prefs.getString("webhook_address", "undefined");
         webhook_token = prefs.getString("webhook_token", "undefined");
 
-        Log.d (TAG, "Received broadcast intent [" + action + "] in context [" + context + "]");
+        Log.d(TAG, "Received broadcast intent [" + action + "] in context [" + context + "]");
         if (action.equals(LIBRE2_BG_INTENT_ACTION)) {
             if (!bundle.containsKey("source") || !bundle.containsKey("libre2_value")) {
                 Log.e(TAG, "Received faulty libre2_bg intent");
@@ -72,7 +72,7 @@ public class DiaBroadcastReceiver extends BroadcastReceiver {
             return;
         }
 
-        Log.e(TAG,"Received unknown intent");
+        Log.e(TAG, "Received unknown intent");
     }
 
     private void webhookUpdate(Bundle bundle) {
@@ -87,9 +87,9 @@ public class DiaBroadcastReceiver extends BroadcastReceiver {
         Log.d(TAG, "Updating [" + webhook_address + "]...");
         StringRequest string_request = new StringRequest(Request.Method.POST, webhook_address, response -> Log.d(TAG, "Response: " + response), error -> Log.e(TAG, error.toString())) {
             @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<>();
-                params.put("token",  webhook_token);
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", webhook_token);
                 params.put("update", update);
                 params.put("type", "libre2_bg");
                 return params;

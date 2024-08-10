@@ -27,7 +27,7 @@ public class XDripValue {
     @NonNull
     @Override
     public String toString() {
-        return  "xdrip_timestamp: " + timestamp + "\n" +
+        return "xdrip_timestamp: " + timestamp + "\n" +
                 "xdrip_value: " + value + "\n" +
                 "xdrip_arrow:" + arrow + "\n" +
                 calibration.toString();

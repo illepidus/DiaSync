@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
+
 import androidx.preference.PreferenceManager;
 
 import java.util.Objects;
@@ -29,7 +30,7 @@ public class Libre2Widget extends AppWidgetProvider {
 
 
     private static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                    int appWidgetId) {
+                                        int appWidgetId) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_libre2);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -58,17 +59,16 @@ public class Libre2Widget extends AppWidgetProvider {
             views.setTextViewText(R.id.widget_trend, "-");
             views.setTextViewText(R.id.widget_message, "NO DATA");
             views.setImageViewResource(R.id.widget_graph, android.R.color.transparent);
-        }
-        else {
+        } else {
             Libre2Value libre2_last_value = libre2_values.maxByTimestamp();
             long ago = (t2 - libre2_last_value.timestamp);
 
             switch (glucose_units) {
                 case "mmol":
-                        views.setTextViewText(R.id.widget_glucose, Glucose.stringMmol(libre2_last_value.getMmolValue()));
+                    views.setTextViewText(R.id.widget_glucose, Glucose.stringMmol(libre2_last_value.getMmolValue()));
                     break;
                 case "mgdl":
-                        views.setTextViewText(R.id.widget_glucose, Glucose.stringMgdl(libre2_last_value.getValue()));
+                    views.setTextViewText(R.id.widget_glucose, Glucose.stringMgdl(libre2_last_value.getValue()));
                     break;
                 default:
                     Log.wtf(TAG, "Unknown glucose units");
@@ -77,7 +77,7 @@ public class Libre2Widget extends AppWidgetProvider {
 
             views.setInt(R.id.widget_glucose, "setPaintFlags", Paint.ANTI_ALIAS_FLAG);
             views.setTextViewText(R.id.widget_trend, libre2_values.getTrendArrow().getSymbol());
-            if (ago < - 60000) {
+            if (ago < -60000) {
                 //DATA FROM FAR FUTURE
                 Log.w(TAG, "Received data from far future. Don't know how to display it");
                 views.setTextViewText(R.id.widget_glucose, "----");
@@ -98,30 +98,28 @@ public class Libre2Widget extends AppWidgetProvider {
             }
 
             if (graph_enabled) {
-                int width =  appWidgetManager.getAppWidgetOptions(appWidgetId).getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
+                int width = appWidgetManager.getAppWidgetOptions(appWidgetId).getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
                 int height = appWidgetManager.getAppWidgetOptions(appWidgetId).getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
                 if (width > 0 && height > 0) {
                     try {
                         views.setImageViewBitmap(R.id.widget_graph, new Libre2GraphBuilder(context)
-                            .setWidth(width)
-                            .setHeight(height)
-                            .setXMin(t1 - 60000)
-                            .setXMax(t2 + 60000)
-                            .setYMin(Double.min((libre2_values.minByValue().getValue()), Glucose.low()) - 18)
-                            .setYMax(Double.max((libre2_values.maxByValue().getValue()), Glucose.high()) + 18)
-                            .setRangeLines(graph_range_lines)
-                            .setRangeZones(graph_range_zones)
-                            .setData(libre2_values)
-                            .build());
+                                .setWidth(width)
+                                .setHeight(height)
+                                .setXMin(t1 - 60000)
+                                .setXMax(t2 + 60000)
+                                .setYMin(Double.min((libre2_values.minByValue().getValue()), Glucose.low()) - 18)
+                                .setYMax(Double.max((libre2_values.maxByValue().getValue()), Glucose.high()) + 18)
+                                .setRangeLines(graph_range_lines)
+                                .setRangeZones(graph_range_zones)
+                                .setData(libre2_values)
+                                .build());
                     } catch (Exception e) {
                         Log.e(TAG, "Wasn't able to build Libre2Graph");
                     }
-                }
-                else {
+                } else {
                     views.setImageViewResource(R.id.widget_graph, android.R.color.transparent);
                 }
-            }
-            else {
+            } else {
                 views.setImageViewResource(R.id.widget_graph, android.R.color.transparent);
             }
             views.setTextColor(R.id.widget_glucose, Glucose.bloodTextColor(libre2_last_value.getValue()));

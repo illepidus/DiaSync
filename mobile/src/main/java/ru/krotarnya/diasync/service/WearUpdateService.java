@@ -103,4 +103,5 @@ public class WearUpdateService extends Service {
             Log.d(TAG, "Failed to start service in context [" + context + "]");
             e.printStackTrace();
         }
-    }}
+    }
+}

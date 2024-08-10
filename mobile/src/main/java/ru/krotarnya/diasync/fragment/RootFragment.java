@@ -20,6 +20,7 @@ import ru.krotarnya.diasync.activity.SettingsActivity;
 @SuppressLint("BatteryLife")
 public class RootFragment extends PreferenceFragmentCompat {
     private static final String TAG = "RootFragment";
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String key) {
         setPreferencesFromResource(R.xml.settings_root, key);

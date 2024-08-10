@@ -41,29 +41,29 @@ public class DiasyncDB extends SQLiteOpenHelper {
         Log.d(TAG, "Creating " + DATABASE_NAME + " tables. Schema = " + DATABASE_VERSION);
         db.execSQL(
                 "CREATE TABLE xdrip_calibrations (" +
-                "timestamp INTEGER PRIMARY KEY, " +
-                "slope REAL, " +
-                "intercept REAL);"
+                        "timestamp INTEGER PRIMARY KEY, " +
+                        "slope REAL, " +
+                        "intercept REAL);"
         );
         db.execSQL(
                 "CREATE TABLE xdrip_values (" +
-                "timestamp INTEGER PRIMARY KEY, " +
-                "value REAL, " +
-                "arrow TEXT, " +
-                "xdrip_calibration INTEGER);"
+                        "timestamp INTEGER PRIMARY KEY, " +
+                        "value REAL, " +
+                        "arrow TEXT, " +
+                        "xdrip_calibration INTEGER);"
         );
         db.execSQL(
                 "CREATE TABLE libre2_values (" +
-                "timestamp INTEGER PRIMARY KEY, " +
-                "serial TEXT, " +
-                "value REAL, " +
-                "xdrip_calibration INTEGER, " +
-                "xdrip_value INTEGER);"
+                        "timestamp INTEGER PRIMARY KEY, " +
+                        "serial TEXT, " +
+                        "value REAL, " +
+                        "xdrip_calibration INTEGER, " +
+                        "xdrip_value INTEGER);"
         );
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int old_version,  int new_version) {
+    public void onUpgrade(SQLiteDatabase db, int old_version, int new_version) {
         if (old_version != new_version) {
             Log.d(TAG, "Dropping " + DATABASE_NAME + " tables. Schema = " + DATABASE_VERSION);
             db.execSQL("DROP TABLE IF EXISTS xdrip_calibrations");
@@ -138,8 +138,7 @@ public class DiasyncDB extends SQLiteOpenHelper {
             Log.d(TAG, "Wasn't able to add Libre2Value to database. Value exits?");
             Log.v(TAG, e.toString());
             return false;
-        }
-        finally {
+        } finally {
             db.endTransaction();
         }
     }
@@ -153,13 +152,13 @@ public class DiasyncDB extends SQLiteOpenHelper {
 
         String LIBRE2_SELECT_QUERY =
                 "SELECT lv.timestamp, lv.serial, lv.value, " +
-                "xc.timestamp AS calibration_timestamp, xc.slope AS calibration_slope, xc.intercept AS calibration_intercept, " +
-                "xv.timestamp AS xdrip_timestamp, xv.value AS xdrip_value, xv.arrow AS xdrip_arrow " +
-                "FROM libre2_values lv " +
-                "LEFT JOIN xdrip_values xv ON lv.xdrip_value = xv.timestamp " +
-                "LEFT JOIN xdrip_calibrations xc ON lv.xdrip_calibration = xc.timestamp " +
-                "WHERE (lv.timestamp > " + from + ") AND (lv.timestamp < " + till + ") " +
-                "ORDER BY lv.timestamp DESC LIMIT " + limit;
+                        "xc.timestamp AS calibration_timestamp, xc.slope AS calibration_slope, xc.intercept AS calibration_intercept, " +
+                        "xv.timestamp AS xdrip_timestamp, xv.value AS xdrip_value, xv.arrow AS xdrip_arrow " +
+                        "FROM libre2_values lv " +
+                        "LEFT JOIN xdrip_values xv ON lv.xdrip_value = xv.timestamp " +
+                        "LEFT JOIN xdrip_calibrations xc ON lv.xdrip_calibration = xc.timestamp " +
+                        "WHERE (lv.timestamp > " + from + ") AND (lv.timestamp < " + till + ") " +
+                        "ORDER BY lv.timestamp DESC LIMIT " + limit;
 
         Log.d(TAG, "Running query: " + LIBRE2_SELECT_QUERY);
 
@@ -191,7 +190,7 @@ public class DiasyncDB extends SQLiteOpenHelper {
                     );
 
                     values.add(value);
-                } while(cursor.moveToNext());
+                } while (cursor.moveToNext());
             }
         } catch (Exception e) {
             Log.d(TAG, "Error while trying to get libre2values from database");

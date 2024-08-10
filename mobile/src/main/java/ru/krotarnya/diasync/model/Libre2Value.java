@@ -48,7 +48,7 @@ public class Libre2Value {
     @NonNull
     @Override
     public String toString() {
-        return  "libre2_timestamp: " + timestamp + "\n" +
+        return "libre2_timestamp: " + timestamp + "\n" +
                 "libre2_serial: " + serial + "\n" +
                 "libre2_value:" + value + "\n" +
                 xDripvalue.toString();

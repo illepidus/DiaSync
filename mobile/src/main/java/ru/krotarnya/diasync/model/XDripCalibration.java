@@ -24,7 +24,7 @@ public class XDripCalibration {
     @NonNull
     @Override
     public String toString() {
-        return  "calibration_timestamp: " + timestamp + "\n" +
+        return "calibration_timestamp: " + timestamp + "\n" +
                 "calibration_slope: " + slope + "\n" +
                 "calibration_intercept:" + intercept;
     }

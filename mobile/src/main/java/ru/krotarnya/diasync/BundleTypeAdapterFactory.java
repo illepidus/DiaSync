@@ -15,6 +15,7 @@ package ru.krotarnya.diasync;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,8 @@ public class BundleTypeAdapterFactory implements TypeAdapterFactory {
             return null;
         }
         return (TypeAdapter<T>) new TypeAdapter<Bundle>() {
-            @Override public void write(JsonWriter out, Bundle bundle) throws IOException {
+            @Override
+            public void write(JsonWriter out, Bundle bundle) throws IOException {
                 if (bundle == null) {
                     out.nullValue();
                     return;
@@ -63,14 +65,16 @@ public class BundleTypeAdapterFactory implements TypeAdapterFactory {
                 out.endObject();
             }
 
-            @Override public Bundle read(JsonReader in) throws IOException {
+            @Override
+            public Bundle read(JsonReader in) throws IOException {
                 switch (in.peek()) {
                     case NULL:
                         in.nextNull();
                         return null;
                     case BEGIN_OBJECT:
                         return toBundle(readObject(in));
-                    default: throw new IOException("expecting object: " + in.getPath());
+                    default:
+                        throw new IOException("expecting object: " + in.getPath());
                 }
             }
 
@@ -88,13 +92,13 @@ public class BundleTypeAdapterFactory implements TypeAdapterFactory {
                     } else if (value instanceof Double) {
                         bundle.putDouble(key, (Double) value);
                     } else if (value instanceof Parcelable) {
-                        bundle.putParcelable(key, (Parcelable)value);
+                        bundle.putParcelable(key, (Parcelable) value);
                     } else if (value instanceof List) {
                         List<Pair<String, Object>> objectValues = (List<Pair<String, Object>>) value;
                         Bundle subBundle = toBundle(objectValues);
                         bundle.putParcelable(key, subBundle);
                     } else {
-                        throw new IOException("Not parcelable key, value: " + key + ", "+ value);
+                        throw new IOException("Not parcelable key, value: " + key + ", " + value);
                     }
                 }
                 return bundle;
@@ -112,7 +116,8 @@ public class BundleTypeAdapterFactory implements TypeAdapterFactory {
                             break;
                         case END_OBJECT:
                             break;
-                        default: throw new IOException("expecting object: " + in.getPath());
+                        default:
+                            throw new IOException("expecting object: " + in.getPath());
                     }
                 }
                 in.endObject();
@@ -134,7 +139,8 @@ public class BundleTypeAdapterFactory implements TypeAdapterFactory {
                         return readNumber(in);
                     case STRING:
                         return in.nextString();
-                    default: throw new IOException("expecting value: " + in.getPath());
+                    default:
+                        throw new IOException("expecting value: " + in.getPath());
                 }
             }
 
