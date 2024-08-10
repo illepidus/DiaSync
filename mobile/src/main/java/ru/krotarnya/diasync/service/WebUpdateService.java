@@ -94,6 +94,7 @@ public class WebUpdateService extends Service {
         return new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                 .setOngoing(true)
                 .setContentTitle("Diasync")
+                .setContentText("Diasync update service")
                 .setSmallIcon(R.drawable.ic_connectivity_settings)
                 .build();
     }
