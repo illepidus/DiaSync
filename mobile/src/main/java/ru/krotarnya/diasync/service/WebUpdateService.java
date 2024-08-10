@@ -30,8 +30,8 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import ru.krotarnya.diasync.Alerter;
-import ru.krotarnya.diasync.Diasync;
 import ru.krotarnya.diasync.DiasyncDB;
+import ru.krotarnya.diasync.R;
 import ru.krotarnya.diasync.activity.PipActivity;
 import ru.krotarnya.diasync.model.Libre2Update;
 import ru.krotarnya.diasync.model.Libre2Value;
@@ -76,7 +76,7 @@ public class WebUpdateService extends Service {
             } else {
                 startForeground(FOREGROUND_ID, buildForegroundNotification());
             }
-            timer.scheduleAtFixedRate(new WebUpdateTask(), 0, 10000);
+            timer.scheduleAtFixedRate(new WebUpdateTask(this), 0, 10000);
         }
         return START_STICKY;
     }
@@ -94,6 +94,7 @@ public class WebUpdateService extends Service {
         return new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                 .setOngoing(true)
                 .setContentTitle("Diasync")
+                .setSmallIcon(R.drawable.ic_connectivity_settings)
                 .build();
     }
 
@@ -117,17 +118,22 @@ public class WebUpdateService extends Service {
     }
 
     private class WebUpdateTask extends TimerTask {
+        private final Context context;
+
+        private WebUpdateTask(Context context) {
+            this.context = context;
+        }
+
         @Override
         public void run() {
             try {
-                Context context = Diasync.getContext();
                 Libre2Value libre2_value = getLastLibre2Value();
                 Log.d(TAG, "Received: \n" + libre2_value);
                 DiasyncDB diasync_db = DiasyncDB.getInstance(context);
+                Alerter.check();
                 if (diasync_db.addLibre2Value(libre2_value)) {
                     WidgetUpdateService.pleaseUpdate(context);
                     WearUpdateService.pleaseUpdate(context);
-                    Alerter.check();
                     Intent updatePipIntent = new Intent(PipActivity.UPDATE_ACTION);
                     LocalBroadcastManager.getInstance(context).sendBroadcast(updatePipIntent);
                 }
