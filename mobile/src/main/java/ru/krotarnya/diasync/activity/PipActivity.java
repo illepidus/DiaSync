@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Rational;
@@ -84,14 +83,10 @@ public class PipActivity extends AppCompatActivity {
     }
 
     private void enterPictureInPicture() {
-        PictureInPictureParams.Builder paramsBuilder = new PictureInPictureParams.Builder()
-                .setAspectRatio(ASPECT_RATIO);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            paramsBuilder = paramsBuilder.setAutoEnterEnabled(true);
-        }
-
-        enterPictureInPictureMode(paramsBuilder.build());
+        enterPictureInPictureMode(new PictureInPictureParams.Builder()
+                .setAspectRatio(ASPECT_RATIO)
+                .setAutoEnterEnabled(true)
+                .build());
     }
 
     private void update() {

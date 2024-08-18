@@ -9,7 +9,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ServiceInfo;
-import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
@@ -71,11 +70,7 @@ public class WebUpdateService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (!isStarted.getAndSet(true)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                startForeground(FOREGROUND_ID, buildForegroundNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
-            } else {
-                startForeground(FOREGROUND_ID, buildForegroundNotification());
-            }
+            startForeground(FOREGROUND_ID, buildForegroundNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
             timer.scheduleAtFixedRate(new WebUpdateTask(this), 0, 10000);
         }
         return START_STICKY;
