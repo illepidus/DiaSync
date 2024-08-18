@@ -22,7 +22,8 @@ import ru.krotarnya.diasync.model.Libre2ValueList;
 import ru.krotarnya.diasync.service.WebUpdateService;
 import ru.krotarnya.diasync.service.WidgetUpdateService;
 
-public class Libre2Widget extends AppWidgetProvider {
+public class
+Libre2Widget extends AppWidgetProvider {
     private static final String TAG = "Libre2Widget";
     private static final String WIDGET_CLICKED_TAG = "ru.krotarnya.diasync.WIDGET_CLICKED";
     public static final String WIDGET_ALERTS_ICON_CLICKED_TAG = "ru.krotarnya.diasync.WIDGET_ALERTS_ICON_CLICKED";

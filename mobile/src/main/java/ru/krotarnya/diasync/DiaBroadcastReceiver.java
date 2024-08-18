@@ -29,13 +29,13 @@ import ru.krotarnya.diasync.service.WidgetUpdateService;
 public class DiaBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "DiaBroadcastReceiver";
     private static final String LIBRE2_BG_INTENT_ACTION = "com.eveningoutpost.dexdrip.diasync.libre2_bg";
-    private String webhook_address;
-    private String webhook_token;
-    private Context broadcast_context;
+    private String webhookAddress;
+    private String webhookToken;
+    private Context broadcastContext;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        broadcast_context = context;
+        broadcastContext = context;
         final String action = intent.getAction();
         if (action == null) return;
 
@@ -43,8 +43,8 @@ public class DiaBroadcastReceiver extends BroadcastReceiver {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean webhook_enabled = prefs.getBoolean("webhook_enabled", false);
         boolean webhook_enabled_follower = prefs.getBoolean("webhook_enabled_follower", false);
-        webhook_address = prefs.getString("webhook_address", "undefined");
-        webhook_token = prefs.getString("webhook_token", "undefined");
+        webhookAddress = prefs.getString("webhook_address", "undefined");
+        webhookToken = prefs.getString("webhook_token", "undefined");
 
         Log.d(TAG, "Received broadcast intent [" + action + "] in context [" + context + "]");
         if (action.equals(LIBRE2_BG_INTENT_ACTION)) {
@@ -83,13 +83,13 @@ public class DiaBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void webhookUpdate(String update) {
-        RequestQueue request_queue = Volley.newRequestQueue(broadcast_context);
-        Log.d(TAG, "Updating [" + webhook_address + "]...");
-        StringRequest string_request = new StringRequest(Request.Method.POST, webhook_address, response -> Log.d(TAG, "Response: " + response), error -> Log.e(TAG, error.toString())) {
+        RequestQueue request_queue = Volley.newRequestQueue(broadcastContext);
+        Log.d(TAG, "Updating [" + webhookAddress + "]...");
+        StringRequest string_request = new StringRequest(Request.Method.POST, webhookAddress, response -> Log.d(TAG, "Response: " + response), error -> Log.e(TAG, error.toString())) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("token", webhook_token);
+                params.put("token", webhookToken);
                 params.put("update", update);
                 params.put("type", "libre2_bg");
                 return params;
