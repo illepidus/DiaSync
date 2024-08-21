@@ -1,12 +1,10 @@
-package ru.krotarnya.diasync.fragment;
+package ru.krotarnya.diasync.settings;
 
 import android.os.Bundle;
 
-import androidx.preference.PreferenceFragmentCompat;
-
 import ru.krotarnya.diasync.R;
 
-public class ConnectivityFragment extends PreferenceFragmentCompat {
+public class ConnectivityFragment extends PreferenceFragment {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String key) {
         setPreferencesFromResource(R.xml.settings_connectivity, key);

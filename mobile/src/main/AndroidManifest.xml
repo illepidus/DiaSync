@@ -48,7 +48,7 @@
         </receiver>
 
         <activity
-            android:name="ru.krotarnya.diasync.activity.SettingsActivity"
+            android:name="ru.krotarnya.diasync.settings.SettingsActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

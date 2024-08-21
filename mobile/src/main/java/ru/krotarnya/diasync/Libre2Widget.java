@@ -16,7 +16,7 @@ import androidx.preference.PreferenceManager;
 import java.util.Objects;
 
 import ru.krotarnya.diasync.activity.PipActivity;
-import ru.krotarnya.diasync.activity.SettingsActivity;
+import ru.krotarnya.diasync.settings.SettingsActivity;
 import ru.krotarnya.diasync.model.Libre2Value;
 import ru.krotarnya.diasync.model.Libre2ValueList;
 import ru.krotarnya.diasync.service.WebUpdateService;
@@ -176,10 +176,11 @@ Libre2Widget extends AppWidgetProvider {
             }
         }
         if (Objects.equals(action, WIDGET_ALERTS_ICON_CLICKED_TAG)) {
+            Log.d(TAG, "Clicked on alerts icon");
             Intent alarmIntent = new Intent(Intent.ACTION_VIEW);
             alarmIntent.setClassName(context.getPackageName(), SettingsActivity.class.getName());
             alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
-            alarmIntent.putExtra("fragment", SettingsActivity.ALERTS_FRAGMENT);
+            alarmIntent.putExtra("fragment", SettingsActivity.class.getName());
             context.startActivity(alarmIntent);
         }
 
@@ -191,7 +192,8 @@ Libre2Widget extends AppWidgetProvider {
         }
     }
 
-    protected static PendingIntent getPendingSelfIntent(Context context, String action) {
+    private static PendingIntent getPendingSelfIntent(Context context, String action) {
+        Log.d(TAG, action);
         Intent intent = new Intent(context, Libre2Widget.class);
         intent.setAction(action);
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);

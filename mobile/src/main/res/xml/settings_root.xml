@@ -10,21 +10,21 @@
         app:useSimpleSummaryProvider="true" />
 
     <Preference
-        app:fragment="ru.krotarnya.diasync.fragment.DisplayFragment"
+        app:fragment="ru.krotarnya.diasync.settings.DisplayFragment"
         app:icon="@drawable/ic_display_settings"
         app:title="Display"
         app:allowDividerBelow="true"
         app:useSimpleSummaryProvider="true" />
 
     <Preference
-        app:fragment="ru.krotarnya.diasync.fragment.ConnectivityFragment"
+        app:fragment="ru.krotarnya.diasync.settings.ConnectivityFragment"
         app:title="Connectivity"
         app:icon="@drawable/ic_connectivity_settings"
         app:allowDividerBelow="true"
         app:useSimpleSummaryProvider="true" />
 
     <Preference
-        app:fragment="ru.krotarnya.diasync.fragment.AlertsFragment"
+        app:fragment="ru.krotarnya.diasync.settings.AlertsFragment"
         app:title="Alerts"
         app:icon="@drawable/ic_alerts_settings"
         app:allowDividerBelow="true"

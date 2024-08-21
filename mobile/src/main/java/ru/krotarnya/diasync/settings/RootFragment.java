@@ -1,4 +1,4 @@
-package ru.krotarnya.diasync.fragment;
+package ru.krotarnya.diasync.settings;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,22 +10,20 @@ import android.provider.Settings;
 import android.util.Log;
 
 import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 
 import ru.krotarnya.diasync.Diasync;
 import ru.krotarnya.diasync.R;
 import ru.krotarnya.diasync.activity.PipActivity;
-import ru.krotarnya.diasync.activity.SettingsActivity;
 
 @SuppressLint("BatteryLife")
-public class RootFragment extends PreferenceFragmentCompat {
+public class RootFragment extends PreferenceFragment {
     private static final String TAG = "RootFragment";
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String key) {
         setPreferencesFromResource(R.xml.settings_root, key);
 
-        Context context = SettingsActivity.getContext();
+        Context context = getContext();
         if (context != null) {
             Log.d(TAG, "Checking for battery optimization");
             String packageName = context.getPackageName();
@@ -46,6 +44,7 @@ public class RootFragment extends PreferenceFragmentCompat {
         if (clear_data != null) clear_data.setOnPreferenceClickListener(preference -> {
             Log.d(TAG, "Asked for clear data and force close");
             Diasync.clearDataForceClose();
+            startActivity(SettingsActivity.consIntent(context, AlertsFragment.class));
             return true;
         });
 

@@ -1,6 +1,5 @@
-package ru.krotarnya.diasync.fragment;
+package ru.krotarnya.diasync.settings;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
@@ -8,23 +7,20 @@ import android.util.Log;
 
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
-import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import java.util.Objects;
 
 import ru.krotarnya.diasync.Glucose;
 import ru.krotarnya.diasync.R;
-import ru.krotarnya.diasync.activity.SettingsActivity;
 
-public class DisplayFragment extends PreferenceFragmentCompat {
+public class DisplayFragment extends PreferenceFragment {
     private static final String TAG = "DisplayFragment";
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String key) {
         setPreferencesFromResource(R.xml.settings_display, key);
-        Context context = SettingsActivity.getContext();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor prefs_editor = prefs.edit();
 
         EditTextPreference glucose_low_pref = findPreference("glucose_low_pref");

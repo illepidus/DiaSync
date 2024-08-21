@@ -1,11 +1,10 @@
-package ru.krotarnya.diasync.fragment;
+package ru.krotarnya.diasync.settings;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
 import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SeekBarPreference;
 
 import java.time.Duration;
@@ -16,7 +15,7 @@ import ru.krotarnya.diasync.Diasync;
 import ru.krotarnya.diasync.R;
 import ru.krotarnya.diasync.model.SnoozeInterval;
 
-public class AlertsFragment extends PreferenceFragmentCompat {
+public class AlertsFragment extends PreferenceFragment {
     private static final String TAG = "AlertsFragment";
     private static final Duration UPDATE_INTERVAL = Duration.ofMillis(300);
     private final Handler eventHandler = new Handler();
