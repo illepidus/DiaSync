@@ -13,16 +13,16 @@ import java.util.Objects;
 import ru.krotarnya.diasync.Glucose;
 import ru.krotarnya.diasync.R;
 
-public class DisplayFragment extends PreferenceFragment {
+public final class DisplayFragment extends PreferenceFragment {
     private static final String TAG = "DisplayFragment";
 
     @Override
-    int screenResource() {
+    protected int screenResource() {
         return R.xml.settings_display;
     }
 
     @Override
-    void afterCreatePreferences() {
+    protected void afterCreatePreferences() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor prefs_editor = prefs.edit();
 

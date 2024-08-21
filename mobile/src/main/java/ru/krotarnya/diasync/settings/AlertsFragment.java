@@ -14,7 +14,7 @@ import ru.krotarnya.diasync.Diasync;
 import ru.krotarnya.diasync.R;
 import ru.krotarnya.diasync.model.SnoozeInterval;
 
-public class AlertsFragment extends PreferenceFragment {
+public final class AlertsFragment extends PreferenceFragment {
     private static final String TAG = "AlertsFragment";
     private static final Duration UPDATE_INTERVAL = Duration.ofMillis(300);
     private final Handler eventHandler = new Handler();
@@ -30,12 +30,12 @@ public class AlertsFragment extends PreferenceFragment {
     private Preference resumePref;
 
     @Override
-    int screenResource() {
+    protected int screenResource() {
         return R.xml.settings_alerts;
     }
 
     @Override
-    void afterCreatePreferences() {
+    protected void afterCreatePreferences() {
         snoozePref = findPreference("alerts_snooze");
         resumePref = findPreference("alerts_resume");
 

@@ -12,14 +12,14 @@ import android.util.Log;
 import ru.krotarnya.diasync.R;
 import ru.krotarnya.diasync.activity.PipActivity;
 
-public class RootFragment extends PreferenceFragment {
+public final class RootFragment extends PreferenceFragment {
     @Override
-    int screenResource() {
+    protected int screenResource() {
         return R.xml.settings_root;
     }
 
     @Override
-    void afterCreatePreferences() {
+    protected void afterCreatePreferences() {
         requestBatteryOptimizationsIfNeeded();
         setOnPreferenceClickListener("clear_data", this::clearDataForceClose);
         setOnPreferenceClickListener("pip_activity", this::launchPipActivity);

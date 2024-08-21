@@ -2,14 +2,9 @@ package ru.krotarnya.diasync.settings;
 
 import ru.krotarnya.diasync.R;
 
-public class ConnectivityFragment extends PreferenceFragment {
+public final class ConnectivityFragment extends DefaultPreferenceFragment {
     @Override
-    int screenResource() {
+    protected int screenResource() {
         return R.xml.settings_connectivity;
-    }
-
-    @Override
-    void afterCreatePreferences() {
-
     }
 }

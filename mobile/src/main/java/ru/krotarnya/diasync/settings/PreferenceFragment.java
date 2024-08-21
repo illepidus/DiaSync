@@ -29,6 +29,6 @@ public abstract class PreferenceFragment extends PreferenceFragmentCompat {
         afterCreatePreferences();
     }
 
-    abstract int screenResource();
-    abstract void afterCreatePreferences();
+    protected abstract int screenResource();
+    protected abstract void afterCreatePreferences();
 }
