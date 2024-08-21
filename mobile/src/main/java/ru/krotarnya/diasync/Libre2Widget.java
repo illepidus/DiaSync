@@ -19,16 +19,15 @@ import ru.krotarnya.diasync.activity.PipActivity;
 import ru.krotarnya.diasync.model.Libre2Value;
 import ru.krotarnya.diasync.model.Libre2ValueList;
 import ru.krotarnya.diasync.service.WebUpdateService;
-import ru.krotarnya.diasync.service.WidgetUpdateService;
+import ru.krotarnya.diasync.settings.AlertsFragment;
 import ru.krotarnya.diasync.settings.SettingsActivity;
+import ru.krotarnya.diasync.widget.WidgetUpdateService;
 
-public class
-Libre2Widget extends AppWidgetProvider {
+public class Libre2Widget extends AppWidgetProvider {
     private static final String TAG = "Libre2Widget";
     private static final String WIDGET_CLICKED_TAG = "ru.krotarnya.diasync.WIDGET_CLICKED";
     public static final String WIDGET_ALERTS_ICON_CLICKED_TAG = "ru.krotarnya.diasync.WIDGET_ALERTS_ICON_CLICKED";
     public static final String WIDGET_PIP_ICON_CLICKED_TAG = "ru.krotarnya.diasync.WIDGET_PIP_ICON_CLICKED";
-
 
     private static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                         int appWidgetId) {
@@ -177,11 +176,7 @@ Libre2Widget extends AppWidgetProvider {
         }
         if (Objects.equals(action, WIDGET_ALERTS_ICON_CLICKED_TAG)) {
             Log.d(TAG, "Clicked on alerts icon");
-            Intent alarmIntent = new Intent(Intent.ACTION_VIEW);
-            alarmIntent.setClassName(context.getPackageName(), SettingsActivity.class.getName());
-            alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
-            alarmIntent.putExtra("fragment", SettingsActivity.class.getName());
-            context.startActivity(alarmIntent);
+            SettingsActivity.pleaseStart(context, AlertsFragment.class);
         }
 
         if (Objects.equals(action, WIDGET_PIP_ICON_CLICKED_TAG)) {

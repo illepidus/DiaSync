@@ -56,6 +56,6 @@ public final class SettingsActivity extends AppCompatActivity {
                 .map(Class::getName)
                 .ifPresent(className -> intent.putExtra(ACTIVATE_FRAGMENT, className));
 
-        context.startService(intent);
+        context.startService(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 }

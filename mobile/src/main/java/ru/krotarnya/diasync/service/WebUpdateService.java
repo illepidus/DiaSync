@@ -34,6 +34,7 @@ import ru.krotarnya.diasync.R;
 import ru.krotarnya.diasync.activity.PipActivity;
 import ru.krotarnya.diasync.model.Libre2Update;
 import ru.krotarnya.diasync.model.Libre2Value;
+import ru.krotarnya.diasync.widget.WidgetUpdateService;
 
 public class WebUpdateService extends Service {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()

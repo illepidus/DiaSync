@@ -24,7 +24,7 @@ import java.util.Optional;
 import ru.krotarnya.diasync.activity.PipActivity;
 import ru.krotarnya.diasync.model.Libre2Value;
 import ru.krotarnya.diasync.service.WearUpdateService;
-import ru.krotarnya.diasync.service.WidgetUpdateService;
+import ru.krotarnya.diasync.widget.WidgetUpdateService;
 
 public class DiaBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "DiaBroadcastReceiver";

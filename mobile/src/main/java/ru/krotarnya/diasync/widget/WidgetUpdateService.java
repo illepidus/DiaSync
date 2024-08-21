@@ -1,4 +1,4 @@
-package ru.krotarnya.diasync.service;
+package ru.krotarnya.diasync.widget;
 
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
