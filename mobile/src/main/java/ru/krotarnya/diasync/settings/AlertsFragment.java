@@ -1,6 +1,5 @@
 package ru.krotarnya.diasync.settings;
 
-import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
@@ -31,8 +30,12 @@ public class AlertsFragment extends PreferenceFragment {
     private Preference resumePref;
 
     @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String key) {
-        setPreferencesFromResource(R.xml.settings_alerts, key);
+    int screenResource() {
+        return R.xml.settings_alerts;
+    }
+
+    @Override
+    void afterCreatePreferences() {
         snoozePref = findPreference("alerts_snooze");
         resumePref = findPreference("alerts_resume");
 

@@ -1,7 +1,6 @@
 package ru.krotarnya.diasync.settings;
 
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 
@@ -18,8 +17,12 @@ public class DisplayFragment extends PreferenceFragment {
     private static final String TAG = "DisplayFragment";
 
     @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String key) {
-        setPreferencesFromResource(R.xml.settings_display, key);
+    int screenResource() {
+        return R.xml.settings_display;
+    }
+
+    @Override
+    void afterCreatePreferences() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor prefs_editor = prefs.edit();
 
