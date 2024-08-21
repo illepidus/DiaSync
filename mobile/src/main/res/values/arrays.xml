@@ -1,9 +1,9 @@
 <resources>
-    <string-array name="glucose_units_entries">
+    <string-array name="glucose_unit_entries">
         <item>mg/dL</item>
         <item>mmol/L</item>
     </string-array>
-    <string-array name="glucose_units_values">
+    <string-array name="glucose_unit_values">
         <item>mgdl</item>
         <item>mmol</item>
     </string-array>

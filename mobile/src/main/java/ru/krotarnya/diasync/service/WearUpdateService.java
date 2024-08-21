@@ -23,10 +23,10 @@ import java.util.stream.Collectors;
 
 import ru.krotarnya.diasync.DiasyncDB;
 import ru.krotarnya.diasync.Glucose;
-import ru.krotarnya.diasync.common.model.WatchFaceBloodData;
 import ru.krotarnya.diasync.common.model.BloodGlucose;
 import ru.krotarnya.diasync.common.model.BloodGlucoseUnit;
 import ru.krotarnya.diasync.common.model.BloodPoint;
+import ru.krotarnya.diasync.common.model.WatchFaceBloodData;
 import ru.krotarnya.diasync.model.Libre2ValueList;
 
 public class WearUpdateService extends Service {
@@ -72,7 +72,7 @@ public class WearUpdateService extends Service {
 
         DiasyncDB diasync_db = DiasyncDB.getInstance(this);
         Libre2ValueList libre2Values = diasync_db.getLibre2Values(t1, t2 + 60000);
-        BloodGlucoseUnit unit = BloodGlucoseUnit.resolveOrThrow(prefs.getString("glucose_units", "mmol"));
+        BloodGlucoseUnit unit = BloodGlucoseUnit.resolveOrThrow(prefs.getString("glucose_unit", "mmol"));
 
         List<BloodPoint> points = libre2Values.stream()
                 .map(v -> new BloodPoint(

@@ -16,11 +16,11 @@ import androidx.preference.PreferenceManager;
 import java.util.Objects;
 
 import ru.krotarnya.diasync.activity.PipActivity;
-import ru.krotarnya.diasync.settings.SettingsActivity;
 import ru.krotarnya.diasync.model.Libre2Value;
 import ru.krotarnya.diasync.model.Libre2ValueList;
 import ru.krotarnya.diasync.service.WebUpdateService;
 import ru.krotarnya.diasync.service.WidgetUpdateService;
+import ru.krotarnya.diasync.settings.SettingsActivity;
 
 public class
 Libre2Widget extends AppWidgetProvider {
@@ -35,7 +35,7 @@ Libre2Widget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_libre2);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String glucose_units = prefs.getString("glucose_units", "mmol");
+        String glucose_unit = prefs.getString("glucose_unit", "mmol");
         boolean graph_enabled = prefs.getBoolean("widget_graph_enabled", true);
         boolean graph_range_lines = prefs.getBoolean("widget_graph_range_lines", false);
         boolean graph_range_zones = prefs.getBoolean("widget_graph_range_zones", true);
@@ -64,7 +64,7 @@ Libre2Widget extends AppWidgetProvider {
             Libre2Value libre2_last_value = libre2_values.maxByTimestamp();
             long ago = (t2 - libre2_last_value.timestamp);
 
-            switch (glucose_units) {
+            switch (glucose_unit) {
                 case "mmol":
                     views.setTextViewText(R.id.widget_glucose, Glucose.stringMmol(libre2_last_value.getMmolValue()));
                     break;

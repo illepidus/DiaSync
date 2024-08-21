@@ -1,10 +1,8 @@
 package ru.krotarnya.diasync;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.icu.text.DateFormat;
 
 import java.time.Duration;
@@ -22,15 +20,6 @@ public class Diasync extends Application {
     public void onCreate() {
         instance = this;
         super.onCreate();
-    }
-
-    public static void clearDataForceClose() {
-        ((ActivityManager) getContext().getSystemService(ACTIVITY_SERVICE))
-                .clearApplicationUserData();
-        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-        homeIntent.addCategory(Intent.CATEGORY_HOME);
-        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        getContext().startActivity(homeIntent);
     }
 
     public static String timeFormat(Instant timestamp) {

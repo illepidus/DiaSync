@@ -23,8 +23,8 @@ public final class DisplayFragment extends PreferenceFragment {
 
     @Override
     protected void afterCreatePreferences() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        SharedPreferences.Editor prefs_editor = prefs.edit();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        SharedPreferences.Editor editor = prefs.edit();
 
         EditTextPreference glucose_low_pref = findPreference("glucose_low_pref");
         if (glucose_low_pref != null) {
@@ -32,9 +32,9 @@ public final class DisplayFragment extends PreferenceFragment {
                     editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL)
             );
             glucose_low_pref.setOnPreferenceChangeListener((preference, value) -> {
-                String glucose_units = prefs.getString("glucose_units", "");
+                String glucose_unit = prefs.getString("glucose_unit", "");
                 double glucose_low;
-                switch (glucose_units) {
+                switch (glucose_unit) {
                     case "mmol":
                         glucose_low = Glucose.mmolToMgdl((String) value);
                         break;
@@ -45,8 +45,8 @@ public final class DisplayFragment extends PreferenceFragment {
                         return false;
                 }
 
-                prefs_editor.putString("glucose_low", Glucose.stringMgdl(glucose_low));
-                prefs_editor.apply();
+                editor.putString("glucose_low", Glucose.stringMgdl(glucose_low));
+                editor.apply();
                 return true;
             });
         }
@@ -57,9 +57,9 @@ public final class DisplayFragment extends PreferenceFragment {
                     editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL)
             );
             glucose_high_pref.setOnPreferenceChangeListener((preference, value) -> {
-                String glucose_units = prefs.getString("glucose_units", "");
+                String glucose_unit = prefs.getString("glucose_unit", "");
                 double glucose_high;
-                switch (glucose_units) {
+                switch (glucose_unit) {
                     case "mmol":
                         glucose_high = Glucose.mmolToMgdl((String) value);
                         break;
@@ -70,16 +70,16 @@ public final class DisplayFragment extends PreferenceFragment {
                         return false;
                 }
 
-                prefs_editor.putString("glucose_high", Glucose.stringMgdl(glucose_high));
-                prefs_editor.apply();
+                editor.putString("glucose_high", Glucose.stringMgdl(glucose_high));
+                editor.apply();
                 return true;
             });
         }
 
-        ListPreference glucose_units = findPreference("glucose_units");
-        if (glucose_units != null) {
-            glucose_units.setOnPreferenceChangeListener((preference, value) -> {
-                final String old_value = glucose_units.getValue();
+        ListPreference glucose_unit = findPreference("glucose_unit");
+        if (glucose_unit != null) {
+            glucose_unit.setOnPreferenceChangeListener((preference, value) -> {
+                final String old_value = glucose_unit.getValue();
                 final String new_value = (String) value;
                 Log.d(TAG, "New glucose units = " + new_value);
                 if (Objects.equals(old_value, new_value)) return false;

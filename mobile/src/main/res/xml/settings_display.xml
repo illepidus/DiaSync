@@ -4,10 +4,10 @@
     <PreferenceCategory app:title="Common settings">
         <ListPreference
             app:defaultValue="mmol"
-            app:entries="@array/glucose_units_entries"
-            app:entryValues="@array/glucose_units_values"
-            app:key="glucose_units"
-            app:title="Glucose units"
+            app:entries="@array/glucose_unit_entries"
+            app:entryValues="@array/glucose_unit_values"
+            app:key="glucose_unit"
+            app:title="Glucose unit"
             app:useSimpleSummaryProvider="true" />
         <EditTextPreference
             app:defaultValue="3.9"

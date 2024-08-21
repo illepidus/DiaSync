@@ -48,14 +48,14 @@ public final class SettingsActivity extends AppCompatActivity {
         return getSupportFragmentManager().popBackStackImmediate();
     }
 
-    public static <T extends PreferenceFragment> Intent consIntent(
+    public static <T extends PreferenceFragment> void pleaseStart(
             Context context,
-            @Nullable Class<T> fragmentClass)
-    {
+            @Nullable Class<T> fragmentClass) {
         Intent intent = new Intent(context, SettingsActivity.class);
         Optional.ofNullable(fragmentClass)
                 .map(Class::getName)
                 .ifPresent(className -> intent.putExtra(ACTIVATE_FRAGMENT, className));
-        return intent;
+
+        context.startService(intent);
     }
 }

@@ -91,7 +91,7 @@ public class PipActivity extends AppCompatActivity {
 
     private void update() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String glucose_units = prefs.getString("glucose_units", "mmol");
+        String glucose_unit = prefs.getString("glucose_unit", "mmol");
         boolean graph_range_lines = prefs.getBoolean("widget_graph_range_lines", false);
         boolean graph_range_zones = prefs.getBoolean("widget_graph_range_zones", true);
         long graph_period = Long.parseLong(prefs.getString("widget_graph_period", "1800000"));
@@ -107,7 +107,7 @@ public class PipActivity extends AppCompatActivity {
         } else {
             Libre2Value libre2_last_value = libre2_values.maxByTimestamp();
 
-            switch (glucose_units) {
+            switch (glucose_unit) {
                 case "mmol":
                     glucose.setText(Glucose.stringMmol(libre2_last_value.getMmolValue()));
                     break;

@@ -15,7 +15,6 @@ import ru.krotarnya.diasync.R;
 import ru.krotarnya.diasync.model.SnoozeInterval;
 
 public final class AlertsFragment extends PreferenceFragment {
-    private static final String TAG = "AlertsFragment";
     private static final Duration UPDATE_INTERVAL = Duration.ofMillis(300);
     private final Handler eventHandler = new Handler();
     private final Runnable updateRunnable = new Runnable() {

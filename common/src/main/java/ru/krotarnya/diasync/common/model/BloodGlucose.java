@@ -16,6 +16,10 @@ public final class BloodGlucose extends DefaultObject implements Comparable<Bloo
         return new BloodGlucose(mgdl);
     }
 
+    public static BloodGlucose consMgdl(String mgdl) {
+        return new BloodGlucose(Double.parseDouble(mgdl));
+    }
+
     public static BloodGlucose consMmol(double mmol) {
         return new BloodGlucose(BloodUtil.mmolToMgdl(mmol));
     }
