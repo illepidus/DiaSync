@@ -40,12 +40,14 @@ public final class DiasyncWidget extends AppWidgetProvider {
 
     private void update(Context context, AppWidgetManager appWidgetManager, int id) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.diasync_widget);
-        views.setImageViewResource(R.id.diasync_widget_canvas, android.R.color.holo_red_dark);
+        update(context, views);
+        appWidgetManager.updateAppWidget(id, views);
+    }
 
+    private void update(Context context, RemoteViews views) {
+        views.setImageViewResource(R.id.diasync_widget_canvas, android.R.color.holo_red_dark);
         Intent intent = new Intent(context, DiasyncWidget.class).setAction("ACTION_TEST");
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.diasync_widget_canvas, pendingIntent);
-
-        appWidgetManager.updateAppWidget(id, views);
     }
 }
