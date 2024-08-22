@@ -1,4 +1,4 @@
-package ru.krotarnya.diasync;
+package ru.krotarnya.diasync.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -15,13 +15,17 @@ import androidx.preference.PreferenceManager;
 
 import java.util.Objects;
 
+import ru.krotarnya.diasync.Alerter;
+import ru.krotarnya.diasync.DiasyncDB;
+import ru.krotarnya.diasync.Glucose;
+import ru.krotarnya.diasync.Libre2GraphBuilder;
+import ru.krotarnya.diasync.R;
 import ru.krotarnya.diasync.activity.PipActivity;
 import ru.krotarnya.diasync.model.Libre2Value;
 import ru.krotarnya.diasync.model.Libre2ValueList;
 import ru.krotarnya.diasync.service.WebUpdateService;
 import ru.krotarnya.diasync.settings.AlertsFragment;
 import ru.krotarnya.diasync.settings.SettingsActivity;
-import ru.krotarnya.diasync.widget.WidgetUpdateService;
 
 public class Libre2Widget extends AppWidgetProvider {
     private static final String TAG = "Libre2Widget";

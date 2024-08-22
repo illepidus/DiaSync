@@ -13,8 +13,6 @@ import android.util.Log;
 
 import java.util.Optional;
 
-import ru.krotarnya.diasync.Libre2Widget;
-
 public class WidgetUpdateService extends Service {
     private static final String TAG = "WidgetUpdateService";
     private boolean isRegistered = false;
@@ -72,8 +70,7 @@ public class WidgetUpdateService extends Service {
         intentFilter.addAction(Intent.ACTION_TIME_TICK);
         intentFilter.addAction(Intent.ACTION_SCREEN_ON);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        if (isRegistered)
-            unregisterReceiver(broadcastReceiver);
+        if (isRegistered) unregisterReceiver(broadcastReceiver);
         registerReceiver(broadcastReceiver, intentFilter);
         isRegistered = true;
     }
