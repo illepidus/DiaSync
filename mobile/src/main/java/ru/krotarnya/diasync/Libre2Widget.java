@@ -155,7 +155,9 @@ Libre2Widget extends AppWidgetProvider {
             String on_click = prefs.getString("libre2_widget_on_click", "settings");
             Log.d(TAG, "Widget clicked. Action = " + on_click);
             WidgetUpdateService.pleaseUpdate(context);
-            context.startService(new Intent(context, WebUpdateService.class));
+            if (!prefs.getBoolean("webhook_enabled", false)) {
+                context.startService(new Intent(context, WebUpdateService.class));
+            }
 
             Alerter.check();
             switch (on_click) {
