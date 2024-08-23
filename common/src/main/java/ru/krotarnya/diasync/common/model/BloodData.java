@@ -14,7 +14,7 @@ import java.util.List;
 import ru.krotarnya.diasync.common.DefaultObject;
 import ru.krotarnya.diasync.common.util.CompressionUtils;
 
-public final class WatchFaceBloodData extends DefaultObject {
+public final class BloodData extends DefaultObject {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
             .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -23,7 +23,7 @@ public final class WatchFaceBloodData extends DefaultObject {
     private final TrendArrow trendArrow;
     private final Params params;
 
-    public WatchFaceBloodData(
+    public BloodData(
             @JsonProperty("points") List<BloodPoint> points,
             @JsonProperty("trend") TrendArrow trendArrow,
             @JsonProperty("params") Params params) {
@@ -52,8 +52,8 @@ public final class WatchFaceBloodData extends DefaultObject {
         }
     }
 
-    public static WatchFaceBloodData deserialize(byte[] compressedJson) throws Exception {
-        return OBJECT_MAPPER.readValue(CompressionUtils.decompress(compressedJson), WatchFaceBloodData.class);
+    public static BloodData deserialize(byte[] compressedJson) throws Exception {
+        return OBJECT_MAPPER.readValue(CompressionUtils.decompress(compressedJson), BloodData.class);
     }
 
     public int getColor(BloodGlucose bloodGlucose) {
@@ -86,8 +86,7 @@ public final class WatchFaceBloodData extends DefaultObject {
                 @JsonProperty("low") BloodGlucose low,
                 @JsonProperty("high") BloodGlucose high,
                 @JsonProperty("timeWindow") Duration timeWindow,
-                @JsonProperty("colors") Colors colors)
-        {
+                @JsonProperty("colors") Colors colors) {
             this.unit = unit;
             this.low = low;
             this.high = high;
@@ -130,8 +129,7 @@ public final class WatchFaceBloodData extends DefaultObject {
                 @JsonProperty("high") int high,
                 @JsonProperty("textLow") int textLow,
                 @JsonProperty("textNormal") int textNormal,
-                @JsonProperty("textHigh") int textHigh)
-        {
+                @JsonProperty("textHigh") int textHigh) {
             this.low = low;
             this.normal = normal;
             this.high = high;

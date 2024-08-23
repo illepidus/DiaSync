@@ -27,9 +27,9 @@ import java.util.stream.Stream;
 
 import kotlin.coroutines.Continuation;
 import ru.krotarnya.diasync.common.model.BatteryStatus;
+import ru.krotarnya.diasync.common.model.BloodData;
 import ru.krotarnya.diasync.common.model.BloodGlucose;
 import ru.krotarnya.diasync.common.model.BloodPoint;
-import ru.krotarnya.diasync.common.model.WatchFaceBloodData;
 import ru.krotarnya.diasync.common.util.DateTimeUtil;
 
 public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedAssets> {
@@ -47,7 +47,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
     private static final int ERROR_COLOR = Color.RED;
 
     @Nullable
-    private WatchFaceBloodData bloodData;
+    private BloodData bloodData;
     @Nullable
     private BatteryStatus watchBatteryStatus;
 
@@ -55,8 +55,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
             @NonNull SurfaceHolder surfaceHolder,
             @NonNull WatchState watchState,
             @NonNull CurrentUserStyleRepository currentUserStyleRepository,
-            @Nullable BatteryStatus watchBatteryStatus)
-    {
+            @Nullable BatteryStatus watchBatteryStatus) {
         super(
                 surfaceHolder,
                 currentUserStyleRepository,
@@ -69,9 +68,9 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
 
     @Nullable
     @Override
-    protected Renderer.SharedAssets createSharedAssets(@NonNull Continuation<? super Renderer.SharedAssets> continuation)
-    {
-        return () -> {};
+    protected Renderer.SharedAssets createSharedAssets(@NonNull Continuation<? super Renderer.SharedAssets> continuation) {
+        return () -> {
+        };
     }
 
     @Override
@@ -79,8 +78,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
             @NonNull Canvas canvas,
             @NonNull Rect rect,
             @NonNull ZonedDateTime zonedDateTime,
-            @NonNull Renderer.SharedAssets sharedAssets)
-    {
+            @NonNull Renderer.SharedAssets sharedAssets) {
         canvas.drawColor(BACKGROUND_COLOR);
         renderTime(canvas, rect, zonedDateTime);
         renderWatchBattery(canvas, rect);
@@ -95,8 +93,8 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
             paint.setColor(batteryStatus.isCharging()
                     ? BATTERY_CHARGING_COLOR
                     : batteryStatus.chargePercentRounded() <= BATTERY_CRITICAL_PERCENT
-                        ? BATTERY_CRITICAL_COLOR
-                        : BATTERY_NORMAL_COLOR);
+                    ? BATTERY_CRITICAL_COLOR
+                    : BATTERY_NORMAL_COLOR);
 
             paint.setTextAlign(Paint.Align.LEFT);
             paint.setTextSize(rect.height() / 15f);
@@ -155,10 +153,9 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
     private void renderTimeLines(
             Canvas canvas,
             Rect graphRect,
-            WatchFaceBloodData data,
+            BloodData data,
             ZonedDateTime zonedDateTime,
-            Function<Instant, Integer> toX)
-    {
+            Function<Instant, Integer> toX) {
         Duration timeWindow = data.params().timeWindow();
         ZonedDateTime from = zonedDateTime.minus(timeWindow);
 
@@ -198,9 +195,8 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
     private void renderChartData(
             Canvas canvas,
             Rect graphRect,
-            WatchFaceBloodData data,
-            Function<BloodPoint, Point> toPoint)
-    {
+            BloodData data,
+            Function<BloodPoint, Point> toPoint) {
         Paint paint = new Paint();
         float r = graphRect.width() * 20f / data.params().timeWindow().getSeconds();
         data.points().forEach(p -> {
@@ -212,13 +208,13 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
         });
     }
 
-    private void renderBloodGlucose(Canvas canvas, Rect graphRect, WatchFaceBloodData data) {
+    private void renderBloodGlucose(Canvas canvas, Rect graphRect, BloodData data) {
         Paint paint = new Paint();
         Optional<BloodPoint> lastPoint = data.points().stream()
                 .max(Comparator.comparing(BloodPoint::time));
 
         String text = lastPoint.map(BloodPoint::glucose)
-                .map(bg -> data.params().unit().getString(bg)  + data.trendArrow().getSymbol())
+                .map(bg -> data.params().unit().getString(bg) + data.trendArrow().getSymbol())
                 .orElse("???");
 
         float textHeight = graphRect.height() / 2.5f;
@@ -243,9 +239,8 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
     private void renderThresholdLines(
             Canvas canvas,
             Rect graphRect,
-            WatchFaceBloodData data,
-            Function<BloodGlucose, Integer> toY)
-    {
+            BloodData data,
+            Function<BloodGlucose, Integer> toY) {
         int x1 = graphRect.left;
         int x2 = graphRect.right;
 
@@ -322,12 +317,11 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
             @NonNull Canvas canvas,
             @NonNull Rect rect,
             @NonNull ZonedDateTime zonedDateTime,
-            @NonNull Renderer.SharedAssets diasyncAssets)
-    {
+            @NonNull Renderer.SharedAssets diasyncAssets) {
 
     }
 
-    public void setBloodData(@Nullable WatchFaceBloodData bloodData) {
+    public void setBloodData(@Nullable BloodData bloodData) {
         this.bloodData = bloodData;
         invalidate();
     }

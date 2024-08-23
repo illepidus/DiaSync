@@ -10,6 +10,10 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
+    <queries>
+        <package android:name="com.eveningoutpost.dexdrip" />
+    </queries>
+
     <application
         android:name="ru.krotarnya.diasync.Diasync"
         android:icon="@mipmap/ic_launcher"
@@ -40,7 +44,6 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="ACTION_TEST" />
             </intent-filter>
 
             <meta-data

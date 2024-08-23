@@ -9,22 +9,22 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class WatchFaceBloodDataDtoTest extends TestCase {
+public class BloodDataDtoTest extends TestCase {
     private static final Random RANDOM = new Random(0);
-    private static final WatchFaceBloodData.Params DEFAULT_PARAMS = new WatchFaceBloodData.Params(
+    private static final BloodData.Params DEFAULT_PARAMS = new BloodData.Params(
             BloodGlucoseUnit.MMOL,
             BloodGlucose.consMmol(3.9),
             BloodGlucose.consMmol(10.0),
             Duration.ofMinutes(60),
-            new WatchFaceBloodData.Colors(0, 0,0, 0, 0, 0));
+            new BloodData.Colors(0, 0, 0, 0, 0, 0));
 
     public void testSerializeDeserialize() throws Exception {
         List<BloodPoint> points = Stream.generate(this::getRandomBloodPoint)
                 .limit(DEFAULT_PARAMS.timeWindow().getSeconds() / 60)
                 .collect(Collectors.toList());
 
-        WatchFaceBloodData source = new WatchFaceBloodData(points, TrendArrow.NONE, DEFAULT_PARAMS);
-        WatchFaceBloodData result = WatchFaceBloodData.deserialize(source.serialize());
+        BloodData source = new BloodData(points, TrendArrow.NONE, DEFAULT_PARAMS);
+        BloodData result = BloodData.deserialize(source.serialize());
 
         assertEquals(source, result);
     }

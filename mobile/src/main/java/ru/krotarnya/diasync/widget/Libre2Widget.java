@@ -172,7 +172,9 @@ public class Libre2Widget extends AppWidgetProvider {
                     break;
                 case "xdrip":
                     Intent xdripIntent = new Intent(Intent.ACTION_VIEW);
-                    xdripIntent.setClassName("com.eveningoutpost.dexdrip", "com.eveningoutpost.dexdrip.Home");
+                    xdripIntent.setClassName(
+                            "com.eveningoutpost.dexdrip",
+                            "com.eveningoutpost.dexdrip.Home");
                     xdripIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(xdripIntent);
                     break;
@@ -180,7 +182,7 @@ public class Libre2Widget extends AppWidgetProvider {
         }
         if (Objects.equals(action, WIDGET_ALERTS_ICON_CLICKED_TAG)) {
             Log.d(TAG, "Clicked on alerts icon");
-            SettingsActivity.pleaseStart(context, AlertsFragment.class);
+            SettingsActivity.pleaseStartExternally(context, AlertsFragment.class);
         }
 
         if (Objects.equals(action, WIDGET_PIP_ICON_CLICKED_TAG)) {

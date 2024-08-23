@@ -1,4 +1,4 @@
-package ru.krotarnya.diasync.service;
+package ru.krotarnya.diasync;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -34,22 +34,20 @@ import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 import kotlin.coroutines.Continuation;
-import ru.krotarnya.diasync.WatchFaceRenderer;
 import ru.krotarnya.diasync.common.model.BatteryStatus;
+import ru.krotarnya.diasync.common.model.BloodData;
 import ru.krotarnya.diasync.common.model.BloodGlucose;
 import ru.krotarnya.diasync.common.model.BloodPoint;
-import ru.krotarnya.diasync.common.model.WatchFaceBloodData;
 import ru.krotarnya.diasync.common.model.WatchSensorReadings;
 
 public class MainWatchFaceService
         extends WatchFaceService
-        implements MessageClient.OnMessageReceivedListener
-{
+        implements MessageClient.OnMessageReceivedListener {
     private static final String TAG = "MainWatchFaceService";
     private static final VibrationEffect LOW_VIBRATION_EFFECT =
             VibrationEffect.createWaveform(
                     new long[]{800, 400, 800},
-                    new  int[]{255, 0, 255},
+                    new int[]{255, 0, 255},
                     -1);
     private static final VibrationEffect HIGH_VIBRATION_EFFECT =
             VibrationEffect.createOneShot(1000, 255);
@@ -121,8 +119,7 @@ public class MainWatchFaceService
     @NonNull
     @Override
     protected ComplicationSlotsManager createComplicationSlotsManager(
-            @NonNull CurrentUserStyleRepository currentUserStyleRepository)
-    {
+            @NonNull CurrentUserStyleRepository currentUserStyleRepository) {
         return super.createComplicationSlotsManager(currentUserStyleRepository);
     }
 
@@ -156,7 +153,7 @@ public class MainWatchFaceService
                 .filter(ignored -> messageEvent.getPath().equals("/blood_chart"))
                 .ifPresent(r -> {
                     try {
-                        WatchFaceBloodData data = WatchFaceBloodData.deserialize(messageEvent.getData());
+                        BloodData data = BloodData.deserialize(messageEvent.getData());
                         watchFaceRenderer.setBloodData(data);
 
                         List<BloodGlucose> last = data.points().stream()
@@ -176,12 +173,12 @@ public class MainWatchFaceService
                         if (lowAlert || highAlert) {
                             Optional.ofNullable((VibratorManager) getSystemService(VIBRATOR_MANAGER_SERVICE))
                                     .ifPresentOrElse(vm -> {
-                                        Vibrator vibrator = vm.getDefaultVibrator();
-                                        vibrator.vibrate(lowAlert
-                                                ? LOW_VIBRATION_EFFECT
-                                                : HIGH_VIBRATION_EFFECT);
-                                    },
-                                    () -> Log.e(TAG, "Was not able to vibrate"));
+                                                Vibrator vibrator = vm.getDefaultVibrator();
+                                                vibrator.vibrate(lowAlert
+                                                        ? LOW_VIBRATION_EFFECT
+                                                        : HIGH_VIBRATION_EFFECT);
+                                            },
+                                            () -> Log.e(TAG, "Was not able to vibrate"));
                         }
                     } catch (Exception e) {
                         Log.e(TAG, "Was not able to deserialize chart data", e);
