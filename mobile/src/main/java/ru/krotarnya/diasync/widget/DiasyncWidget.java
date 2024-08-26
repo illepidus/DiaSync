@@ -14,7 +14,9 @@ import androidx.annotation.IdRes;
 import java.util.Arrays;
 import java.util.Optional;
 
+import ru.krotarnya.diasync.DiasyncGraphBuilder;
 import ru.krotarnya.diasync.R;
+import ru.krotarnya.diasync.common.model.BloodData;
 import ru.krotarnya.diasync.settings.AlertsFragment;
 import ru.krotarnya.diasync.settings.SettingsActivity;
 
@@ -31,6 +33,7 @@ public final class DiasyncWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        Log.d(TAG, "onUpdate");
         Arrays.stream(appWidgetIds).forEach(id -> update(context, appWidgetManager, id));
     }
 
@@ -39,14 +42,21 @@ public final class DiasyncWidget extends AppWidgetProvider {
             Context context,
             AppWidgetManager appWidgetManager,
             int appWidgetId,
-            Bundle newOptions) {
+            Bundle newOptions)
+    {
+        Log.d(TAG, "onAppWidgetOptionsChanged call " + newOptions);
         update(context, appWidgetManager, appWidgetId);
     }
 
+    /**
+     * Do not use this other than processing on click self intents
+     * Widget setOnClickIntents should be processed by onUpdate call
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
         Log.d(TAG, "Received " + intent);
+
         switch (Optional.ofNullable(intent.getAction()).orElse(ACTION_DEFAULT)) {
             case ACTION_ALERTS:
                 SettingsActivity.pleaseStartExternally(context, AlertsFragment.class);
@@ -59,24 +69,40 @@ public final class DiasyncWidget extends AppWidgetProvider {
             case ACTION_PIP:
                 break;
         }
-
-
     }
 
     private void update(Context context, AppWidgetManager appWidgetManager, int id) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.diasync_widget);
-        update(context, views);
+        setOnClickIntents(context, views);
+        // TODO: implement
+        BloodData data = null;
+        drawGraph(data, views, appWidgetManager.getAppWidgetOptions(id));
         appWidgetManager.updateAppWidget(id, views);
     }
 
-    private void update(Context context, RemoteViews views) {
-        views.setImageViewResource(R.id.diasync_widget_canvas, android.R.color.holo_red_dark);
+    private void drawGraph(BloodData data, RemoteViews views, Bundle options) {
+        int width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
+        int height = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+
+        views.setImageViewBitmap(R.id.diasync_widget_canvas, new DiasyncGraphBuilder()
+                .setWidth(width)
+                .setHeight(height)
+                .setData(data)
+                .build());
+    }
+
+    private void setOnClickIntents(Context context, RemoteViews views) {
         setOnClickIntent(context, views, R.id.diasync_widget_canvas, ACTION_XDRIP);
         setOnClickIntent(context, views, R.id.diasync_widget_alerts, ACTION_ALERTS);
         setOnClickIntent(context, views, R.id.diasync_widget_pip, ACTION_PIP);
     }
 
-    private void setOnClickIntent(Context context, RemoteViews views, @IdRes int viewId, String action) {
+    private void setOnClickIntent(
+            Context context,
+            RemoteViews views,
+            @IdRes int viewId,
+            String action)
+    {
         views.setOnClickPendingIntent(viewId, getPendingSelfIntent(context, action));
     }
 

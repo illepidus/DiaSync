@@ -33,8 +33,10 @@ public class Libre2Widget extends AppWidgetProvider {
     public static final String WIDGET_ALERTS_ICON_CLICKED_TAG = "ru.krotarnya.diasync.WIDGET_ALERTS_ICON_CLICKED";
     public static final String WIDGET_PIP_ICON_CLICKED_TAG = "ru.krotarnya.diasync.WIDGET_PIP_ICON_CLICKED";
 
-    private static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                        int appWidgetId) {
+    private static void updateAppWidget(
+            Context context, AppWidgetManager appWidgetManager,
+            int appWidgetId)
+    {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_libre2);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -138,13 +140,20 @@ public class Libre2Widget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
+        Log.d(TAG, "onUpdate");
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
     }
 
     @Override
-    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
+    public void onAppWidgetOptionsChanged(
+            Context context,
+            AppWidgetManager appWidgetManager,
+            int appWidgetId,
+            Bundle newOptions)
+    {
+        Log.d(TAG, "onAppWidgetOptionsChanged");
         updateAppWidget(context, appWidgetManager, appWidgetId);
     }
 
