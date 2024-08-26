@@ -15,4 +15,11 @@
     <color name="pip_background">#40000000</color>
     <color name="color_primary">#FFA500</color>
     <color name="color_secondary">#FFA500</color>
+
+    <color name="contrast_1">#FF0088FF</color>
+    <color name="contrast_2">#FF00FF88</color>
+    <color name="contrast_3">#FF8800FF</color>
+    <color name="contrast_4">#FF88FF00</color>
+    <color name="contrast_5">#FFFF0088</color>
+    <color name="contrast_6">#FFFF8800</color>
 </resources>

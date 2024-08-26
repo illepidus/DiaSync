@@ -26,10 +26,10 @@ public class Libre2ValueList extends ArrayList<Libre2Value> {
 
                     //Stupid Java 11 without OptionalDouble.stream()
                     return Optional.ofNullable(avg.isPresent()
-                            ? TrendArrow.of(max.getValue() - avg.getAsDouble())
-                            : null);
+                                                       ? TrendArrow.of(max.getValue() - avg.getAsDouble())
+                                                       : null);
                 })
-                .orElse(TrendArrow.NONE);
+                .orElse(TrendArrow.UNKNOWN);
     }
 
     public Libre2Value maxByValue() {

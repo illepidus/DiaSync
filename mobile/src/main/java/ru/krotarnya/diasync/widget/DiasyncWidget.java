@@ -5,18 +5,31 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 import androidx.annotation.IdRes;
+import androidx.preference.PreferenceManager;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import ru.krotarnya.diasync.DiasyncDB;
 import ru.krotarnya.diasync.DiasyncGraphBuilder;
+import ru.krotarnya.diasync.Glucose;
 import ru.krotarnya.diasync.R;
 import ru.krotarnya.diasync.common.model.BloodData;
+import ru.krotarnya.diasync.common.model.BloodGlucose;
+import ru.krotarnya.diasync.common.model.BloodGlucoseUnit;
+import ru.krotarnya.diasync.common.model.BloodPoint;
+import ru.krotarnya.diasync.common.model.TrendArrow;
+import ru.krotarnya.diasync.model.Libre2ValueList;
 import ru.krotarnya.diasync.settings.AlertsFragment;
 import ru.krotarnya.diasync.settings.SettingsActivity;
 
@@ -74,10 +87,39 @@ public final class DiasyncWidget extends AppWidgetProvider {
     private void update(Context context, AppWidgetManager appWidgetManager, int id) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.diasync_widget);
         setOnClickIntents(context, views);
-        // TODO: implement
-        BloodData data = null;
-        drawGraph(data, views, appWidgetManager.getAppWidgetOptions(id));
+        drawGraph(getBloodData(context), views, appWidgetManager.getAppWidgetOptions(id));
         appWidgetManager.updateAppWidget(id, views);
+    }
+
+    private BloodData getBloodData(Context context) {
+        // TODO: upgrade
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        long graph_period = Long.parseLong(prefs.getString("watchface_graph_period", "1800000"));
+        long t2 = System.currentTimeMillis(), t1 = t2 - graph_period;
+
+        DiasyncDB diasync_db = DiasyncDB.getInstance(context);
+        Libre2ValueList libre2Values = diasync_db.getLibre2Values(t1, t2 + 60000);
+        BloodGlucoseUnit unit = BloodGlucoseUnit.resolveOrThrow(prefs.getString("glucose_unit", "mmol"));
+
+        List<BloodPoint> points = libre2Values.stream()
+                .map(v -> new BloodPoint(
+                        Instant.ofEpochMilli(v.timestamp),
+                        BloodGlucose.consMgdl(v.getValue())))
+                .collect(Collectors.toList());
+        BloodData.Params params = new BloodData.Params(
+                unit,
+                BloodGlucose.consMgdl(Glucose.low()),
+                BloodGlucose.consMgdl(Glucose.high()),
+                Duration.ofMillis(graph_period),
+                new BloodData.Colors(
+                        Glucose.lowGraphColor(),
+                        Glucose.normalGraphColor(),
+                        Glucose.highGraphColor(),
+                        Glucose.lowTextColor(),
+                        Glucose.normalTextColor(),
+                        Glucose.highTextColor()));
+
+        return new BloodData(points, TrendArrow.of(points), params);
     }
 
     private void drawGraph(BloodData data, RemoteViews views, Bundle options) {
@@ -85,9 +127,9 @@ public final class DiasyncWidget extends AppWidgetProvider {
         int height = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
 
         views.setImageViewBitmap(R.id.diasync_widget_canvas, new DiasyncGraphBuilder()
+                .setData(data)
                 .setWidth(width)
                 .setHeight(height)
-                .setData(data)
                 .build());
     }
 

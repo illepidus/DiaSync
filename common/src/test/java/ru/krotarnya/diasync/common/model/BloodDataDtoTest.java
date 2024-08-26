@@ -23,7 +23,7 @@ public class BloodDataDtoTest extends TestCase {
                 .limit(DEFAULT_PARAMS.timeWindow().getSeconds() / 60)
                 .collect(Collectors.toList());
 
-        BloodData source = new BloodData(points, TrendArrow.NONE, DEFAULT_PARAMS);
+        BloodData source = new BloodData(points, TrendArrow.UNKNOWN, DEFAULT_PARAMS);
         BloodData result = BloodData.deserialize(source.serialize());
 
         assertEquals(source, result);

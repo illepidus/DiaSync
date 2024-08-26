@@ -36,7 +36,6 @@ public final class DiasyncGraphBuilder {
 
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Integer.MAX_VALUE / 2);
-        paint.setStyle(Paint.Style.FILL);
 
         canvas.drawCircle((float) width / 2, (float) height / 2, (float) width / 8, paint);
         return bitmap;
