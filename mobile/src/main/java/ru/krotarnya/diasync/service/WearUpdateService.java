@@ -51,8 +51,8 @@ public class WearUpdateService extends Service {
         AsyncTask.execute(() -> {
             try {
                 Tasks.await(Wearable
-                                .getCapabilityClient(this)
-                                .getCapability(CAPABILITY, CapabilityClient.FILTER_REACHABLE))
+                                    .getCapabilityClient(this)
+                                    .getCapability(CAPABILITY, CapabilityClient.FILTER_REACHABLE))
                         .getNodes()
                         .stream()
                         .filter(Node::isNearby)
@@ -85,12 +85,17 @@ public class WearUpdateService extends Service {
                 BloodGlucose.consMgdl(Glucose.high()),
                 Duration.ofMillis(graph_period),
                 new BloodData.Colors(
+                        Glucose.widgetBackgroundColor(),
                         Glucose.lowGraphColor(),
                         Glucose.normalGraphColor(),
                         Glucose.highGraphColor(),
                         Glucose.lowTextColor(),
                         Glucose.normalTextColor(),
-                        Glucose.highTextColor()));
+                        Glucose.highTextColor(),
+                        Glucose.errorTextColor(),
+                        Glucose.lowGraphZoneColor(),
+                        Glucose.normalGraphZoneColor(),
+                        Glucose.highGraphZoneColor()));
 
         return new BloodData(points, libre2Values.getTrendArrow(), params).serialize();
     }

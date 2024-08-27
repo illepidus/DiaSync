@@ -17,6 +17,7 @@ public class Glucose implements SharedPreferences.OnSharedPreferenceChangeListen
     private static final double MMOL_TO_MGDL = 18.0182d;
     private static final double MGDL_TO_MMOL = 1 / MMOL_TO_MGDL;
     private static Glucose INSTANCE;
+    private final int widget_background_color;
     private final int error_text_color;
     private final int error_graph_color;
     private final int low_text_color;
@@ -43,6 +44,7 @@ public class Glucose implements SharedPreferences.OnSharedPreferenceChangeListen
         mmol_format = new DecimalFormat("0.0", decimal_format_symbols);
         mgdl_format = new DecimalFormat("0", decimal_format_symbols);
 
+        widget_background_color = ContextCompat.getColor(context, R.color.widget_background);
         error_text_color = ContextCompat.getColor(context, R.color.glucose_error_text);
         error_graph_color = ContextCompat.getColor(context, R.color.glucose_error_graph);
         low_text_color = ContextCompat.getColor(context, R.color.glucose_low_text);
@@ -82,6 +84,10 @@ public class Glucose implements SharedPreferences.OnSharedPreferenceChangeListen
 
     public static double mmolToMgdl(String v) {
         return mmolToMgdl(parse(v));
+    }
+
+    public static int widgetBackgroundColor() {
+        return getInstance().widget_background_color;
     }
 
     public static int errorTextColor() {
@@ -167,6 +173,7 @@ public class Glucose implements SharedPreferences.OnSharedPreferenceChangeListen
     public static boolean useCalibrations() {
         return getInstance().useCalibrations;
     }
+
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences p, String key) {

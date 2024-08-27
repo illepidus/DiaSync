@@ -11,7 +11,10 @@ public enum BloodGlucoseUnit {
     private final Function<BloodGlucose, Double> toValueF;
     private final Function<BloodGlucose, String> toStringF;
 
-    BloodGlucoseUnit(Function<BloodGlucose, Double> toValueF, Function<BloodGlucose, String> toStringF) {
+    BloodGlucoseUnit(
+            Function<BloodGlucose, Double> toValueF,
+            Function<BloodGlucose, String> toStringF)
+    {
         this.toValueF = toValueF;
         this.toStringF = toStringF;
     }
@@ -31,6 +34,6 @@ public enum BloodGlucoseUnit {
     }
 
     public static BloodGlucoseUnit resolveOrThrow(String s) {
-        return resolve(s).orElseThrow(() -> new IllegalArgumentException(s + "is not valid unit"));
+        return resolve(s).orElseThrow(() -> new IllegalArgumentException(s + "is not valid bloodGlucoseUnit"));
     }
 }

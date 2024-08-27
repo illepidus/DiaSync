@@ -100,7 +100,8 @@ public class MainWatchFaceService
             @NonNull WatchState watchState,
             @NonNull ComplicationSlotsManager complicationSlotsManager,
             @NonNull CurrentUserStyleRepository currentUserStyleRepository,
-            @NonNull Continuation<? super WatchFace> continuation) {
+            @NonNull Continuation<? super WatchFace> continuation)
+    {
         BatteryStatus watchBatteryStatus = Optional.ofNullable((BatteryManager) this.getSystemService(BATTERY_SERVICE))
                 .map(bm -> new BatteryStatus(
                         bm.isCharging(),
@@ -119,7 +120,8 @@ public class MainWatchFaceService
     @NonNull
     @Override
     protected ComplicationSlotsManager createComplicationSlotsManager(
-            @NonNull CurrentUserStyleRepository currentUserStyleRepository) {
+            @NonNull CurrentUserStyleRepository currentUserStyleRepository)
+    {
         return super.createComplicationSlotsManager(currentUserStyleRepository);
     }
 
@@ -163,20 +165,21 @@ public class MainWatchFaceService
                                 .collect(Collectors.toList());
 
                         boolean lowAlert = (last.size() > 0)
-                                && last.get(0).lt(data.params().low())
+                                && last.get(0).lt(data.params().bloodGlucoseLow())
                                 && ((last.size() == 1) || last.get(0).lt(last.get(1)));
 
                         boolean highAlert = (last.size() > 0)
-                                && last.get(0).gt(data.params().high())
+                                && last.get(0).gt(data.params().bloodGlucoseHigh())
                                 && ((last.size() == 1) || last.get(0).gt(last.get(1)));
 
                         if (lowAlert || highAlert) {
                             Optional.ofNullable((VibratorManager) getSystemService(VIBRATOR_MANAGER_SERVICE))
-                                    .ifPresentOrElse(vm -> {
+                                    .ifPresentOrElse(
+                                            vm -> {
                                                 Vibrator vibrator = vm.getDefaultVibrator();
                                                 vibrator.vibrate(lowAlert
-                                                        ? LOW_VIBRATION_EFFECT
-                                                        : HIGH_VIBRATION_EFFECT);
+                                                                         ? LOW_VIBRATION_EFFECT
+                                                                         : HIGH_VIBRATION_EFFECT);
                                             },
                                             () -> Log.e(TAG, "Was not able to vibrate"));
                         }

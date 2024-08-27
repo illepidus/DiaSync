@@ -26,7 +26,8 @@ public final class BloodData extends DefaultObject {
     public BloodData(
             @JsonProperty("points") List<BloodPoint> points,
             @JsonProperty("trend") TrendArrow trendArrow,
-            @JsonProperty("params") Params params) {
+            @JsonProperty("params") Params params)
+    {
         this.points = points;
         this.trendArrow = trendArrow;
         this.params = params;
@@ -57,53 +58,54 @@ public final class BloodData extends DefaultObject {
     }
 
     public int getColor(BloodGlucose bloodGlucose) {
-        if (bloodGlucose.lt(params().low()))
-            return params().colors().low();
-        else if (bloodGlucose.gt(params().high()))
-            return params().colors().high();
+        if (bloodGlucose.lt(params().bloodGlucoseLow()))
+            return params().colors().pointLow();
+        else if (bloodGlucose.gt(params().bloodGlucoseHigh()))
+            return params().colors().pointHigh();
 
-        return params().colors().normal();
+        return params().colors().pointNormal();
     }
 
     public int getTextColor(BloodGlucose bloodGlucose) {
-        if (bloodGlucose.lt(params().low()))
+        if (bloodGlucose.lt(params().bloodGlucoseLow()))
             return params().colors().textLow();
-        else if (bloodGlucose.gt(params().high()))
+        else if (bloodGlucose.gt(params().bloodGlucoseHigh()))
             return params().colors().textHigh();
 
         return params().colors().textNormal();
     }
 
     public static final class Params extends DefaultObject {
-        private final BloodGlucoseUnit unit;
-        private final BloodGlucose low;
-        private final BloodGlucose high;
+        private final BloodGlucoseUnit bloodGlucoseUnit;
+        private final BloodGlucose bloodGlucoseLow;
+        private final BloodGlucose bloodGlucoseHigh;
         private final Duration timeWindow;
         private final Colors colors;
 
         public Params(
-                @JsonProperty("unit") BloodGlucoseUnit unit,
-                @JsonProperty("low") BloodGlucose low,
-                @JsonProperty("high") BloodGlucose high,
+                @JsonProperty("unit") BloodGlucoseUnit bloodGlucoseUnit,
+                @JsonProperty("low") BloodGlucose bloodGlucoseLow,
+                @JsonProperty("high") BloodGlucose bloodGlucoseHigh,
                 @JsonProperty("timeWindow") Duration timeWindow,
-                @JsonProperty("colors") Colors colors) {
-            this.unit = unit;
-            this.low = low;
-            this.high = high;
+                @JsonProperty("colors") Colors colors)
+        {
+            this.bloodGlucoseUnit = bloodGlucoseUnit;
+            this.bloodGlucoseLow = bloodGlucoseLow;
+            this.bloodGlucoseHigh = bloodGlucoseHigh;
             this.timeWindow = timeWindow;
             this.colors = colors;
         }
 
-        public BloodGlucoseUnit unit() {
-            return unit;
+        public BloodGlucoseUnit bloodGlucoseUnit() {
+            return bloodGlucoseUnit;
         }
 
-        public BloodGlucose low() {
-            return low;
+        public BloodGlucose bloodGlucoseLow() {
+            return bloodGlucoseLow;
         }
 
-        public BloodGlucose high() {
-            return high;
+        public BloodGlucose bloodGlucoseHigh() {
+            return bloodGlucoseHigh;
         }
 
         public Duration timeWindow() {
@@ -116,38 +118,54 @@ public final class BloodData extends DefaultObject {
     }
 
     public static final class Colors extends DefaultObject {
-        private final int low;
-        private final int normal;
-        private final int high;
+        private final int background;
+        private final int pointLow;
+        private final int pointNormal;
+        private final int pointHigh;
         private final int textLow;
         private final int textNormal;
         private final int textHigh;
+        private final int textError;
+        private final int zoneLow;
+        private final int zoneNormal;
+        private final int zoneHigh;
 
         public Colors(
-                @JsonProperty("low") int low,
-                @JsonProperty("normal") int normal,
-                @JsonProperty("high") int high,
+                @JsonProperty("background") int background,
+                @JsonProperty("pointLow") int pointLow,
+                @JsonProperty("pointNormal") int pointNormal,
+                @JsonProperty("pointHigh") int pointHigh,
                 @JsonProperty("textLow") int textLow,
                 @JsonProperty("textNormal") int textNormal,
-                @JsonProperty("textHigh") int textHigh) {
-            this.low = low;
-            this.normal = normal;
-            this.high = high;
+                @JsonProperty("textHigh") int textHigh,
+                @JsonProperty("textError") int textError,
+                @JsonProperty("zoneLow") int zoneLow,
+                @JsonProperty("zoneNormal") int zoneNormal,
+                @JsonProperty("zoneHigh") int zoneHigh)
+        {
+            this.background = background;
+            this.pointLow = pointLow;
+            this.pointNormal = pointNormal;
+            this.pointHigh = pointHigh;
             this.textLow = textLow;
             this.textNormal = textNormal;
             this.textHigh = textHigh;
+            this.textError = textError;
+            this.zoneLow = zoneLow;
+            this.zoneNormal = zoneNormal;
+            this.zoneHigh = zoneHigh;
         }
 
-        public int high() {
-            return high;
+        public int pointHigh() {
+            return pointHigh;
         }
 
-        public int normal() {
-            return normal;
+        public int pointNormal() {
+            return pointNormal;
         }
 
-        public int low() {
-            return low;
+        public int pointLow() {
+            return pointLow;
         }
 
         public int textLow() {
@@ -160,6 +178,26 @@ public final class BloodData extends DefaultObject {
 
         public int textHigh() {
             return textHigh;
+        }
+
+        public int background() {
+            return background;
+        }
+
+        public int textError() {
+            return textError;
+        }
+
+        public int zoneLow() {
+            return zoneLow;
+        }
+
+        public int zoneNormal() {
+            return zoneNormal;
+        }
+
+        public int zoneHigh() {
+            return zoneHigh;
         }
     }
 }

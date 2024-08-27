@@ -21,19 +21,20 @@ public class WidgetUpdateService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = Optional.ofNullable(intent.getAction()).orElse("");
-            if (action.compareTo(Intent.ACTION_TIME_TICK) == 0) {
-                updateWidgets();
-            } else if (action.compareTo(Intent.ACTION_SCREEN_ON) == 0) {
-                enableClockTicks();
-                updateWidgets();
-            } else if (action.compareTo(Intent.ACTION_SCREEN_OFF) == 0) {
-                disableClockTicks();
+            switch (action) {
+                case Intent.ACTION_TIME_TICK:
+                    updateWidgets();
+                    break;
+                case Intent.ACTION_SCREEN_ON:
+                    enableClockTicks();
+                    updateWidgets();
+                    break;
+                case Intent.ACTION_SCREEN_OFF:
+                    disableClockTicks();
+                    break;
             }
         }
     };
-
-    public WidgetUpdateService() {
-    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -80,8 +81,7 @@ public class WidgetUpdateService extends Service {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_SCREEN_ON);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        if (isRegistered)
-            unregisterReceiver(broadcastReceiver);
+        if (isRegistered) unregisterReceiver(broadcastReceiver);
         registerReceiver(broadcastReceiver, intentFilter);
         isRegistered = true;
     }
@@ -104,7 +104,7 @@ public class WidgetUpdateService extends Service {
         if (ids.length > 0) {
             widget_intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
             Log.d(TAG, "Updating widgets");
-            getApplicationContext().sendBroadcast(widget_intent);
+            sendBroadcast(widget_intent);
         }
     }
 }

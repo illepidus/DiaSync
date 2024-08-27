@@ -3,6 +3,7 @@ package ru.krotarnya.diasync;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 import ru.krotarnya.diasync.common.model.BloodData;
 
@@ -31,6 +32,8 @@ public final class DiasyncGraphBuilder {
     }
 
     public Bitmap build() {
+        Log.d(TAG, "Building " + data.points().size() + " points");
+        Log.d(TAG, data.toString());
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
 

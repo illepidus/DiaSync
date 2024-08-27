@@ -30,6 +30,7 @@ import ru.krotarnya.diasync.common.model.BloodGlucoseUnit;
 import ru.krotarnya.diasync.common.model.BloodPoint;
 import ru.krotarnya.diasync.common.model.TrendArrow;
 import ru.krotarnya.diasync.model.Libre2ValueList;
+import ru.krotarnya.diasync.service.WebUpdateService;
 import ru.krotarnya.diasync.settings.AlertsFragment;
 import ru.krotarnya.diasync.settings.SettingsActivity;
 
@@ -82,6 +83,8 @@ public final class DiasyncWidget extends AppWidgetProvider {
             case ACTION_PIP:
                 break;
         }
+
+        context.startService(new Intent(context, WebUpdateService.class));
     }
 
     private void update(Context context, AppWidgetManager appWidgetManager, int id) {
@@ -112,12 +115,17 @@ public final class DiasyncWidget extends AppWidgetProvider {
                 BloodGlucose.consMgdl(Glucose.high()),
                 Duration.ofMillis(graph_period),
                 new BloodData.Colors(
+                        Glucose.widgetBackgroundColor(),
                         Glucose.lowGraphColor(),
                         Glucose.normalGraphColor(),
                         Glucose.highGraphColor(),
                         Glucose.lowTextColor(),
                         Glucose.normalTextColor(),
-                        Glucose.highTextColor()));
+                        Glucose.highTextColor(),
+                        Glucose.errorTextColor(),
+                        Glucose.lowGraphZoneColor(),
+                        Glucose.normalGraphZoneColor(),
+                        Glucose.highGraphZoneColor()));
 
         return new BloodData(points, TrendArrow.of(points), params);
     }

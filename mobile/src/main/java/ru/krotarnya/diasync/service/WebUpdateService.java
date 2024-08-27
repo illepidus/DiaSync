@@ -34,7 +34,6 @@ import ru.krotarnya.diasync.R;
 import ru.krotarnya.diasync.activity.PipActivity;
 import ru.krotarnya.diasync.model.Libre2Update;
 import ru.krotarnya.diasync.model.Libre2Value;
-import ru.krotarnya.diasync.widget.WidgetUpdateService;
 
 public class WebUpdateService extends Service {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
@@ -44,7 +43,7 @@ public class WebUpdateService extends Service {
 
     private static final int FOREGROUND_ID = 0x19CA5000;
     private static final String NOTIFICATION_CHANNEL_ID = "DiasyncNotificationChannel";
-    private static final String TAG = "WebUpdateService";
+    private static final String TAG = WebUpdateService.class.getSimpleName();
     private final Timer timer = new Timer();
     private final AtomicBoolean isStarted = new AtomicBoolean(false);
 
@@ -95,15 +94,12 @@ public class WebUpdateService extends Service {
                 .build();
     }
 
-
     private Libre2Value getLastLibre2Value() throws Exception {
         StringBuilder sb = new StringBuilder();
         URL url = new URL("https://krotarnya.ru/diasync.php");
 
         BufferedReader in;
-        in = new BufferedReader(
-                new InputStreamReader(
-                        url.openStream()));
+        in = new BufferedReader(new InputStreamReader(url.openStream()));
 
         String inputLine;
         while ((inputLine = in.readLine()) != null)
@@ -125,11 +121,11 @@ public class WebUpdateService extends Service {
         public void run() {
             try {
                 Libre2Value libre2_value = getLastLibre2Value();
-                Log.d(TAG, "Received: \n" + libre2_value);
+                Log.d(TAG, "Updating... " + WebUpdateService.this);
+                //Log.d(TAG, "Received: \n" + libre2_value);
                 DiasyncDB diasync_db = DiasyncDB.getInstance(context);
                 Alerter.check();
                 if (diasync_db.addLibre2Value(libre2_value)) {
-                    WidgetUpdateService.pleaseUpdate(context);
                     WearUpdateService.pleaseUpdate(context);
                     Intent updatePipIntent = new Intent(PipActivity.UPDATE_ACTION);
                     LocalBroadcastManager.getInstance(context).sendBroadcast(updatePipIntent);

@@ -16,7 +16,7 @@ public class BloodDataDtoTest extends TestCase {
             BloodGlucose.consMmol(3.9),
             BloodGlucose.consMmol(10.0),
             Duration.ofMinutes(60),
-            new BloodData.Colors(0, 0, 0, 0, 0, 0));
+            new BloodData.Colors(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
 
     public void testSerializeDeserialize() throws Exception {
         List<BloodPoint> points = Stream.generate(this::getRandomBloodPoint)

@@ -27,7 +27,7 @@ import ru.krotarnya.diasync.service.WearUpdateService;
 import ru.krotarnya.diasync.widget.WidgetUpdateService;
 
 public class DiaBroadcastReceiver extends BroadcastReceiver {
-    private static final String TAG = "DiaBroadcastReceiver";
+    private static final String TAG = DiaBroadcastReceiver.class.getSimpleName();
     private static final String LIBRE2_BG_INTENT_ACTION = "com.eveningoutpost.dexdrip.diasync.libre2_bg";
     private String webhookAddress;
     private String webhookToken;

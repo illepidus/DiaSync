@@ -55,7 +55,8 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
             @NonNull SurfaceHolder surfaceHolder,
             @NonNull WatchState watchState,
             @NonNull CurrentUserStyleRepository currentUserStyleRepository,
-            @Nullable BatteryStatus watchBatteryStatus) {
+            @Nullable BatteryStatus watchBatteryStatus)
+    {
         super(
                 surfaceHolder,
                 currentUserStyleRepository,
@@ -78,7 +79,8 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
             @NonNull Canvas canvas,
             @NonNull Rect rect,
             @NonNull ZonedDateTime zonedDateTime,
-            @NonNull Renderer.SharedAssets sharedAssets) {
+            @NonNull Renderer.SharedAssets sharedAssets)
+    {
         canvas.drawColor(BACKGROUND_COLOR);
         renderTime(canvas, rect, zonedDateTime);
         renderWatchBattery(canvas, rect);
@@ -91,8 +93,8 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
             Paint paint = new Paint();
             paint.setFakeBoldText(true);
             paint.setColor(batteryStatus.isCharging()
-                    ? BATTERY_CHARGING_COLOR
-                    : batteryStatus.chargePercentRounded() <= BATTERY_CRITICAL_PERCENT
+                                   ? BATTERY_CHARGING_COLOR
+                                   : batteryStatus.chargePercentRounded() <= BATTERY_CRITICAL_PERCENT
                     ? BATTERY_CRITICAL_COLOR
                     : BATTERY_NORMAL_COLOR);
 
@@ -126,12 +128,12 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
 
             DoubleSummaryStatistics glucoseStatistics = Stream.concat(
                             data.points().stream().map(BloodPoint::glucose),
-                            Stream.of(data.params().low(), data.params().high()))
-                    .collect(Collectors.summarizingDouble(g -> data.params().unit().getValue(g)));
+                            Stream.of(data.params().bloodGlucoseLow(), data.params().bloodGlucoseHigh()))
+                    .collect(Collectors.summarizingDouble(g -> data.params().bloodGlucoseUnit().getValue(g)));
 
 
             Function<BloodGlucose, Integer> toY = bg -> {
-                double v = data.params().unit().getValue(bg);
+                double v = data.params().bloodGlucoseUnit().getValue(bg);
                 double minV = glucoseStatistics.getMin();
                 double maxV = glucoseStatistics.getMax();
                 int minY = graphRect.bottom;
@@ -155,7 +157,8 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
             Rect graphRect,
             BloodData data,
             ZonedDateTime zonedDateTime,
-            Function<Instant, Integer> toX) {
+            Function<Instant, Integer> toX)
+    {
         Duration timeWindow = data.params().timeWindow();
         ZonedDateTime from = zonedDateTime.minus(timeWindow);
 
@@ -196,7 +199,8 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
             Canvas canvas,
             Rect graphRect,
             BloodData data,
-            Function<BloodPoint, Point> toPoint) {
+            Function<BloodPoint, Point> toPoint)
+    {
         Paint paint = new Paint();
         float r = graphRect.width() * 20f / data.params().timeWindow().getSeconds();
         data.points().forEach(p -> {
@@ -214,7 +218,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
                 .max(Comparator.comparing(BloodPoint::time));
 
         String text = lastPoint.map(BloodPoint::glucose)
-                .map(bg -> data.params().unit().getString(bg) + data.trendArrow().getSymbol())
+                .map(bg -> data.params().bloodGlucoseUnit().getString(bg) + data.trendArrow().getSymbol())
                 .orElse("???");
 
         float textHeight = graphRect.height() / 2.5f;
@@ -240,18 +244,19 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
             Canvas canvas,
             Rect graphRect,
             BloodData data,
-            Function<BloodGlucose, Integer> toY) {
+            Function<BloodGlucose, Integer> toY)
+    {
         int x1 = graphRect.left;
         int x2 = graphRect.right;
 
         Paint paint = new Paint();
         paint.setStrokeWidth(graphRect.height() / 100f);
 
-        paint.setColor(data.params().colors().low());
-        canvas.drawLine(x1, toY.apply(data.params().low()), x2, toY.apply(data.params().low()), paint);
+        paint.setColor(data.params().colors().pointLow());
+        canvas.drawLine(x1, toY.apply(data.params().bloodGlucoseLow()), x2, toY.apply(data.params().bloodGlucoseLow()), paint);
 
-        paint.setColor(data.params().colors().high());
-        canvas.drawLine(x1, toY.apply(data.params().high()), x2, toY.apply(data.params().high()), paint);
+        paint.setColor(data.params().colors().pointHigh());
+        canvas.drawLine(x1, toY.apply(data.params().bloodGlucoseHigh()), x2, toY.apply(data.params().bloodGlucoseHigh()), paint);
     }
 
     private void renderTime(Canvas canvas, Rect rect, ZonedDateTime zonedDateTime) {
@@ -317,7 +322,8 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
             @NonNull Canvas canvas,
             @NonNull Rect rect,
             @NonNull ZonedDateTime zonedDateTime,
-            @NonNull Renderer.SharedAssets diasyncAssets) {
+            @NonNull Renderer.SharedAssets diasyncAssets)
+    {
 
     }
 

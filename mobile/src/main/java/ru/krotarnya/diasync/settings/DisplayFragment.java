@@ -98,7 +98,7 @@ public final class DisplayFragment extends PreferenceFragment {
                             glucose_low_pref.setText(Glucose.stringMgdl(Glucose.mmolToMgdl(glucose_low_pref.getText())));
                         break;
                     default:
-                        Log.wtf(TAG, "Unknown glucose unit type set.");
+                        Log.wtf(TAG, "Unknown glucose bloodGlucoseUnit type set.");
                         return false;
                 }
                 return true;
