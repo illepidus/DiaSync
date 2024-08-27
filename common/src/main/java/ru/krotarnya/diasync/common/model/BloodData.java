@@ -67,11 +67,9 @@ public final class BloodData extends DefaultObject {
     }
 
     public int getTextColor(BloodGlucose bloodGlucose) {
-        if (bloodGlucose.lt(params().bloodGlucoseLow()))
-            return params().colors().textLow();
-        else if (bloodGlucose.gt(params().bloodGlucoseHigh()))
-            return params().colors().textHigh();
-
+        if (bloodGlucose == null) return params().colors().textError();
+        if (bloodGlucose.lt(params().bloodGlucoseLow())) return params().colors().textLow();
+        if (bloodGlucose.gt(params().bloodGlucoseHigh())) return params().colors().textHigh();
         return params().colors().textNormal();
     }
 
@@ -156,6 +154,11 @@ public final class BloodData extends DefaultObject {
             this.zoneHigh = zoneHigh;
         }
 
+        public int background() {
+            return background;
+        }
+
+
         public int pointHigh() {
             return pointHigh;
         }
@@ -178,10 +181,6 @@ public final class BloodData extends DefaultObject {
 
         public int textHigh() {
             return textHigh;
-        }
-
-        public int background() {
-            return background;
         }
 
         public int textError() {

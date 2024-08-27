@@ -218,7 +218,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
                 .max(Comparator.comparing(BloodPoint::time));
 
         String text = lastPoint.map(BloodPoint::glucose)
-                .map(bg -> data.params().bloodGlucoseUnit().getString(bg) + data.trendArrow().getSymbol())
+                .map(bg -> data.params().bloodGlucoseUnit().toString(bg) + data.trendArrow().getSymbol())
                 .orElse("???");
 
         float textHeight = graphRect.height() / 2.5f;
@@ -230,7 +230,7 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
         paint.setTextAlign(Paint.Align.LEFT);
         paint.setTextSize(textHeight);
 
-        paint.setColor(BACKGROUND_COLOR);
+        paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(strokeWidth);
         canvas.drawText(text, textX, textY - (paint.descent() + paint.ascent()) / 2, paint);
@@ -285,13 +285,11 @@ public class WatchFaceRenderer extends Renderer.CanvasRenderer2<Renderer.SharedA
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(rect.height() / 10f);
         paint.setColor(ERROR_COLOR);
-        Optional<Instant> lastPoint = Optional.ofNullable(bloodData)
+        String text = Optional.ofNullable(bloodData)
                 .stream()
                 .flatMap(c -> c.points().stream())
                 .max(Comparator.comparing(BloodPoint::time))
-                .map(BloodPoint::time);
-
-        String text = lastPoint
+                .map(BloodPoint::time)
                 .map(p -> Duration.between(p, zonedDateTime))
                 .map(d -> d.compareTo(AGO_WARNING_THRESHOLD) > 0
                         ? d.getSeconds() / 60 + "m"

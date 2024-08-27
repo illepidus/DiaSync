@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="glucose_error_text">#FFFF00FF</color>
+    <color name="glucose_error_text">#FFFF0000</color>
     <color name="glucose_error_graph">#FFFF00FF</color>
     <color name="glucose_high_text">#FFFFBB33</color>
     <color name="glucose_high_graph">#FFFFBB33</color>
@@ -10,7 +10,7 @@
     <color name="glucose_low_graph_zone">#40C30909</color>
     <color name="glucose_normal_text">#FFFFFFFF</color>
     <color name="glucose_normal_graph">#FF00BFFF</color>
-    <color name="glucose_normal_graph_zone">#40000000</color>
+    <color name="glucose_normal_graph_zone">#00000000</color>
     <color name="widget_background">#40000000</color>
     <color name="pip_background">#40000000</color>
     <color name="color_primary">#FFA500</color>

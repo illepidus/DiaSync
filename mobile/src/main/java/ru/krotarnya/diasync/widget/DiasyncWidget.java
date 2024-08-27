@@ -6,7 +6,9 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -18,6 +20,7 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import ru.krotarnya.diasync.DiasyncDB;
@@ -89,8 +92,13 @@ public final class DiasyncWidget extends AppWidgetProvider {
 
     private void update(Context context, AppWidgetManager appWidgetManager, int id) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.diasync_widget);
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        BloodData bloodData = getBloodData(context);
+        Bundle appWidgetOptions = appWidgetManager.getAppWidgetOptions(id);
+        Configuration configuration = context.getResources().getConfiguration();
+
         setOnClickIntents(context, views);
-        drawGraph(getBloodData(context), views, appWidgetManager.getAppWidgetOptions(id));
+        drawGraph(bloodData, configuration, displayMetrics, appWidgetOptions, views);
         appWidgetManager.updateAppWidget(id, views);
     }
 
@@ -130,9 +138,21 @@ public final class DiasyncWidget extends AppWidgetProvider {
         return new BloodData(points, TrendArrow.of(points), params);
     }
 
-    private void drawGraph(BloodData data, RemoteViews views, Bundle options) {
-        int width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
-        int height = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+    private void drawGraph(
+            BloodData data,
+            Configuration configuration,
+            DisplayMetrics displayMetrics,
+            Bundle options,
+            RemoteViews views)
+    {
+        int orientation = configuration.orientation;
+        Function<String, Integer> dipsToPixels = dips -> Math.round(options.getInt(dips) * displayMetrics.density);
+        int width = dipsToPixels.apply(orientation == Configuration.ORIENTATION_LANDSCAPE
+                                               ? AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH
+                                               : AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+        int height = dipsToPixels.apply(orientation == Configuration.ORIENTATION_LANDSCAPE
+                                                ? AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT
+                                                : AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
 
         views.setImageViewBitmap(R.id.diasync_widget_canvas, new DiasyncGraphBuilder()
                 .setData(data)

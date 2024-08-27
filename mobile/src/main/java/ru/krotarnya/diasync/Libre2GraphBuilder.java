@@ -34,7 +34,7 @@ public class Libre2GraphBuilder {
         return (int) (dp * (metrics.densityDpi / 160f));
     }
 
-    public Libre2GraphBuilder setWidth(float width) {
+    public Libre2GraphBuilder setWidth(int width) {
         this.width = convertDpToPixel(width);
         return this;
     }

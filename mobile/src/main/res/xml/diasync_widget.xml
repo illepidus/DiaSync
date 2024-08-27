@@ -4,6 +4,8 @@
     android:initialLayout="@layout/diasync_widget"
     android:minWidth="40dp"
     android:minHeight="40dp"
+    android:targetCellWidth="2"
+    android:targetCellHeight="2"
     android:previewLayout="@layout/diasync_widget"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="600000"

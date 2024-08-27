@@ -23,7 +23,7 @@ public enum BloodGlucoseUnit {
         return toValueF.apply(bg);
     }
 
-    public String getString(BloodGlucose bg) {
+    public String toString(BloodGlucose bg) {
         return toStringF.apply(bg);
     }
 

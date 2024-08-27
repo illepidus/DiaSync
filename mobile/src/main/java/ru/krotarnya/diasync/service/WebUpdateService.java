@@ -131,7 +131,7 @@ public class WebUpdateService extends Service {
                     LocalBroadcastManager.getInstance(context).sendBroadcast(updatePipIntent);
                 }
             } catch (Exception e) {
-                Log.w(TAG, "update failed", e);
+                Log.w(TAG, "update failed " + e.getMessage(), e);
             }
         }
     }
