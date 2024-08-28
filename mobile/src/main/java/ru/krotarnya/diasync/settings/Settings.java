@@ -5,8 +5,7 @@ import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-
+import java.time.Duration;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -21,19 +20,24 @@ public class Settings {
         this.preferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    @JsonGetter("glucose_low")
     public BloodGlucose glucoseLow() {
         return getDynamicSetting(DynamicSetting.GLUCOSE_LOW, BloodGlucose.class);
     }
 
-    @JsonGetter("glucose_high")
     public BloodGlucose glucoseHigh() {
         return getDynamicSetting(DynamicSetting.GLUCOSE_HIGH, BloodGlucose.class);
     }
 
-    @JsonGetter("glucose_unit")
     public BloodGlucoseUnit glucoseUnit() {
         return getDynamicSetting(DynamicSetting.GLUCOSE_UNIT, BloodGlucoseUnit.class);
+    }
+
+    public Boolean useCalibrations() {
+        return getDynamicSetting(DynamicSetting.USE_CALIBRATIONS, Boolean.class);
+    }
+
+    public Duration widgetTimeWindow() {
+        return getDynamicSetting(DynamicSetting.WIDGET_TIME_WINDOW, Duration.class);
     }
 
     private <T> T getDynamicSetting(DynamicSetting setting, Class<T> clazz) {

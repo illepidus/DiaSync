@@ -10,7 +10,6 @@ import android.provider.Settings;
 import android.util.Log;
 
 import ru.krotarnya.diasync.R;
-import ru.krotarnya.diasync.activity.PipActivity;
 
 public final class RootFragment extends PreferenceFragment {
     @Override
@@ -22,7 +21,6 @@ public final class RootFragment extends PreferenceFragment {
     protected void afterCreatePreferences() {
         requestBatteryOptimizationsIfNeeded();
         setOnPreferenceClickListener("clear_data", this::clearDataForceClose);
-        setOnPreferenceClickListener("pip_activity", this::launchPipActivity);
     }
 
     @SuppressLint("BatteryLife")
@@ -33,15 +31,9 @@ public final class RootFragment extends PreferenceFragment {
         if (!pm.isIgnoringBatteryOptimizations(packageName)) {
             Log.d(TAG, "Asking to disable battery optimization");
             requireContext().startActivity(new Intent()
-                    .setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-                    .setData(Uri.parse("package:" + packageName)));
+                                                   .setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                                                   .setData(Uri.parse("package:" + packageName)));
         }
-    }
-
-    private void launchPipActivity() {
-        Log.d(TAG, "Asked to launch PiP activity");
-        Intent intent = new Intent(requireContext(), PipActivity.class);
-        startActivity(intent);
     }
 
     private void clearDataForceClose() {

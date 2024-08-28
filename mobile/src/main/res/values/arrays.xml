@@ -8,25 +8,12 @@
         <item>mmol</item>
     </string-array>
 
-    <string-array name="widget_on_click_entries">
-        <item>None</item>
-        <item>Update widget</item>
-        <item>Diasync settings</item>
-        <item>xDrip main window</item>
-    </string-array>
-    <string-array name="widget_on_click_values">
-        <item>none</item>
-        <item>update</item>
-        <item>settings</item>
-        <item>xdrip</item>
-    </string-array>
-
-    <string-array name="graph_period_entries">
+    <string-array name="time_window_entries">
         <item>30 minutes</item>
         <item>1 hour</item>
         <item>3 hours</item>
     </string-array>
-    <string-array name="graph_period_values">
+    <string-array name="time_window_values">
         <item>1800000</item>
         <item>3600000</item>
         <item>10800000</item>

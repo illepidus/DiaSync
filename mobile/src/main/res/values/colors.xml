@@ -1,25 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="glucose_error_text">#FFFF0000</color>
-    <color name="glucose_error_graph">#FFFF00FF</color>
-    <color name="glucose_high_text">#FFFFBB33</color>
-    <color name="glucose_high_graph">#FFFFBB33</color>
-    <color name="glucose_high_graph_zone">#40FFBB33</color>
-    <color name="glucose_low_text">#FFC30909</color>
-    <color name="glucose_low_graph">#FFC30909</color>
-    <color name="glucose_low_graph_zone">#40C30909</color>
-    <color name="glucose_normal_text">#FFFFFFFF</color>
-    <color name="glucose_normal_graph">#FF00BFFF</color>
-    <color name="glucose_normal_graph_zone">#00000000</color>
     <color name="widget_background">#40000000</color>
+    <color name="widget_glucose_low">#FFC30909</color>
+    <color name="widget_glucose_normal">#FF00BFFF</color>
+    <color name="widget_glucose_high">#FFFFBB33</color>
+    <color name="widget_glucose_error">#FFFF00FF</color>
+    <color name="widget_text_low">#FFC30909</color>
+    <color name="widget_text_normal">#FFFFFFFF</color>
+    <color name="widget_text_high">#FFFFBB33</color>
+    <color name="widget_text_error">#FFFF0000</color>
+    <color name="widget_zone_low">#40C30909</color>
+    <color name="widget_zone_normal">#00000000</color>
+    <color name="widget_zone_high">#40FFBB33</color>
     <color name="pip_background">#40000000</color>
+
     <color name="color_primary">#FFA500</color>
     <color name="color_secondary">#FFA500</color>
-
-    <color name="contrast_1">#FF0088FF</color>
-    <color name="contrast_2">#FF00FF88</color>
-    <color name="contrast_3">#FF8800FF</color>
-    <color name="contrast_4">#FF88FF00</color>
-    <color name="contrast_5">#FFFF0088</color>
-    <color name="contrast_6">#FFFF8800</color>
 </resources>

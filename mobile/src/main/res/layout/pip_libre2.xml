@@ -22,8 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="5"
-            android:gravity="start">
-        </LinearLayout>
+            android:gravity="start"></LinearLayout>
 
         <TextView
             android:id="@+id/libre2_pip_glucose"
@@ -36,7 +35,7 @@
             android:paddingRight="10dp"
             android:gravity="start"
             android:text="@string/pip_glucose_text"
-            android:textColor="@color/glucose_normal_text"
+            android:textColor="@color/widget_text_normal"
             android:textStyle="normal" />
 
         <TextView
@@ -50,7 +49,7 @@
             android:paddingRight="10dp"
             android:gravity="start"
             android:text="@string/pip_trend_text"
-            android:textColor="@color/glucose_normal_text"
+            android:textColor="@color/widget_text_normal"
             android:textStyle="normal" />
     </LinearLayout>
 </FrameLayout>

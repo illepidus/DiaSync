@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.Nullable;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
@@ -18,6 +19,8 @@ public enum DynamicSetting {
     GLUCOSE_LOW("glucose_low", "70.0", BloodGlucose::consMgdl),
     GLUCOSE_HIGH("glucose_high", "180.0", BloodGlucose::consMgdl),
     GLUCOSE_UNIT("glucose_unit", "mmol", BloodGlucoseUnit::resolveOrThrow),
+    USE_CALIBRATIONS("use_calibrations", "true", Boolean::parseBoolean),
+    WIDGET_TIME_WINDOW("widget_time_window", "1800000", s -> Duration.ofMillis(Long.parseLong(s))),
     ;
 
     private final String key;

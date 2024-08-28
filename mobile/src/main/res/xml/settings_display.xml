@@ -19,61 +19,28 @@
             app:key="glucose_high_pref"
             app:title="High value"
             app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
-    <PreferenceCategory app:title="Phone widget">
-        <ListPreference
-            app:defaultValue="settings"
-            app:entries="@array/widget_on_click_entries"
-            app:entryValues="@array/widget_on_click_values"
-            app:key="libre2_widget_on_click"
-            app:title="On click action"
-            app:useSimpleSummaryProvider="true" />
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="use_calibrations"
             app:title="Use xDrip calibrations" />
-        <SwitchPreferenceCompat
-            app:defaultValue="true"
-            app:key="widget_alerts_icon"
-            app:title="Display alerts icon" />
-        <SwitchPreferenceCompat
-            app:defaultValue="true"
-            app:key="widget_pip_icon"
-            app:title="Display PIP icon" />
-        <SwitchPreferenceCompat
-            app:allowDividerBelow="true"
-            app:defaultValue="true"
-            app:key="widget_graph_enabled"
-            app:title="Graph enabled" />
+    </PreferenceCategory>
+    <PreferenceCategory app:title="Phone widget">
         <ListPreference
-            app:allowDividerAbove="true"
             app:defaultValue="1800000"
-            app:dependency="widget_graph_enabled"
-            app:entries="@array/graph_period_entries"
-            app:entryValues="@array/graph_period_values"
-            app:key="widget_graph_period"
+            app:entries="@array/time_window_entries"
+            app:entryValues="@array/time_window_values"
+            app:key="widget_time_window"
             app:title="Graph period"
             app:useSimpleSummaryProvider="true" />
-        <SwitchPreferenceCompat
-            app:defaultValue="false"
-            app:dependency="widget_graph_enabled"
-            app:key="widget_graph_range_lines"
-            app:title="Display range lines" />
-        <SwitchPreferenceCompat
-            app:defaultValue="true"
-            app:dependency="widget_graph_enabled"
-            app:key="widget_graph_range_zones"
-            app:title="Display range zones" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="Watchface">
         <ListPreference
             app:defaultValue="1800000"
-            app:entries="@array/graph_period_entries"
-            app:entryValues="@array/graph_period_values"
+            app:entries="@array/time_window_entries"
+            app:entryValues="@array/time_window_values"
             app:key="watchface_graph_period"
             app:title="Graph period"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
-
 </PreferenceScreen>

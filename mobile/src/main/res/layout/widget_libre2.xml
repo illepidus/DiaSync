@@ -5,7 +5,7 @@
     android:theme="@style/Theme.DiaSync.Libre2Widget"
     android:orientation="vertical"
     android:id="@+id/libre2_widget_layout"
-    android:background="@color/widget_background" >
+    android:background="@color/widget_background">
 
     <ImageView
         android:id="@+id/widget_graph"
@@ -51,8 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="4"
-            android:gravity="start">
-        </LinearLayout>
+            android:gravity="start"></LinearLayout>
 
         <TextView
             android:id="@+id/widget_glucose"
@@ -65,7 +64,7 @@
             android:paddingRight="10dp"
             android:gravity="start"
             android:text="@string/widget_glucose_text"
-            android:textColor="@color/glucose_normal_text"
+            android:textColor="@color/widget_text_normal"
             android:textStyle="normal" />
 
         <TextView
@@ -79,7 +78,7 @@
             android:paddingRight="10dp"
             android:gravity="start"
             android:text="@string/widget_trend_text"
-            android:textColor="@color/glucose_normal_text"
+            android:textColor="@color/widget_text_normal"
             android:textStyle="normal" />
 
         <TextView
@@ -91,7 +90,7 @@
             android:contentDescription="@string/widget_description"
             android:gravity="center"
             android:text="@string/widget_timer_text"
-            android:textColor="@color/glucose_normal_text"
+            android:textColor="@color/widget_text_normal"
             android:textStyle="normal" />
     </LinearLayout>
 </FrameLayout>

@@ -1,12 +1,11 @@
-<PreferenceScreen
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     app:key="settings_root">
 
     <Preference
-        app:key="pip_activity"
-        app:icon="@drawable/ic_pip"
-        app:title="Picture-in-picture"
-        app:allowDividerAbove="true"
+        app:fragment="ru.krotarnya.diasync.settings.AlertsFragment"
+        app:title="Alerts"
+        app:icon="@drawable/ic_alerts_settings"
+        app:allowDividerBelow="true"
         app:useSimpleSummaryProvider="true" />
 
     <Preference
@@ -24,17 +23,10 @@
         app:useSimpleSummaryProvider="true" />
 
     <Preference
-        app:fragment="ru.krotarnya.diasync.settings.AlertsFragment"
-        app:title="Alerts"
-        app:icon="@drawable/ic_alerts_settings"
-        app:allowDividerBelow="true"
-        app:useSimpleSummaryProvider="true" />
-
-    <Preference
         app:key="clear_data"
         app:icon="@drawable/ic_clear_data"
         app:title="CLEAR ALL DATA"
         app:allowDividerAbove="true"
-        app:useSimpleSummaryProvider="true"  />
+        app:useSimpleSummaryProvider="true" />
 
 </PreferenceScreen>

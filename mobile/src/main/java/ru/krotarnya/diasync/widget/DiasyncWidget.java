@@ -5,7 +5,6 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -13,9 +12,8 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 import androidx.annotation.IdRes;
-import androidx.preference.PreferenceManager;
+import androidx.core.content.ContextCompat;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
@@ -25,16 +23,15 @@ import java.util.stream.Collectors;
 
 import ru.krotarnya.diasync.DiasyncDB;
 import ru.krotarnya.diasync.DiasyncGraphBuilder;
-import ru.krotarnya.diasync.Glucose;
 import ru.krotarnya.diasync.R;
 import ru.krotarnya.diasync.common.model.BloodData;
 import ru.krotarnya.diasync.common.model.BloodGlucose;
-import ru.krotarnya.diasync.common.model.BloodGlucoseUnit;
 import ru.krotarnya.diasync.common.model.BloodPoint;
 import ru.krotarnya.diasync.common.model.TrendArrow;
 import ru.krotarnya.diasync.model.Libre2ValueList;
 import ru.krotarnya.diasync.service.WebUpdateService;
 import ru.krotarnya.diasync.settings.AlertsFragment;
+import ru.krotarnya.diasync.settings.Settings;
 import ru.krotarnya.diasync.settings.SettingsActivity;
 
 /**
@@ -103,37 +100,37 @@ public final class DiasyncWidget extends AppWidgetProvider {
     }
 
     private BloodData getBloodData(Context context) {
-        // TODO: upgrade
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        long graph_period = Long.parseLong(prefs.getString("widget_graph_period", "1800000"));
+        //TODO: redo database activity
+        Settings settings = Settings.getInstance(context);
+        long graph_period = settings.widgetTimeWindow().toMillis();
         long t2 = System.currentTimeMillis(), t1 = t2 - graph_period;
 
         DiasyncDB diasync_db = DiasyncDB.getInstance(context);
         Libre2ValueList libre2Values = diasync_db.getLibre2Values(t1, t2 + 60000);
-        BloodGlucoseUnit unit = BloodGlucoseUnit.resolveOrThrow(prefs.getString("glucose_unit", "mmol"));
 
         List<BloodPoint> points = libre2Values.stream()
                 .map(v -> new BloodPoint(
                         Instant.ofEpochMilli(v.timestamp),
                         BloodGlucose.consMgdl(v.getValue())))
                 .collect(Collectors.toList());
+
         BloodData.Params params = new BloodData.Params(
-                unit,
-                BloodGlucose.consMgdl(Glucose.low()),
-                BloodGlucose.consMgdl(Glucose.high()),
-                Duration.ofMillis(graph_period),
+                settings.glucoseUnit(),
+                settings.glucoseLow(),
+                settings.glucoseHigh(),
+                settings.widgetTimeWindow(),
                 new BloodData.Colors(
-                        Glucose.widgetBackgroundColor(),
-                        Glucose.lowGraphColor(),
-                        Glucose.normalGraphColor(),
-                        Glucose.highGraphColor(),
-                        Glucose.lowTextColor(),
-                        Glucose.normalTextColor(),
-                        Glucose.highTextColor(),
-                        Glucose.errorTextColor(),
-                        Glucose.lowGraphZoneColor(),
-                        Glucose.normalGraphZoneColor(),
-                        Glucose.highGraphZoneColor()));
+                        ContextCompat.getColor(context, R.color.widget_background),
+                        ContextCompat.getColor(context, R.color.widget_glucose_low),
+                        ContextCompat.getColor(context, R.color.widget_glucose_normal),
+                        ContextCompat.getColor(context, R.color.widget_glucose_high),
+                        ContextCompat.getColor(context, R.color.widget_text_low),
+                        ContextCompat.getColor(context, R.color.widget_text_normal),
+                        ContextCompat.getColor(context, R.color.widget_text_high),
+                        ContextCompat.getColor(context, R.color.widget_text_error),
+                        ContextCompat.getColor(context, R.color.widget_zone_low),
+                        ContextCompat.getColor(context, R.color.widget_zone_normal),
+                        ContextCompat.getColor(context, R.color.widget_zone_high)));
 
         return new BloodData(points, TrendArrow.of(points), params);
     }
