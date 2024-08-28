@@ -1,16 +1,9 @@
 <resources>
     <string name="app_name">Diasync</string>
-    <string name="diasync_widget_description">Diasync widget</string>
-    <string name="widget_glucose_text">----</string>
-    <string name="widget_trend_text">-</string>
-    <string name="widget_timer_text">--------</string>
-    <string name="widget_description">Libre2 current value display</string>
-    <string name="widget_graph_description">Libre2 graph</string>
-    <string name="widget_alerts_icon_description">Alerts icon</string>
-    <string name="widget_pip_icon_description">Pip icon</string>
-    <string name="pip_glucose_text">----</string>
-    <string name="pip_trend_text">-</string>
-    <string name="pip_description">Libre2 current value display</string>
-    <string name="pip_graph_description">Libre2 graph</string>
+    <string name="widget_description">Recent blood glucose</string>
+    <string name="widget_canvas_description">Canvas for displaying widget content</string>
+    <string name="widget_alerts_button_description">Alerts icon</string>
+    <string name="widget_pip_button_description">Pip icon</string>
+    <string name="pip_canvas_description">Canvas for displaying PiP content</string>
     <string name="settings_title">Diasync</string>
 </resources>

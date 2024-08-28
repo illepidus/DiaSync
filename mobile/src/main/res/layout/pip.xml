@@ -1,0 +1,15 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pip_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pip_background"
+    android:orientation="vertical"
+    android:theme="@style/Theme.DiaSync">
+
+    <ImageView
+        android:id="@+id/pip_canvas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/pip_canvas_description"
+        android:scaleType="centerInside" />
+</FrameLayout>

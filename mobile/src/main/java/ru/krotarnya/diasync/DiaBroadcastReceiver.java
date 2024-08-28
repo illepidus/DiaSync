@@ -21,8 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import ru.krotarnya.diasync.activity.PipActivity;
 import ru.krotarnya.diasync.model.Libre2Value;
+import ru.krotarnya.diasync.pip.PipActivity;
 import ru.krotarnya.diasync.service.WearUpdateService;
 import ru.krotarnya.diasync.widget.WidgetUpdateService;
 

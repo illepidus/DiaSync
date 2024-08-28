@@ -88,7 +88,7 @@ public final class DiasyncWidget extends AppWidgetProvider {
     }
 
     private void update(Context context, AppWidgetManager appWidgetManager, int id) {
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.diasync_widget);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         BloodData bloodData = getBloodData(context);
         Bundle appWidgetOptions = appWidgetManager.getAppWidgetOptions(id);
@@ -151,7 +151,7 @@ public final class DiasyncWidget extends AppWidgetProvider {
                                                 ? AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT
                                                 : AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
 
-        views.setImageViewBitmap(R.id.diasync_widget_canvas, new DiasyncGraphBuilder()
+        views.setImageViewBitmap(R.id.widget_canvas, new DiasyncGraphBuilder()
                 .setData(data)
                 .setWidth(width)
                 .setHeight(height)
@@ -159,9 +159,9 @@ public final class DiasyncWidget extends AppWidgetProvider {
     }
 
     private void setOnClickIntents(Context context, RemoteViews views) {
-        setOnClickIntent(context, views, R.id.diasync_widget_canvas, ACTION_XDRIP);
-        setOnClickIntent(context, views, R.id.diasync_widget_alerts, ACTION_ALERTS);
-        setOnClickIntent(context, views, R.id.diasync_widget_pip, ACTION_PIP);
+        setOnClickIntent(context, views, R.id.widget_canvas, ACTION_XDRIP);
+        setOnClickIntent(context, views, R.id.widget_alerts_button, ACTION_ALERTS);
+        setOnClickIntent(context, views, R.id.widget_pip_button, ACTION_PIP);
     }
 
     private void setOnClickIntent(

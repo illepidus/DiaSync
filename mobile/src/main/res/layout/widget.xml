@@ -1,5 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/diasync_widget_layout"
+    android:id="@+id/widget_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/widget_background"
@@ -7,11 +7,11 @@
     android:theme="@style/Theme.DiaSync">
 
     <ImageView
-        android:id="@+id/diasync_widget_canvas"
+        android:id="@+id/widget_canvas"
         android:src="@color/widget_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/widget_graph_description"
+        android:contentDescription="@string/widget_canvas_description"
         android:scaleType="centerInside" />
 
     <LinearLayout
@@ -20,21 +20,21 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/diasync_widget_alerts"
+            android:id="@+id/widget_alerts_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:contentDescription="@string/widget_alerts_icon_description"
+            android:contentDescription="@string/widget_alerts_button_description"
             android:cropToPadding="true"
             android:padding="5dp"
             android:src="@drawable/ic_bell_gear" />
 
         <ImageView
-            android:id="@+id/diasync_widget_pip"
+            android:id="@+id/widget_pip_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:contentDescription="@string/widget_pip_icon_description"
+            android:contentDescription="@string/widget_pip_button_description"
             android:cropToPadding="true"
             android:padding="5dp"
             android:src="@drawable/ic_pip" />
