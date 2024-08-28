@@ -29,6 +29,7 @@ import ru.krotarnya.diasync.common.model.BloodGlucose;
 import ru.krotarnya.diasync.common.model.BloodPoint;
 import ru.krotarnya.diasync.common.model.TrendArrow;
 import ru.krotarnya.diasync.model.Libre2ValueList;
+import ru.krotarnya.diasync.pip.PipActivity;
 import ru.krotarnya.diasync.service.WebUpdateService;
 import ru.krotarnya.diasync.settings.AlertsFragment;
 import ru.krotarnya.diasync.settings.Settings;
@@ -81,6 +82,7 @@ public final class DiasyncWidget extends AppWidgetProvider {
                         .ifPresent(context::startActivity);
                 break;
             case ACTION_PIP:
+                context.startActivity(new Intent(context, PipActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 break;
         }
 

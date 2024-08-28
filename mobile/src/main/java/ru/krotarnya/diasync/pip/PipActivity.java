@@ -47,7 +47,6 @@ public class PipActivity extends AppCompatActivity {
                 Log.d(TAG, "Received " + intent.getAction());
                 update();
             }
-            
         }
     };
 

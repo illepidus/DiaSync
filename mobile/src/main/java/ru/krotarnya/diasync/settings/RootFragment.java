@@ -30,9 +30,10 @@ public final class RootFragment extends PreferenceFragment {
         PowerManager pm = (PowerManager) requireContext().getSystemService(Context.POWER_SERVICE);
         if (!pm.isIgnoringBatteryOptimizations(packageName)) {
             Log.d(TAG, "Asking to disable battery optimization");
-            requireContext().startActivity(new Intent()
-                                                   .setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-                                                   .setData(Uri.parse("package:" + packageName)));
+            requireContext().startActivity(
+                    new Intent()
+                            .setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                            .setData(Uri.parse("package:" + packageName)));
         }
     }
 
