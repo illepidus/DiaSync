@@ -97,13 +97,13 @@ public class WidgetUpdateService extends Service {
     }
 
     private void updateWidgets() {
-        Intent widget_intent = new Intent(getApplicationContext(), Libre2Widget.class);
+        Intent widget_intent = new Intent(getApplicationContext(), DiasyncWidget.class);
         widget_intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         int[] ids = AppWidgetManager.getInstance(getApplicationContext())
-                .getAppWidgetIds(new ComponentName(getApplicationContext(), Libre2Widget.class));
+                .getAppWidgetIds(new ComponentName(getApplicationContext(), DiasyncWidget.class));
         if (ids.length > 0) {
+            Log.d(TAG, "Updating Diasync widgets");
             widget_intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-            Log.d(TAG, "Updating widgets");
             sendBroadcast(widget_intent);
         }
     }
