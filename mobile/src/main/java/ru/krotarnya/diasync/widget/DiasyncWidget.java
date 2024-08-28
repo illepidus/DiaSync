@@ -105,7 +105,7 @@ public final class DiasyncWidget extends AppWidgetProvider {
     private BloodData getBloodData(Context context) {
         // TODO: upgrade
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        long graph_period = Long.parseLong(prefs.getString("watchface_graph_period", "1800000"));
+        long graph_period = Long.parseLong(prefs.getString("widget_graph_period", "1800000"));
         long t2 = System.currentTimeMillis(), t1 = t2 - graph_period;
 
         DiasyncDB diasync_db = DiasyncDB.getInstance(context);
