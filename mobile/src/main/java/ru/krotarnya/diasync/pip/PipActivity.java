@@ -34,10 +34,12 @@ import ru.krotarnya.diasync.settings.Settings;
 public class PipActivity extends AppCompatActivity {
     private static final String TAG = PipActivity.class.getSimpleName();
     public static final String UPDATE_ACTION = "ru.krotarnya.diasync.pip.UPDATE_ACTION";
-    private static final Set<String> UPDATE_ACTIONS = Set.of(Intent.ACTION_TIME_TICK, UPDATE_ACTION);
+    private static final Set<String> UPDATE_ACTIONS =
+            Set.of(Intent.ACTION_TIME_TICK, UPDATE_ACTION);
     private static final Rational ASPECT_RATIO = new Rational(3, 4);
     private static final int PIP_WIDTH = 400;
-    private static final int PIP_HEIGHT = PIP_WIDTH * ASPECT_RATIO.getDenominator() / ASPECT_RATIO.getNumerator();
+    private static final int PIP_HEIGHT =
+            PIP_WIDTH * ASPECT_RATIO.getDenominator() / ASPECT_RATIO.getNumerator();
     private ImageView canvas;
 
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -84,18 +86,18 @@ public class PipActivity extends AppCompatActivity {
 
     private void enterPictureInPicture() {
         enterPictureInPictureMode(new PictureInPictureParams.Builder()
-                                          .setAspectRatio(ASPECT_RATIO)
-                                          .setAutoEnterEnabled(true)
-                                          .build());
+                .setAspectRatio(ASPECT_RATIO)
+                .setAutoEnterEnabled(true)
+                .build());
     }
 
     private void update() {
         BloodData bloodData = getBloodData(this);
         canvas.setImageBitmap(new DiasyncGraphBuilder()
-                                      .setData(bloodData)
-                                      .setWidth(PIP_WIDTH)
-                                      .setHeight(PIP_HEIGHT)
-                                      .build());
+                .setData(bloodData)
+                .setWidth(PIP_WIDTH)
+                .setHeight(PIP_HEIGHT)
+                .build());
     }
 
     private BloodData getBloodData(Context context) {
