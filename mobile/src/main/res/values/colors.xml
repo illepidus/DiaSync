@@ -12,7 +12,19 @@
     <color name="widget_zone_low">#40C30909</color>
     <color name="widget_zone_normal">#00000000</color>
     <color name="widget_zone_high">#40FFBB33</color>
-    <color name="pip_background">#40000000</color>
+
+    <color name="pip_background">#FF000000</color>
+    <color name="pip_glucose_low">#FFC30909</color>
+    <color name="pip_glucose_normal">#FF00BFFF</color>
+    <color name="pip_glucose_high">#FFFFBB33</color>
+    <color name="pip_glucose_error">#FFFF00FF</color>
+    <color name="pip_text_low">#FFC30909</color>
+    <color name="pip_text_normal">#FFFFFFFF</color>
+    <color name="pip_text_high">#FFFFBB33</color>
+    <color name="pip_text_error">#FFFF0000</color>
+    <color name="pip_zone_low">#40C30909</color>
+    <color name="pip_zone_normal">#00000000</color>
+    <color name="pip_zone_high">#40FFBB33</color>
 
     <color name="color_primary">#FFA500</color>
     <color name="color_secondary">#FFA500</color>

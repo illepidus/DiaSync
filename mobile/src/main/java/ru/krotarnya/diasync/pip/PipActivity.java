@@ -32,8 +32,8 @@ import ru.krotarnya.diasync.model.Libre2ValueList;
 import ru.krotarnya.diasync.settings.Settings;
 
 public class PipActivity extends AppCompatActivity {
-    private static final String TAG = "PipActivity";
-    public static final String UPDATE_ACTION = "ru.krotarnya.diasync.activity.PipActivity.update";
+    private static final String TAG = PipActivity.class.getSimpleName();
+    public static final String UPDATE_ACTION = "ru.krotarnya.diasync.pip.UPDATE_ACTION";
     private static final Set<String> UPDATE_ACTIONS = Set.of(Intent.ACTION_TIME_TICK, UPDATE_ACTION);
     private static final Rational ASPECT_RATIO = new Rational(3, 4);
     private static final int PIP_WIDTH = 400;
@@ -119,17 +119,17 @@ public class PipActivity extends AppCompatActivity {
                 settings.glucoseHigh(),
                 settings.widgetTimeWindow(),
                 new BloodData.Colors(
-                        ContextCompat.getColor(context, R.color.widget_background),
-                        ContextCompat.getColor(context, R.color.widget_glucose_low),
-                        ContextCompat.getColor(context, R.color.widget_glucose_normal),
-                        ContextCompat.getColor(context, R.color.widget_glucose_high),
-                        ContextCompat.getColor(context, R.color.widget_text_low),
-                        ContextCompat.getColor(context, R.color.widget_text_normal),
-                        ContextCompat.getColor(context, R.color.widget_text_high),
-                        ContextCompat.getColor(context, R.color.widget_text_error),
-                        ContextCompat.getColor(context, R.color.widget_zone_low),
-                        ContextCompat.getColor(context, R.color.widget_zone_normal),
-                        ContextCompat.getColor(context, R.color.widget_zone_high)));
+                        ContextCompat.getColor(context, R.color.pip_background),
+                        ContextCompat.getColor(context, R.color.pip_glucose_low),
+                        ContextCompat.getColor(context, R.color.pip_glucose_normal),
+                        ContextCompat.getColor(context, R.color.pip_glucose_high),
+                        ContextCompat.getColor(context, R.color.pip_text_low),
+                        ContextCompat.getColor(context, R.color.pip_text_normal),
+                        ContextCompat.getColor(context, R.color.pip_text_high),
+                        ContextCompat.getColor(context, R.color.pip_text_error),
+                        ContextCompat.getColor(context, R.color.pip_zone_low),
+                        ContextCompat.getColor(context, R.color.pip_zone_normal),
+                        ContextCompat.getColor(context, R.color.pip_zone_high)));
 
         return new BloodData(points, TrendArrow.of(points), params);
     }
