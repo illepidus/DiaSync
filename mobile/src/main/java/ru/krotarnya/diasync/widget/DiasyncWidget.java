@@ -54,10 +54,7 @@ public final class DiasyncWidget extends AppWidgetProvider {
 
     @Override
     public void onAppWidgetOptionsChanged(
-            Context context,
-            AppWidgetManager appWidgetManager,
-            int appWidgetId,
-            Bundle newOptions)
+            Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions)
     {
         Log.d(TAG, "onAppWidgetOptionsChanged call " + newOptions);
         update(context, appWidgetManager, appWidgetId);
@@ -73,16 +70,22 @@ public final class DiasyncWidget extends AppWidgetProvider {
         Log.d(TAG, "Received " + intent);
 
         switch (Optional.ofNullable(intent.getAction()).orElse(ACTION_DEFAULT)) {
-            case ACTION_ALERTS:
-                SettingsActivity.pleaseStartExternally(context, AlertsFragment.class);
-                break;
             case ACTION_XDRIP:
-                Optional.ofNullable(context.getPackageManager().getLaunchIntentForPackage(XDRIP_PACKAGE_NAME))
-                        .map(i -> i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK))
+                Optional.ofNullable(context.getPackageManager()
+                                .getLaunchIntentForPackage(XDRIP_PACKAGE_NAME))
+                        .map(i -> i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                         .ifPresent(context::startActivity);
                 break;
+            case ACTION_ALERTS:
+                context.startActivity(new Intent(context, SettingsActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                        .putExtra(SettingsActivity.FRAGMENT, AlertsFragment.class.getName()));
+                break;
             case ACTION_PIP:
-                context.startActivity(new Intent(context, PipActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                context.startActivity(new Intent(context, PipActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
                 break;
         }
 
@@ -110,18 +113,13 @@ public final class DiasyncWidget extends AppWidgetProvider {
         DiasyncDB diasync_db = DiasyncDB.getInstance(context);
         Libre2ValueList libre2Values = diasync_db.getLibre2Values(t1, t2 + 60000);
 
-        List<BloodPoint> points = libre2Values.stream()
-                .map(v -> new BloodPoint(
-                        Instant.ofEpochMilli(v.timestamp),
-                        BloodGlucose.consMgdl(v.getValue())))
+        List<BloodPoint> points = libre2Values.stream().map(v -> new BloodPoint(
+                        Instant.ofEpochMilli(v.timestamp), BloodGlucose.consMgdl(v.getValue())))
                 .collect(Collectors.toList());
 
-        BloodData.Params params = new BloodData.Params(
-                settings.glucoseUnit(),
-                settings.glucoseLow(),
-                settings.glucoseHigh(),
-                settings.widgetTimeWindow(),
-                new BloodData.Colors(
+        BloodData.Params params =
+                new BloodData.Params(settings.glucoseUnit(), settings.glucoseLow(),
+                        settings.glucoseHigh(), settings.widgetTimeWindow(), new BloodData.Colors(
                         ContextCompat.getColor(context, R.color.widget_background),
                         ContextCompat.getColor(context, R.color.widget_glucose_low),
                         ContextCompat.getColor(context, R.color.widget_glucose_normal),
@@ -138,26 +136,22 @@ public final class DiasyncWidget extends AppWidgetProvider {
     }
 
     private void drawGraph(
-            BloodData data,
-            Configuration configuration,
-            DisplayMetrics displayMetrics,
-            Bundle options,
-            RemoteViews views)
+            BloodData data, Configuration configuration, DisplayMetrics displayMetrics,
+            Bundle options, RemoteViews views)
     {
         int orientation = configuration.orientation;
-        Function<String, Integer> dipsToPixels = dips -> Math.round(options.getInt(dips) * displayMetrics.density);
+        Function<String, Integer> dipsToPixels =
+                dips -> Math.round(options.getInt(dips) * displayMetrics.density);
         int width = dipsToPixels.apply(orientation == Configuration.ORIENTATION_LANDSCAPE
-                                               ? AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH
-                                               : AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+                ? AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH
+                : AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
         int height = dipsToPixels.apply(orientation == Configuration.ORIENTATION_LANDSCAPE
-                                                ? AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT
-                                                : AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+                ? AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT
+                : AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
 
-        views.setImageViewBitmap(R.id.widget_canvas, new DiasyncGraphBuilder()
-                .setData(data)
-                .setWidth(width)
-                .setHeight(height)
-                .build());
+        views.setImageViewBitmap(
+                R.id.widget_canvas,
+                new DiasyncGraphBuilder().setData(data).setWidth(width).setHeight(height).build());
     }
 
     private void setOnClickIntents(Context context, RemoteViews views) {
@@ -167,10 +161,7 @@ public final class DiasyncWidget extends AppWidgetProvider {
     }
 
     private void setOnClickIntent(
-            Context context,
-            RemoteViews views,
-            @IdRes int viewId,
-            String action)
+            Context context, RemoteViews views, @IdRes int viewId, String action)
     {
         views.setOnClickPendingIntent(viewId, getPendingSelfIntent(context, action));
     }

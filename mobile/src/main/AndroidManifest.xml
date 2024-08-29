@@ -63,10 +63,11 @@
         <activity
             android:name="ru.krotarnya.diasync.pip.PipActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:noHistory="true"
             android:supportsPictureInPicture="true" />
 
         <receiver
-            android:name="ru.krotarnya.diasync.DiaBroadcastReceiver"
+            android:name="ru.krotarnya.diasync.XDripBroadcastReceiver"
             android:exported="true"
             android:permission="android.permission.INTERNET">
             <intent-filter>
