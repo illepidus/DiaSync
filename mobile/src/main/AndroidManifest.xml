@@ -22,6 +22,21 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.DiaSync">
 
+        <activity
+            android:name="ru.krotarnya.diasync.settings.SettingsActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="ru.krotarnya.diasync.pip.PipActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:noHistory="true"
+            android:supportsPictureInPicture="true" />
+
         <service
             android:name="ru.krotarnya.diasync.service.WebUpdateService"
             android:enabled="true"
@@ -40,33 +55,6 @@
             android:exported="false" />
 
         <receiver
-            android:name="ru.krotarnya.diasync.widget.DiasyncWidget"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget" />
-        </receiver>
-
-        <activity
-            android:name="ru.krotarnya.diasync.settings.SettingsActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name="ru.krotarnya.diasync.pip.PipActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:noHistory="true"
-            android:supportsPictureInPicture="true" />
-
-        <receiver
             android:name="ru.krotarnya.diasync.XDripBroadcastReceiver"
             android:exported="true"
             android:permission="android.permission.INTERNET">
@@ -76,12 +64,24 @@
         </receiver>
 
         <receiver
-            android:name="ru.krotarnya.diasync.service.WebUpdateServiceRunner"
+            android:name="ru.krotarnya.diasync.service.WebUpdateService$ServiceRunner"
             android:exported="true"
             android:permission="android.permission.INTERNET">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="ru.krotarnya.diasync.widget.DiasyncWidget"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget" />
         </receiver>
 
     </application>

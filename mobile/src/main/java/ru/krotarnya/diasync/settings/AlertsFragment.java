@@ -1,5 +1,6 @@
 package ru.krotarnya.diasync.settings;
 
+import android.icu.text.DateFormat;
 import android.os.Handler;
 import android.util.Log;
 
@@ -89,7 +90,7 @@ public final class AlertsFragment extends PreferenceFragment {
             resumePref.setSummary("["
                     + Diasync.durationFormat(Duration.between(Instant.now(), Alerter.snoozedTill()))
                     + "] Snoozed till "
-                    + Diasync.timeFormat(Alerter.snoozedTill()));
+                    + DateFormat.getTimeInstance(DateFormat.MEDIUM).format(Alerter.snoozedTill()));
         } else {
             snoozePref.setVisible(true);
             resumePref.setVisible(false);

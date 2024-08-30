@@ -118,7 +118,8 @@ public final class DiasyncGraphBuilder {
             paint.setColor(params.colors().zoneHigh());
             canvas.drawRect(0, 0, width, y(params.bloodGlucoseHigh()), paint);
             paint.setColor(params.colors().zoneNormal());
-            canvas.drawRect(0, y(params.bloodGlucoseLow()), width, y(params.bloodGlucoseHigh()), paint);
+            canvas.drawRect(
+                    0, y(params.bloodGlucoseLow()), width, y(params.bloodGlucoseHigh()), paint);
             paint.setColor(params.colors().zoneLow());
             canvas.drawRect(0, y(params.bloodGlucoseLow()), width, height, paint);
         }
@@ -144,8 +145,9 @@ public final class DiasyncGraphBuilder {
                     .max(Comparator.comparing(BloodPoint::time));
 
             String text = lastPoint.map(BloodPoint::glucose)
-                    .map(bg -> data.params().bloodGlucoseUnit().toString(bg) + data.trendArrow().getSymbol())
-                    .orElse("???");
+                    .map(bg -> data.params().bloodGlucoseUnit().toString(bg) +
+                            data.trendArrow().getSymbol())
+                    .orElse("?");
 
             Function<Float, Paint> textPaintConstructor = height -> {
                 Paint paint = new Paint();

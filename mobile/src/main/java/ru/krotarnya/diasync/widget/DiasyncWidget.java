@@ -30,7 +30,6 @@ import ru.krotarnya.diasync.common.model.BloodPoint;
 import ru.krotarnya.diasync.common.model.TrendArrow;
 import ru.krotarnya.diasync.model.Libre2ValueList;
 import ru.krotarnya.diasync.pip.PipActivity;
-import ru.krotarnya.diasync.service.WebUpdateService;
 import ru.krotarnya.diasync.settings.AlertsFragment;
 import ru.krotarnya.diasync.settings.Settings;
 import ru.krotarnya.diasync.settings.SettingsActivity;
@@ -88,8 +87,6 @@ public final class DiasyncWidget extends AppWidgetProvider {
                         .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
                 break;
         }
-
-        context.startService(new Intent(context, WebUpdateService.class));
     }
 
     private void update(Context context, AppWidgetManager appWidgetManager, int id) {

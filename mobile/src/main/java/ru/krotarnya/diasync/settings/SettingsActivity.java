@@ -11,7 +11,6 @@ import java.util.Optional;
 import ru.krotarnya.diasync.R;
 
 public final class SettingsActivity extends AppCompatActivity {
-    private static final String TAG = SettingsActivity.class.getSimpleName();
     public static final String FRAGMENT = SettingsActivity.class.getName() + ".fragment";
 
     @Override

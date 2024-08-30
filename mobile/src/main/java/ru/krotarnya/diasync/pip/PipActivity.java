@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import ru.krotarnya.diasync.Diasync;
 import ru.krotarnya.diasync.DiasyncDB;
 import ru.krotarnya.diasync.DiasyncGraphBuilder;
 import ru.krotarnya.diasync.R;
@@ -33,9 +34,8 @@ import ru.krotarnya.diasync.settings.Settings;
 
 public class PipActivity extends AppCompatActivity {
     private static final String TAG = PipActivity.class.getSimpleName();
-    public static final String UPDATE_ACTION = "ru.krotarnya.diasync.pip.UPDATE_ACTION";
     private static final Set<String> UPDATE_ACTIONS =
-            Set.of(Intent.ACTION_TIME_TICK, UPDATE_ACTION);
+            Set.of(Intent.ACTION_TIME_TICK, Diasync.Intents.NEW_DATA_AVAILABLE);
     private static final Rational ASPECT_RATIO = new Rational(3, 4);
     private static final int PIP_WIDTH = 400;
     private static final int PIP_HEIGHT =

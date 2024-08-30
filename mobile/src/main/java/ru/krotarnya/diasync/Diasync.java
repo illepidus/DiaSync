@@ -3,11 +3,14 @@ package ru.krotarnya.diasync;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
-import android.icu.text.DateFormat;
+import android.content.Intent;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.util.concurrent.TimeUnit;
+
+import ru.krotarnya.diasync.service.WearUpdateService;
+import ru.krotarnya.diasync.service.WebUpdateService;
+import ru.krotarnya.diasync.widget.WidgetUpdateService;
 
 public class Diasync extends Application {
     private static Diasync instance;
@@ -20,10 +23,9 @@ public class Diasync extends Application {
     public void onCreate() {
         instance = this;
         super.onCreate();
-    }
-
-    public static String timeFormat(Instant timestamp) {
-        return DateFormat.getTimeInstance(DateFormat.MEDIUM).format(timestamp.toEpochMilli());
+        startService(new Intent(getApplicationContext(), WebUpdateService.class));
+        startService(new Intent(getApplicationContext(), WidgetUpdateService.class));
+        startService(new Intent(getApplicationContext(), WearUpdateService.class));
     }
 
     @SuppressLint("DefaultLocale")
@@ -32,5 +34,9 @@ public class Diasync extends Application {
         long min = TimeUnit.MILLISECONDS.toMinutes(duration.toMillis()) % 60;
         long sec = TimeUnit.MILLISECONDS.toSeconds(duration.toMillis()) % 60;
         return String.format("%02d:%02d:%02d", hr, min, sec);
+    }
+
+    public static class Intents {
+        public static final String NEW_DATA_AVAILABLE = "ru.krotarnya.diasync.NEW_DATA_AVAILABLE";
     }
 }

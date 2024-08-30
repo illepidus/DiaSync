@@ -6,6 +6,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ServiceInfo;
@@ -24,16 +25,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Optional;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import ru.krotarnya.diasync.Alerter;
+import ru.krotarnya.diasync.Diasync;
 import ru.krotarnya.diasync.DiasyncDB;
 import ru.krotarnya.diasync.R;
 import ru.krotarnya.diasync.model.Libre2Update;
 import ru.krotarnya.diasync.model.Libre2Value;
-import ru.krotarnya.diasync.pip.PipActivity;
 
 public class WebUpdateService extends Service {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
@@ -53,24 +56,25 @@ public class WebUpdateService extends Service {
     }
 
     @Override
-    public void onTaskRemoved(Intent rootIntent) {
-        Intent restartServiceIntent = new Intent(getApplicationContext(), this.getClass());
-        restartServiceIntent.setPackage(getPackageName());
-
-        PendingIntent restartServicePendingIntent = PendingIntent.getService(getApplicationContext(), 1, restartServiceIntent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
-        AlarmManager alarmService = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        alarmService.set(
+    public void onTaskRemoved(Intent intent) {
+        ((AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE)).set(
                 AlarmManager.ELAPSED_REALTIME,
                 SystemClock.elapsedRealtime() + 1000,
-                restartServicePendingIntent);
-
-        super.onTaskRemoved(rootIntent);
+                PendingIntent.getService(
+                        getApplicationContext(),
+                        1,
+                        new Intent(getApplicationContext(), this.getClass())
+                                .setPackage(getPackageName()),
+                        PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE));
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (!isStarted.getAndSet(true)) {
-            startForeground(FOREGROUND_ID, buildForegroundNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
+            startForeground(
+                    FOREGROUND_ID,
+                    buildForegroundNotification(),
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
             timer.scheduleAtFixedRate(new WebUpdateTask(this), 0, 10000);
         }
         return START_STICKY;
@@ -121,18 +125,28 @@ public class WebUpdateService extends Service {
         public void run() {
             try {
                 Libre2Value libre2_value = getLastLibre2Value();
-                Log.d(TAG, "Updating... " + WebUpdateService.this);
-                //Log.d(TAG, "Received: \n" + libre2_value);
-                DiasyncDB diasync_db = DiasyncDB.getInstance(context);
+                DiasyncDB diasyncDB = DiasyncDB.getInstance(context);
                 Alerter.check();
-                if (diasync_db.addLibre2Value(libre2_value)) {
+                if (diasyncDB.addLibre2Value(libre2_value)) {
+                    Intent intent = new Intent(Diasync.Intents.NEW_DATA_AVAILABLE);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                     WearUpdateService.pleaseUpdate(context);
-                    Intent updatePipIntent = new Intent(PipActivity.UPDATE_ACTION);
-                    LocalBroadcastManager.getInstance(context).sendBroadcast(updatePipIntent);
                 }
             } catch (Exception e) {
-                Log.w(TAG, "update failed " + e.getMessage(), e);
+                Log.w(TAG, "Update failed " + e.getMessage(), e);
             }
+        }
+    }
+
+    public static class ServiceRunner extends BroadcastReceiver {
+        private static final Set<String> PERMITTED_ACTIONS = Set.of(Intent.ACTION_BOOT_COMPLETED);
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Optional.ofNullable(intent.getAction())
+                    .filter(PERMITTED_ACTIONS::contains)
+                    .ifPresent(any -> context.startForegroundService(
+                            new Intent(context, WebUpdateService.class)));
         }
     }
 }

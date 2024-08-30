@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.preference.PreferenceManager;
 
 import com.android.volley.Request;
@@ -22,9 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import ru.krotarnya.diasync.model.Libre2Value;
-import ru.krotarnya.diasync.pip.PipActivity;
 import ru.krotarnya.diasync.service.WearUpdateService;
-import ru.krotarnya.diasync.widget.WidgetUpdateService;
 
 public class XDripBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = XDripBroadcastReceiver.class.getSimpleName();
@@ -66,11 +63,8 @@ public class XDripBroadcastReceiver extends BroadcastReceiver {
             Log.d(TAG, "Received: \n" + libre2_value);
             DiasyncDB diasync_db = DiasyncDB.getInstance(context);
             if (diasync_db.addLibre2Value(libre2_value)) {
-                WidgetUpdateService.pleaseUpdate(context);
                 WearUpdateService.pleaseUpdate(context);
                 Alerter.check();
-                Intent updatePipIntent = new Intent(PipActivity.UPDATE_ACTION);
-                LocalBroadcastManager.getInstance(context).sendBroadcast(updatePipIntent);
             }
             return;
         }
