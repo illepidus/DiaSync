@@ -47,22 +47,20 @@ public class WearUpdateService extends Service {
     }
 
     private void updateWear() {
-        Log.d(TAG, "resending...");
-        AsyncTask.execute(() -> {
-            try {
-                Tasks.await(Wearable
-                                .getCapabilityClient(this)
-                                .getCapability(CAPABILITY, CapabilityClient.FILTER_REACHABLE))
-                        .getNodes()
-                        .stream()
-                        .filter(Node::isNearby)
-                        .forEach(node -> Wearable
-                                .getMessageClient(this)
-                                .sendMessage(node.getId(), CAPABILITY_PATH, getBloodData()));
-            } catch (Exception e) {
-                Log.e(TAG, "Something went wrong sending data to wear", e);
-            }
-        });
+        Log.d(TAG, "looking for nearby nodes...");
+        Wearable.getCapabilityClient(getApplicationContext())
+                .getCapability(CAPABILITY, CapabilityClient.FILTER_REACHABLE)
+                .addOnCompleteListener(task -> {
+                    Log.d(TAG, "found " + task.getResult().getNodes().size() + " nodes");
+                    task.getResult()
+                            .getNodes()
+                            .stream()
+                            .peek(x -> Log.d(TAG, "node: " + x.getDisplayName()))
+                            .filter(Node::isNearby)
+                            .forEach(node -> Wearable
+                                    .getMessageClient(this)
+                                    .sendMessage(node.getId(), CAPABILITY_PATH, getBloodData()));
+                });
     }
 
     private byte[] getBloodData() {
