@@ -17,6 +17,7 @@ import com.google.android.gms.wearable.Wearable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import ru.krotarnya.diasync.DiasyncDB;
@@ -50,6 +51,10 @@ public class WearUpdateService extends Service {
             Wearable.getCapabilityClient(getApplicationContext())
                     .getCapability(CAPABILITY, CapabilityClient.FILTER_REACHABLE)
                     .addOnCompleteListener(task -> {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Wasn't able to communicate to device");
+                            return;
+                        }
                         Log.d(TAG, "found " + task.getResult().getNodes().size() + " nodes");
                         task.getResult()
                                 .getNodes()
