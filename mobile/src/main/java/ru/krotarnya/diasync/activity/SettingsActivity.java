@@ -22,7 +22,8 @@ import ru.krotarnya.diasync.fragment.DisplayFragment;
 import ru.krotarnya.diasync.fragment.RootFragment;
 
 public class SettingsActivity extends AppCompatActivity
-        implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
+        implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback
+{
     private static final String TAG = "SettingsActivity";
     private static final String TITLE_TAG = "DiasyncSettingsTitle";
     public static final String DISPLAY_FRAGMENT = "DisplayFragment";

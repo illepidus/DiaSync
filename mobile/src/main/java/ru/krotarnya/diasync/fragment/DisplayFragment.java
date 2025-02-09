@@ -13,6 +13,7 @@ import androidx.preference.PreferenceManager;
 
 import java.util.Objects;
 
+import ru.krotarnya.diasync.Diasync;
 import ru.krotarnya.diasync.Glucose;
 import ru.krotarnya.diasync.R;
 import ru.krotarnya.diasync.activity.SettingsActivity;
@@ -23,8 +24,7 @@ public class DisplayFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String key) {
         setPreferencesFromResource(R.xml.settings_display, key);
-        Context context = SettingsActivity.getContext();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(Diasync.getContext());
         SharedPreferences.Editor prefs_editor = prefs.edit();
 
         EditTextPreference glucose_low_pref = findPreference("glucose_low_pref");
