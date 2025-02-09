@@ -4,14 +4,12 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
-import com.google.android.gms.tasks.Tasks;
 import com.google.android.gms.wearable.CapabilityClient;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
@@ -48,19 +46,23 @@ public class WearUpdateService extends Service {
 
     private void updateWear() {
         Log.d(TAG, "looking for nearby nodes...");
-        Wearable.getCapabilityClient(getApplicationContext())
-                .getCapability(CAPABILITY, CapabilityClient.FILTER_REACHABLE)
-                .addOnCompleteListener(task -> {
-                    Log.d(TAG, "found " + task.getResult().getNodes().size() + " nodes");
-                    task.getResult()
-                            .getNodes()
-                            .stream()
-                            .peek(x -> Log.d(TAG, "node: " + x.getDisplayName()))
-                            .filter(Node::isNearby)
-                            .forEach(node -> Wearable
-                                    .getMessageClient(this)
-                                    .sendMessage(node.getId(), CAPABILITY_PATH, getBloodData()));
-                });
+        try {
+            Wearable.getCapabilityClient(getApplicationContext())
+                    .getCapability(CAPABILITY, CapabilityClient.FILTER_REACHABLE)
+                    .addOnCompleteListener(task -> {
+                        Log.d(TAG, "found " + task.getResult().getNodes().size() + " nodes");
+                        task.getResult()
+                                .getNodes()
+                                .stream()
+                                .peek(x -> Log.d(TAG, "node: " + x.getDisplayName()))
+                                .filter(Node::isNearby)
+                                .forEach(node -> Wearable
+                                        .getMessageClient(this)
+                                        .sendMessage(node.getId(), CAPABILITY_PATH, getBloodData()));
+                    });
+        } catch (Exception exception) {
+            Log.w(TAG, "Something went terribly wrong. Is wearable API available?", exception);
+        }
     }
 
     private byte[] getBloodData() {
@@ -98,8 +100,7 @@ public class WearUpdateService extends Service {
             context.startService(new Intent(context, WearUpdateService.class));
             Log.d(TAG, "Starting service in context [" + context + "]");
         } catch (Exception e) {
-            Log.d(TAG, "Failed to start service in context [" + context + "]");
-            e.printStackTrace();
+            Log.d(TAG, "Failed to start service in context [" + context + "]", e);
         }
     }
 }
